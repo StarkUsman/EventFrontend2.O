@@ -1,0 +1,553 @@
+<div class="subscription-plane-head">
+  <ul>
+    <li>
+      <a [routerLink]="routes.packages">Subscription Plans</a>
+    </li>
+    <li>
+      <a [routerLink]="routes.subscription" class="active">Subscribers List</a>
+    </li>
+  </ul>
+</div>
+<!-- Page Header -->
+<div class="page-header">
+  <div class="content-page-header">
+    <h5>Subscriber List</h5>
+    <div class="page-content">
+      <div class="list-btn">
+        <ul class="filter-list">
+          <li>
+            <a class="btn-filters" href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="bottom"
+              title="Refresh" matTooltip="Refresh"><span><i class="feather icon-refresh-ccw"></i></span></a>
+            </li>
+            <li>
+              <a (click)="openContent()" class="btn btn-filters w-auto popup-toggle" data-bs-toggle="tooltip"
+                data-bs-placement="bottom" title="Filter" matTooltip="Filter"><span class="me-2"><img
+              src="assets/img/icons/filter-icon.svg" alt="filter"></span>Filter
+            </a>
+          </li>
+
+          <li>
+            <div class="dropdown dropdown-action" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Download"
+              matTooltip="Download">
+              <a href="javascript:void(0);" class="btn btn-filters" data-bs-toggle="dropdown"
+                aria-expanded="false"><span class="me-2"><i class="feather icon-download"></i></span>Export</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <ul class="d-block">
+                    <li>
+                      <a class="d-flex align-items-center download-item" href="javascript:void(0);" download><i
+                      class="far fa-file-pdf me-2"></i>Export as PDF</a>
+                    </li>
+                    <li>
+                      <a class="d-flex align-items-center download-item" href="javascript:void(0);" download><i
+                      class="far fa-file-text me-2"></i>Export as Excel</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            <li>
+              <a class="btn btn-filters" href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                title="Print" matTooltip="Print"><span class="me-2"><i class="feather icon-printer"></i></span> Print
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /Page Header -->
+
+  <div class="super-admin-list-head">
+    <div class="row">
+      <div class="col-xl-3 col-md-6 d-flex">
+        <div class="card w-100">
+          <div class="card-body">
+            <div class="grid-info-item subscription-list total-transaction">
+              <div class="grid-head-icon">
+                <i class="feather icon-shield"></i>
+              </div>
+              <div class="grid-info">
+                <span>Total Transaction</span>
+                <h4>$6,565,60</h4>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-md-6 d-flex">
+        <div class="card w-100">
+          <div class="card-body">
+            <div class="grid-info-item subscription-list total-subscriber">
+              <div class="grid-head-icon">
+                <i class="feather icon-users"></i>
+              </div>
+              <div class="grid-info">
+                <span>Total Subscribers</span>
+                <h4>945</h4>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-md-6 d-flex">
+        <div class="card w-100">
+          <div class="card-body">
+            <div class="grid-info-item subscription-list active-subscriber">
+              <div class="grid-head-icon">
+                <i class="feather icon-user-check"></i>
+              </div>
+              <div class="grid-info">
+                <span>Active Subscriber</span>
+                <h4>944</h4>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-md-6 d-flex">
+        <div class="card w-100">
+          <div class="card-body">
+            <div class="grid-info-item subscription-list expired-subscriber">
+              <div class="grid-head-icon">
+                <i class="feather icon-user-x"></i>
+              </div>
+              <div class="grid-info">
+                <span>Expired</span>
+                <h4>1</h4>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card-table">
+        <div class="card-body">
+          <div class="table-responsive">
+            <div class="companies-table">
+              <table matSort (matSortChange)="sortData($event)" class="table table-center table-hover datatable">
+                <thead class="thead-light">
+                  <tr>
+                    <th Class="no-sort">#</th>
+                    <th mat-sort-header="subscriber">Subscriber</th>
+                    <th mat-sort-header="plan">Plan</th>
+                    <th mat-sort-header="billingCycle">Billing Cycle</th>
+                    <th mat-sort-header="paymentGateway">Payment Gateway</th>
+                    <th mat-sort-header="amount">Amount</th>
+                    <th mat-sort-header="registeredOn">Registered On</th>
+                    <th mat-sort-header="expiringOn">Expiring On</th>
+                    <th mat-sort-header="status">Status</th>
+                    <th mat-sort-header="invoice">Invoice </th>
+                    <th Class="no-sort">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (data of tableData; track data) {
+                    <tr>
+                      <td>{{data.id}}</td>
+                      <td>
+                        <h2 class="table-avatar">
+                          <a [routerLink]="routes.profile" class="company-avatar avatar-md me-2 companies company-icon">
+                            <img class="avatar-img rounded-circle company" [src]="data.img" alt="Company Image"></a>
+                            <a href="javascript:void(0);">{{data.subscriber}}</a>
+                          </h2>
+                        </td>
+                        <td>{{data.plan}}</td>
+                        <td>{{data.billingCycle}}</td>
+                        <td>{{data.paymentGateway}}</td>
+                        <td>{{data.amount}}</td>
+                        <td>{{data.registeredOn}}</td>
+                        @if (data.expiringOn !== 'Expired') {
+                          <td>{{data.expiringOn}}</td>
+                        }
+                        @if (data.expiringOn === 'Expired') {
+                          <td>
+                            <span class="text-danger">{{data.expiringOn}}</span>
+                          </td>
+                        }
+                        <td>
+                          <span class="badge d-inline-flex align-items-center"
+                            [ngClass]="{'bg-success-light': data.status === 'Paid', 'bg-danger-light': data.status === 'Unpaid'}">
+                            <i class="feather me-1"
+                              [ngClass]="{'icon-check': data.status === 'Paid', 'icon-x': data.status === 'Unpaid'}">
+                            </i>
+                            {{data.status}}
+                          </span>
+                        </td>
+                        <td><a [routerLink]="routes.invoiceSubscription" class="invoice-detail"><i
+                        class="feather icon-file-text"></i></a></td>
+                        <td class="d-flex align-items-center">
+                          <div class="dropdown dropdown-action">
+                            <a href="javascript:void(0);" class=" btn-action-icon " data-bs-toggle="dropdown"
+                              aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
+                              <div class="dropdown-menu dropdown-menu-end">
+                                <ul class="dropdown-ul">
+                                  <li>
+                                    <a class="dropdown-item" href="javascript:void(0);"><i
+                                    class="feather icon-download me-2"></i>Download</a>
+                                  </li>
+                                  <li class="delete-alt">
+                                    <div>
+                                      <a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal"
+                                        data-bs-target="#delete_modal"><i class="feather icon-trash-2 me-2"></i>Delete</a>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <app-custom-pagination></app-custom-pagination>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- /Page Wrapper -->
+
+        <!-- Filter -->
+        <div class="toggle-sidebar" [ngClass]="{ 'open-filter': toggleData === true }">
+          <div class="sidebar-layout-filter">
+            <div class="sidebar-header">
+              <h5>Filter</h5>
+              <a href="javascript:void(0);" class="sidebar-closes" (click)="openContent()"><i
+              class="fa-regular fa-circle-xmark"></i></a>
+            </div>
+            <div class="sidebar-body">
+              <form action="#" autocomplete="off">
+                <!-- Customer -->
+                <div class="accordion" id="accordionMain1">
+                  <div class="card-header-new" id="headingOne">
+                    <h6 class="filter-title">
+                      <a href="javascript:void(0);" class="w-100" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                        aria-expanded="true" aria-controls="collapseOne">
+                        Subscriber
+                        <span class="float-end"><i class="fa-solid fa-chevron-down"></i></span>
+                      </a>
+                    </h6>
+                  </div>
+
+                  <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample1">
+                    <div class="card-body-chat">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div id="checkBoxes">
+                            <div class="form-custom">
+                              <input type="text" class="form-control  member-search-dropdown" id="member_search"
+                                placeholder="Search Subscriber">
+                                <span><img src="assets/img/icons/search.svg" alt="img"></span>
+                              </div>
+                              <div class="selectBox-cont search-dropdown-item">
+                                <label class="custom_check w-100">
+                                  <input type="checkbox" name="bystatus">
+                                  <span class="checkmark"></span> Hermann Groups
+                                </label>
+                                <label class="custom_check w-100">
+                                  <input type="checkbox" name="bystatus">
+                                  <span class="checkmark"></span> Skiles LLC
+                                </label>
+                                <label class="custom_check w-100">
+                                  <input type="checkbox" name="bystatus">
+                                  <span class="checkmark"></span> Kerluke Group
+                                </label>
+                                <label class="custom_check w-100">
+                                  <input type="checkbox" name="bystatus">
+                                  <span class="checkmark"></span>Schowalter Group
+                                </label>
+                                <label class="custom_check w-100">
+                                  <input type="checkbox" name="bystatus">
+                                  <span class="checkmark"></span> Accentric Global
+                                </label>
+                                <label class="custom_check w-100">
+                                  <input type="checkbox" name="bystatus">
+                                  <span class="checkmark"></span> Dexter Matrix
+                                </label>
+                                <label class="custom_check w-100">
+                                  <input type="checkbox" name="bystatus">
+                                  <span class="checkmark"></span> Emporis Technologies
+                                </label>
+                                <label class="custom_check w-100">
+                                  <input type="checkbox" name="bystatus">
+                                  <span class="checkmark"></span>High Tech Lead
+                                </label>
+                                <label class="custom_check w-100">
+                                  <input type="checkbox" name="bystatus">
+                                  <span class="checkmark"></span> Beacon Softwares
+                                </label>
+                                <label class="custom_check w-100">
+                                  <input type="checkbox" name="bystatus">
+                                  <span class="checkmark"></span>Global tech
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /Customer -->
+
+                  <!-- By Package -->
+                  <div class="accordion" id="accordionMain4">
+                    <div class="card-header-new" id="headingFive">
+                      <h6 class="filter-title">
+                        <a href="javascript:void(0);" class="w-100" data-bs-toggle="collapse" data-bs-target="#collapseFour"
+                          aria-expanded="true" aria-controls="collapseFour">
+                          Plans
+                          <span class="float-end"><i class="fa-solid fa-chevron-down"></i></span>
+                        </a>
+                      </h6>
+                    </div>
+
+                    <div id="collapseFour" class="collapse" aria-labelledby="headingFive" data-bs-parent="#accordionExample3">
+                      <div class="card-body-chat">
+                        <div id="checkBoxes2">
+                          <div class="selectBox-cont">
+                            <label class="custom_check w-100">
+                              <input type="checkbox" name="bypackage">
+                              <span class="checkmark"></span> All Plans
+                            </label>
+                            <label class="custom_check w-100">
+                              <input type="checkbox" name="bypackage">
+                              <span class="checkmark"></span> Advanced
+                            </label>
+                            <label class="custom_check w-100">
+                              <input type="checkbox" name="bypackage">
+                              <span class="checkmark"></span> Basic
+                            </label>
+                            <label class="custom_check w-100">
+                              <input type="checkbox" name="bypackage">
+                              <span class="checkmark"></span> Enterprise
+                            </label>
+                            <label class="custom_check w-100">
+                              <input type="checkbox" name="bypackage">
+                              <span class="checkmark"></span> Premium
+                            </label>
+                            <label class="custom_check w-100">
+                              <input type="checkbox" name="bypackage">
+                              <span class="checkmark"></span> Free
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /By Package -->
+
+                  <!-- By Status -->
+                  <div class="accordion" id="accordionMain3">
+                    <div class="card-header-new" id="headingThree">
+                      <h6 class="filter-title">
+                        <a href="javascript:void(0);" class="w-100" data-bs-toggle="collapse" data-bs-target="#collapseThree"
+                          aria-expanded="true" aria-controls="collapseThree">
+                          Plans Type
+                          <span class="float-end"><i class="fa-solid fa-chevron-down"></i></span>
+                        </a>
+                      </h6>
+                    </div>
+
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample3">
+                      <div class="card-body-chat">
+                        <div id="checkBoxes3">
+                          <div class="selectBox-cont">
+                            <label class="custom_check w-100">
+                              <input type="checkbox" name="bystatus">
+                              <span class="checkmark"></span> All Plan Type
+                            </label>
+                            <label class="custom_check w-100">
+                              <input type="checkbox" name="bystatus">
+                              <span class="checkmark"></span> Monthly
+                            </label>
+                            <label class="custom_check w-100">
+                              <input type="checkbox" name="bystatus">
+                              <span class="checkmark"></span>Weekly
+                            </label>
+                            <label class="custom_check w-100">
+                              <input type="checkbox" name="bystatus">
+                              <span class="checkmark"></span> Lifetime
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /By Status -->
+
+                  <!-- Payment Gateway -->
+                  <div class="accordion" id="accordionMain5">
+                    <div class="card-header-new" id="headingfive">
+                      <h6 class="filter-title">
+                        <a href="javascript:void(0);" class="w-100" data-bs-toggle="collapse" data-bs-target="#collapsefive"
+                          aria-expanded="true" aria-controls="collapsefive">
+                          Payment Gateway
+                          <span class="float-end"><i class="fa-solid fa-chevron-down"></i></span>
+                        </a>
+                      </h6>
+                    </div>
+
+                    <div id="collapsefive" class="collapse" aria-labelledby="headingfive" data-bs-parent="#accordionExample5">
+                      <div class="card-body-chat">
+                        <div id="checkBoxes4">
+                          <div class="selectBox-cont">
+                            <label class="custom_check w-100">
+                              <input type="checkbox" name="bystatus">
+                              <span class="checkmark"></span> All
+                            </label>
+                            <label class="custom_check w-100">
+                              <input type="checkbox" name="bystatus">
+                              <span class="checkmark"></span> Paypal
+                            </label>
+                            <label class="custom_check w-100">
+                              <input type="checkbox" name="bystatus">
+                              <span class="checkmark"></span>Credit Card
+                            </label>
+                            <label class="custom_check w-100">
+                              <input type="checkbox" name="bystatus">
+                              <span class="checkmark"></span> Debit Card
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /Payment Gateway -->
+
+                  <!-- Select Date -->
+                  <div class="accordion accordion-last" id="accordionMain2">
+                    <div class="card-header-new" id="headingTwo">
+                      <h6 class="filter-title">
+                        <a href="javascript:void(0);" class="w-100" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                          aria-expanded="true" aria-controls="collapseTwo">
+                          Created Date
+                          <span class="float-end"><i class="fa-solid fa-chevron-down"></i></span>
+                        </a>
+                      </h6>
+                    </div>
+
+                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample2">
+                      <div class="card-body-chat">
+                        <div class="input-block mb-3">
+                          <label class="form-control-label">From</label>
+                          <div class="cal-icon">
+                            <input type="email" class="form-control datetimepicker" bsDatepicker [bsConfig]="{ adaptivePosition: true }" placeholder="From Date">
+                          </div>
+                        </div>
+                        <div class="input-block mb-3">
+                          <label class="form-control-label">To</label>
+                          <div class="cal-icon">
+                            <input type="email" class="form-control datetimepicker" bsDatepicker [bsConfig]="{ adaptivePosition: true }" placeholder="To Date">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /Select Date -->
+
+
+
+                  <div class="filter-buttons">
+                    <button type="submit" class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary">
+                      Apply
+                    </button>
+                    <button type="submit" class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary">
+                      Reset
+                    </button>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+          <!-- /Filter -->
+
+          <!-- Edit Vendor Modal -->
+          <div class="modal custom-modal fade" id="edit_contact" role="dialog">
+            <div class="modal-dialog modal-dialog-centered modal-md">
+              <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                  <div class="form-header modal-header-title text-start mb-0">
+                    <h4 class="mb-0">Edit Contact Messages</h4>
+                  </div>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-lg-12 col-md-12">
+                      <div class="input-block mb-3">
+                        <label>Name</label>
+                        <input type="text" class="form-control" value="John Smith" placeholder="Enter Name">
+                      </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12">
+                      <div class="input-block mb-3">
+                        <label>Email</label>
+                        <input type="text" class="form-control" value="john@example.com" placeholder="Email">
+                      </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12">
+                      <div class="input-block mb-3">
+                        <label>Mobile</label>
+                        <input type="text" class="form-control" value="989-438-3131" placeholder="Enter Mobile Number">
+                      </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12">
+                      <div class="input-block mb-3">
+                        <label>Message</label>
+                        <input type="text" class="form-control" value="Lorem ipsum dolor" placeholder="message">
+                      </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12">
+                      <div class="input-block mb-0">
+                        <label>Date</label>
+                        <input type="text" class="form-control" value="15 Dec 2023, 04:35 PM" placeholder="message">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</a>
+                  <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn">Update</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /Edit Vendor Modal -->
+
+          <!-- Delete Items Modal -->
+          <div class="modal custom-modal fade modal-delete" id="delete_modal" role="dialog">
+            <div class="modal-dialog modal-dialog-centered modal-md">
+              <div class="modal-content">
+                <div class="modal-body">
+                  <div class="form-header">
+                    <div class="delete-modal-icon">
+                      <span><i class="feather icon-check-circle"></i></span>
+                    </div>
+                    <h3>Are You Sure?</h3>
+                    <p>You want delete plan</p>
+                  </div>
+                  <div class="modal-btn delete-action">
+                    <div class="modal-footer justify-content-center p-0">
+                      <button type="submit" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn me-2">Yes,
+                      Delete</button>
+                      <button type="button" data-bs-dismiss="modal" class="btn btn-back cancel-btn">No, Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /Delete Items Modal -->

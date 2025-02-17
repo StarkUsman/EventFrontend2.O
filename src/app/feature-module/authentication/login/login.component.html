@@ -1,0 +1,136 @@
+<!-- Main Wrapper -->
+<div class="main-wrapper login-body">
+  <div class="login-wrapper">
+    <div class="container">
+      <img class="img-fluid logo-dark mb-2 logo-color" src="assets/img/logo2.png" alt="Logo">
+
+      <div class="loginbox">
+        <div class="login-right">
+          <div class="login-right-wrap">
+            <h1>Login</h1>
+            <p class="account-subtitle">Access to our dashboard</p>
+
+            <form [formGroup]="form" (ngSubmit)="loginFormSubmit()">
+              <div class="input-block mb-3">
+                <label htmlFor="label" class="form-control-label">Email Address</label>
+                <input id="label"
+                  class="form-control"
+                  type="text"
+                  formControlName="email"
+                  id="email"
+                  [ngClass]="{
+                    'is-invalid': f['email'].touched && f['email'].invalid
+                  }"
+                  />
+                  @if (f['email'].touched && f['email'].invalid) {
+                    <div
+                      class="invalid-feedback"
+                      >
+                      @if (f['email'].errors && f['email'].errors['required']) {
+                        <div
+                          >
+                          Email is required.
+                        </div>
+                      }
+                      @if (f['email'].errors && f['email'].errors['email']) {
+                        <div>
+                          Please, enter valid email address.
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+                <div class="input-block mb-3">
+                  <label htmlFor="label" class="form-control-label">Password</label>
+                  <div class="pass-group">
+                    <input id="label"
+                      class="form-control"
+                      [type]="show_password ? 'password' : 'text'"
+                      type="password"
+                      formControlName="password"
+                      id="password"
+                    [ngClass]="{
+                      'is-invalid':
+                        f['password'].touched && f['password'].invalid
+                    }"
+                      />
+                      <a  href="javascript:void(0);" (click)="show_password = !show_password">
+                        <span
+                    [ngClass]="
+                      show_password === true
+                        ? 'fas toggle-password fa-eye-slash'
+                        : 'fas toggle-password fa-eye'
+                    "
+
+                        ></span>
+                      </a>
+                      @if (f['password'].touched && f['password'].invalid) {
+                        <div
+                          class="invalid-feedback"
+                          >
+                          @if (
+                            f['password'].errors && f['password'].errors['required']
+                            ) {
+                            <div
+                              >
+                              Password is required.
+                            </div>
+                          }
+                        </div>
+                      }
+                    </div>
+                  </div>
+                  <div class="input-block mb-3">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="custom-control custom-checkbox">
+                          <input
+                            type="checkbox"
+                            class="custom-control-input"
+                            id="cb1"
+                            />
+                            <label htmlFor="label" class="custom-control-label ms-1" for="cb1"
+                              >Remember me</label
+                              >
+                            </div>
+                          </div>
+                          <div class="col-6 text-end">
+                            <a class="forgot-link" [routerLink]="routes.forgot_password"
+                              >Forgot Password ?</a
+                              >
+                            </div>
+                          </div>
+                        </div>
+                        <button
+                          [disabled]="form.invalid"
+                          class="btn btn-lg btn-block btn-primary w-100"
+                          type="submit"
+                          >
+                          Login
+                        </button>
+                        <div class="login-or">
+                          <span class="or-line"></span>
+                          <span class="span-or">or</span>
+                        </div>
+                        <!-- Social Login -->
+                        <div class="social-login mb-3">
+                          <span>Login with</span>
+                          <a href="javascript:void(0);" class="facebook"
+                            ><i class="fab fa-facebook-f"></i></a
+                            ><a href="javascript:void(0);" class="google"
+                            ><i class="fab fa-google"></i
+                          ></a>
+                        </div>
+                        <!-- /Social Login -->
+                        <div class="text-center dont-have">
+                          Don't have an account yet?
+                          <a [routerLink]="routes.register">Register</a>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /Main Wrapper -->
