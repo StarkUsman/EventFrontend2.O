@@ -26,6 +26,9 @@ export class ListComponent {
   showFilter = false;
   dataSource!: MatTableDataSource<vendor>;
   public searchDataValue = '';
+  vendorToDelete: number = 0;
+  vendorToEdit: any = {};
+  newVendor: any = {};  
   // pagination variables end
 
   constructor(
@@ -43,6 +46,7 @@ export class ListComponent {
 
   private getTableData(pageOption: pageSelection): void {
     this.data.getVendors().subscribe((apiRes: apiResultFormat) => {
+      console.log(apiRes);
       this.tableData = [];
       this.serialNumberArray = [];
       this.totalData = apiRes.totalData;
@@ -90,5 +94,31 @@ export class ListComponent {
 
   toggleCollapse() {
     this.isCollapsed = !this.isCollapsed;
+  }
+
+  setVendorToEdit(sNo: number) {
+    this.vendorToEdit = this.tableData.find((vendor) => vendor.sNo === sNo);
+  }
+
+  updateVendor() {
+    this.data.updateVendor(this.vendorToEdit).subscribe((res) => {
+      this.getTableData({ skip: 0, limit: this.pageSize });
+    });
+  }
+
+  addVendor() {
+    this.data.addVendor(this.newVendor).subscribe((res) => {
+      this.getTableData({ skip: 0, limit: this.pageSize });
+    });
+  }
+
+  setVendorToDelete(sNo: number) {
+    this.vendorToDelete = sNo;
+  }
+
+  deleteVendor(sNo: number) {
+    this.data.deleteVendor(sNo).subscribe((res) => {
+      this.getTableData({ skip: 0, limit: this.pageSize });
+    });
   }
 }

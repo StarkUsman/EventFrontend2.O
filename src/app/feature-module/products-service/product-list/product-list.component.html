@@ -1,7 +1,7 @@
 <!-- Page Header -->
 <div class="page-header">
   <div class="content-page-header">
-    <h5>Products / Services</h5>
+    <h5>Products</h5>
     <div class="list-btn">
       <ul class="filter-list">
         <li>
@@ -140,7 +140,7 @@
                       <tbody>
                         @for (data of productlist; track data; let i = $index) {
                           <tr>
-                            <td>{{ data.id }}</td>
+                            <td>{{ data.sNo }}</td>
                             <td>
                               <a href="javascript:void(0);" class="product-list-item-img"
                                 ><img [src]="data.img" alt="image" />
@@ -149,7 +149,7 @@
                               </td>
                               <td>{{ data.code }}</td>
                               <td>{{ data.category }}</td>
-                              <td>{{ data.units }}</td>
+                              <td>{{ data.unit }}</td>
                               <td>{{ data.quantity }}</td>
                               <td>{{ data.sellingPrice }}</td>
                               <td>{{ data.purchasePrice }}</td>
@@ -168,6 +168,7 @@
                                         <a
                                           class="dropdown-item"
                                           [routerLink]="routes.editproducts"
+                                          [queryParams]="{ id: data.id }"
                                           ><i class="far fa-edit me-2"></i>Edit</a
                                           >
                                         </li>
@@ -177,6 +178,7 @@
                                             href="javascript:void(0);"
                                             data-bs-toggle="modal"
                                             data-bs-target="#delete_modal"
+                                            (click)="setProductToDelete(data.id)"
                                             ><i class="far fa-trash-alt me-2"></i>Delete</a
                                             >
                                           </li>
@@ -461,6 +463,7 @@
                         type="reset"
                         data-bs-dismiss="modal"
                         class="w-100 btn btn-primary paid-continue-btn"
+                        (click)="deleteProduct(productToDelete)"
                         >
                         Delete
                       </button>

@@ -130,15 +130,7 @@
                               <td>{{ data.sNo }}</td>
                               <td>
                                 <h2 class="table-avatar">
-                                  <a
-                                    [routerLink]="routes.profile"
-                                    class="avatar avatar-sm me-2"
-                                    ><img
-                                    class="avatar-img rounded-circle"
-                                    [src]="data.img"
-                                    alt="User Image"
-                                  /></a>
-                                  <a [routerLink]="routes.profile"
+                                  <a href="javascript:void(0);"
                                     >{{ data.name }} <span>{{ data.email }}</span></a
                                     >
                                   </h2>
@@ -166,6 +158,7 @@
                                               href="javascript:void(0);"
                                               data-bs-toggle="modal"
                                               data-bs-target="#edit_vendor"
+                                              (click)="setVendorToEdit(data.sNo)"
                                               ><i class="far fa-edit me-2"></i>Edit</a
                                               >
                                             </li>
@@ -175,6 +168,7 @@
                                                 href="javascript:void(0);"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#delete_modal"
+                                                (click)="setVendorToDelete(data.id)"
                                                 ><i class="far fa-trash-alt me-2"></i>Delete</a
                                                 >
                                               </li>
@@ -344,32 +338,32 @@
                                 <div class="col-lg-12 col-sm-12">
                                   <div class="input-block mb-3">
                                     <label for="name">Name</label>
-                                    <input type="text" class="form-control" placeholder="Enter Name">
+                                    <input type="text" class="form-control" [(ngModel)]="newVendor.name" placeholder="Enter Name" required="true">
                                   </div>
                                 </div>
                                 <div class="col-lg-12 col-sm-12">
                                   <div class="input-block mb-3">
                                     <label for="email">Email</label>
-                                    <input type="text" class="form-control" placeholder="Enter Email Address">
+                                    <input type="text" class="form-control" [(ngModel)]="newVendor.email" placeholder="Enter Email Address" required="true">
                                   </div>
                                 </div>
                                 <div class="col-lg-12 col-sm-12">
                                   <div class="input-block mb-3">
                                     <label for="phone">Phone Number</label>
-                                    <input type="number" class="form-control" placeholder="Enter Phone Number">
+                                    <input type="number" class="form-control" [(ngModel)]="newVendor.phone" placeholder="Enter Phone Number" required="true">
                                   </div>
                                 </div>
                                 <div class="col-lg-12 col-sm-12">
                                   <div class="input-block mb-0">
                                     <label for="balance">Closing Balance</label>
-                                    <input type="number" class="form-control" placeholder="Enter Closing Balance Amount">
+                                    <input type="number" class="form-control" [(ngModel)]="newVendor.balance" placeholder="Enter Closing Balance Amount" required="true">
                                   </div>
                                 </div>
                               </div>
                             </div>
                             <div class="modal-footer">
                               <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</a>
-                              <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn">Add Vendor</a>
+                              <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn" (click)="addVendor()">Add Vendor</a>
                             </div>
                           </div>
                         </div>
@@ -393,32 +387,32 @@
                                 <div class="col-lg-12 col-md-12">
                                   <div class="input-block mb-3">
                                     <label for="name">Name</label>
-                                    <input type="text" class="form-control" value="John Smith" placeholder="Enter Name">
+                                    <input type="text" class="form-control" [(ngModel)]="vendorToEdit.name" placeholder="Enter Name">
                                   </div>
                                 </div>
                                 <div class="col-lg-12 col-md-12">
                                   <div class="input-block mb-3">
                                     <label for="Email">Email</label>
-                                    <input type="text" class="form-control" value="john@example.com" placeholder="Select Date">
+                                    <input type="text" class="form-control" [(ngModel)]="vendorToEdit.email" placeholder="Select Date">
                                   </div>
                                 </div>
                                 <div class="col-lg-12 col-md-12">
                                   <div class="input-block mb-3">
                                     <label for="Phone">Phone Number</label>
-                                    <input type="text" class="form-control" value="+1 989-438-3131" placeholder="Enter Reference Number">
+                                    <input type="text" class="form-control" [(ngModel)]="vendorToEdit.phone" placeholder="Enter Reference Number">
                                   </div>
                                 </div>
                                 <div class="col-lg-12 col-md-12">
                                   <div class="input-block mb-0">
                                     <label for="balance">Balance</label>
-                                    <input type="text" class="form-control" value="$4200" placeholder="Enter Reference Number">
+                                    <input type="text" class="form-control" [(ngModel)]="vendorToEdit.balance" placeholder="Enter Reference Number">
                                   </div>
                                 </div>
                               </div>
                             </div>
                             <div class="modal-footer">
                               <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</a>
-                              <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn">Update</a>
+                              <a data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn" (click)="updateVendor()">Update</a>
                             </div>
                           </div>
                         </div>
@@ -437,7 +431,7 @@
                               <div class="modal-btn delete-action">
                                 <div class="row">
                                   <div class="col-6">
-                                    <button type="reset" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-continue-btn">Delete</button>
+                                    <button data-bs-dismiss="modal" class="w-100 btn btn-primary paid-continue-btn" (click)="deleteVendor(vendorToDelete)">Delete</button>
                                   </div>
                                   <div class="col-6">
                                     <button type="submit" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-cancel-btn">Cancel</button>

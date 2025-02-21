@@ -94,27 +94,27 @@
                         <a
                           [routerLink]="routes.purchasesdetails"
                           class="invoice-link"
-                          >{{ data.purchaseId }}</a
+                          >{{ data.purch_id }}</a
                           >
                         </td>
                         <td>
                           <h2 class="table-avatar">
-                            <a
+                            <!-- <a
                               [routerLink]="routes.profile"
                               class="avatar avatar-sm me-2"
                               ><img
                               class="avatar-img rounded-circle"
                               [src]="data.img"
                               alt="User Image"
-                            /></a>
+                            /></a> -->
                             <a [routerLink]="routes.profile"
-                              >{{ data.person }} <span>{{ data.phone }}</span></a
+                              >{{ data.vendor_id }} <span>{{ data.phone }}</span></a
                               >
                             </h2>
                           </td>
-                          <td>{{ data.totalAmount }}</td>
+                          <td>{{ data.total_amount }}</td>
                           <td>{{ data.paymentmode }}</td>
-                          <td>{{ data.date }}</td>
+                          <td>{{ data.purchase_date }}</td>
                           <td>
                             <span
                       [ngClass]="{

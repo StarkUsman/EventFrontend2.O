@@ -27,6 +27,9 @@ export class CategoryComponent  {
     dataSource!: MatTableDataSource<category>;
     public searchDataValue = '';
     //** / pagination variables
+    categoryToDelete: number = 0;
+    categoryToEdit: any = {};
+    newCategory: any = {};
   
 
   constructor(private data: DataService,private pagination: PaginationService , private router: Router) {
@@ -80,7 +83,17 @@ export class CategoryComponent  {
 
   files: File[] = [];
   onSelect(event: { addedFiles: File[] }) {
+    const file = event.addedFiles[0]; 
     this.files.push(...event.addedFiles);
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      if(!this.categoryToEdit.id){
+        this.newCategory.img = reader.result;
+      }
+      this.categoryToEdit.img = reader.result;
+    };
   }
   onRemove(event:File) {
    this.files.splice(this.files.indexOf(event), 1);
@@ -101,5 +114,33 @@ export class CategoryComponent  {
   public toggleData  = false;
   openContent() {
     this.toggleData = !this.toggleData;
+  }
+  
+  setCategoryToEdit(id: number) {
+    this.categoryToEdit = this.category.find((category) => category.id === id);
+  }
+
+  updateCategory() {
+    this.data.updateCategory(this.categoryToEdit).subscribe((res) => {
+      this.getTableData({ skip: 0, limit: this.pageSize });
+      this.files = [];
+    });
+  }
+
+  addCategory() {
+    this.data.addCategory(this.newCategory).subscribe((res) => {
+      this.getTableData({ skip: 0, limit: this.pageSize });
+      this.files = [];
+    });
+  }
+
+  setCategoryToDelete(id: number) {
+    this.categoryToDelete = id;
+  }
+
+  deleteCategory(id: number) {
+    this.data.deleteCategory(id).subscribe((res) => {
+      this.getTableData({ skip: 0, limit: this.pageSize });
+    });
   }
 }

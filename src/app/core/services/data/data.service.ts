@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
 import { routes } from '../../core.index';
-import { SideBar, SideBarData, SideBarMenu, apiResultFormat } from '../../models/models';
+import { SideBar, SideBarData, SideBarMenu, apiResultFormat, vendor } from '../../models/models';
 
 @Injectable({
   providedIn: 'root',
@@ -248,12 +248,25 @@ export class DataService {
     );
   }
   public getVendors() {
-    return this.http.get<apiResultFormat>('assets/JSON/vendors.json').pipe(
+    return this.http.get<apiResultFormat>('http://localhost:3000/vendors').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
     );
   }
+
+  public deleteVendor(sNo: number) {
+    return this.http.delete(`http://localhost:3000/vendors/${sNo}`);
+  }
+
+  public addVendor(vendor: any) {
+    return this.http.post('http://localhost:3000/vendors', vendor);
+  }
+
+  public updateVendor(vendor: any) {
+    return this.http.put(`http://localhost:3000/vendors/${vendor.id}`, vendor);
+  }
+
   public getLedger() {
     return this.http.get<apiResultFormat>('assets/JSON/ledger.json').pipe(
       map((res: apiResultFormat) => {
@@ -314,26 +327,69 @@ export class DataService {
       );
   }
   public getUnits() {
-    return this.http.get<apiResultFormat>('assets/JSON/units.json').pipe(
+    return this.http.get<apiResultFormat>('http://localhost:3000/units').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
     );
   }
+
+  public deleteUnits(sNo: number) {
+    return this.http.delete(`http://localhost:3000/units/${sNo}`);
+  }
+
+  public addUnits(unit: any) {
+    return this.http.post('http://localhost:3000/units', unit);
+  }
+
+  public updateUnits(unit: any) {
+    return this.http.put(`http://localhost:3000/units/${unit.unit_id}`, unit);
+  }
+
   public getCategory() {
-    return this.http.get<apiResultFormat>('assets/JSON/category.json').pipe(
+    return this.http.get<apiResultFormat>('http://localhost:3000/category').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
     );
   }
+
+  public deleteCategory(id: number) {
+    return this.http.delete(`http://localhost:3000/category/${id}`);
+  }
+
+  public addCategory(category: any) {
+    return this.http.post('http://localhost:3000/category', category);
+  }
+
+  public updateCategory(category: any) {
+    return this.http.put(`http://localhost:3000/category/${category.id}`, category);
+  }
+
   public getProductlist() {
-    return this.http.get<apiResultFormat>('assets/JSON/productlist.json').pipe(
+    return this.http.get<apiResultFormat>('http://localhost:3000/products').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
     );
   }
+
+  public deleteProduct(id: number) {
+    return this.http.delete(`http://localhost:3000/products/${id}`);
+  }
+
+  public getProductById(id: number) {
+    return this.http.get(`http://localhost:3000/products/${id}`);
+  }
+
+  public updateProduct(product: any) {
+    return this.http.put(`http://localhost:3000/products/${product.id}`, product);
+  }
+
+  public addProduct(product: any) {
+    return this.http.post('http://localhost:3000/products', product);
+  }
+
   public getcreditnotes() {
     return this.http.get<apiResultFormat>('assets/JSON/creditnotes.json').pipe(
       map((res: apiResultFormat) => {
@@ -469,7 +525,7 @@ export class DataService {
     );
   }
   public getpurchase() {
-    return this.http.get<apiResultFormat>('assets/JSON/purchase.json').pipe(
+    return this.http.get<apiResultFormat>('http://localhost:3000/purchase').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
@@ -750,160 +806,160 @@ public sideBar: any[] = [
           },
         ],
       },
-      {
-        menuValue: 'Applications',
-        route: routes.application,
-        hasSubRoute: true,
-        showSubRoute: false,
-        icon: 'grid',
-        base: 'application',
-        subMenus: [
-          {
-            separateRoute: true,
-            menuValue: 'Chat',
-            tittle: 'Chat',
-            route: routes.chat,
-            base: routes.chat,
-            icon: 'message-square',
-            showAsTab: false,
-          },
-          {
-            separateRoute: true,
-            menuValue: 'Calendar',
-            tittle: 'Calendar',
-            route: routes.calender,
-            base: routes.calender,
-            icon: 'calendar',
-            showAsTab: false,
-          },
-          {
-            separateRoute: true,
-            menuValue: 'Email',
-            tittle: 'Email',
-            route: routes.email,
-            base: routes.email,
-            icon: 'mail',
-            showAsTab: false,
-          },
-        ],
-      },
-      {
-        menuValue: 'Super Admin',
-        route: routes.application,
-        hasSubRoute: true,
-        showSubRoute: false,
-        icon: 'user',
-        base: 'super-admin',
-        subMenus: [
-          {
-            separateRoute: true,
-            menuValue: 'Dashboard',
-            route: routes.superAdminDashboard,
-            base: routes.superAdminDashboard,
-            showAsTab: false,
-          },
-          {
-            separateRoute: true,
-            menuValue: 'Companies',
-            route: routes.companies,
-            base: routes.companies,
-            showAsTab: false,
-          },
-          {
-            separateRoute: true,
-            menuValue: 'Subscription',
-            route: routes.subscription,
-            base: routes.subscription,
-            showAsTab: false,
-          },
-          {
-            separateRoute: true,
-            menuValue: 'Packages',
-            route: routes.packages,
-            base: routes.packages,
-            showAsTab: false,
-          },
-          {
-            separateRoute: true,
-            menuValue: 'Domain',
-            route: routes.domain,
-            base: routes.domain,
-            showAsTab: false,
-          },
-          {
-            separateRoute: true,
-            menuValue: 'Purchase Transaction',
-            route: routes.purchaseTransaction,
-            base: routes.purchaseTransaction,
-            showAsTab: false,
-          },
-        ],
-      },
-      {
-        menuValue: 'Customer',
-        route: routes.customer,
-        view:false,
-        hasSubRoute: true,
-        showSubRoute: false,
-        icon: 'users',
-        base: 'customers',
-        subMenus: [
-          {
-            separateRoute: true,
-            menuValue: 'Customers',
-            tittle: 'Customers',
-            route: routes.customer,
-            base: 'customer',
-            icon: 'users',
-            showAsTab: false,
-          },
-          {
-            separateRoute: true,
-            menuValue: 'Customer Details',
-            tittle: 'Customer Details',
-            route: routes.customerdetails,
-            base: 'customerdetailspage',
-            icon: 'file',
-            showAsTab: false,
-          },
-          {
-            separateRoute: true,
-            menuValue: 'Vendors',
-            tittle: 'Vendors',
-            route: routes.vendorsList,
-            base: 'vendors',
-            icon: 'users',
-            showAsTab: false,
-          },
-        ],
-      },
+      // {
+      //   menuValue: 'Applications',
+      //   route: routes.application,
+      //   hasSubRoute: true,
+      //   showSubRoute: false,
+      //   icon: 'grid',
+      //   base: 'application',
+      //   subMenus: [
+      //     {
+      //       separateRoute: true,
+      //       menuValue: 'Chat',
+      //       tittle: 'Chat',
+      //       route: routes.chat,
+      //       base: routes.chat,
+      //       icon: 'message-square',
+      //       showAsTab: false,
+      //     },
+      //     {
+      //       separateRoute: true,
+      //       menuValue: 'Calendar',
+      //       tittle: 'Calendar',
+      //       route: routes.calender,
+      //       base: routes.calender,
+      //       icon: 'calendar',
+      //       showAsTab: false,
+      //     },
+      //     {
+      //       separateRoute: true,
+      //       menuValue: 'Email',
+      //       tittle: 'Email',
+      //       route: routes.email,
+      //       base: routes.email,
+      //       icon: 'mail',
+      //       showAsTab: false,
+      //     },
+      //   ],
+      // },
+      // {
+      //   menuValue: 'Super Admin',
+      //   route: routes.application,
+      //   hasSubRoute: true,
+      //   showSubRoute: false,
+      //   icon: 'user',
+      //   base: 'super-admin',
+      //   subMenus: [
+      //     {
+      //       separateRoute: true,
+      //       menuValue: 'Dashboard',
+      //       route: routes.superAdminDashboard,
+      //       base: routes.superAdminDashboard,
+      //       showAsTab: false,
+      //     },
+      //     {
+      //       separateRoute: true,
+      //       menuValue: 'Companies',
+      //       route: routes.companies,
+      //       base: routes.companies,
+      //       showAsTab: false,
+      //     },
+      //     {
+      //       separateRoute: true,
+      //       menuValue: 'Subscription',
+      //       route: routes.subscription,
+      //       base: routes.subscription,
+      //       showAsTab: false,
+      //     },
+      //     {
+      //       separateRoute: true,
+      //       menuValue: 'Packages',
+      //       route: routes.packages,
+      //       base: routes.packages,
+      //       showAsTab: false,
+      //     },
+      //     {
+      //       separateRoute: true,
+      //       menuValue: 'Domain',
+      //       route: routes.domain,
+      //       base: routes.domain,
+      //       showAsTab: false,
+      //     },
+      //     {
+      //       separateRoute: true,
+      //       menuValue: 'Purchase Transaction',
+      //       route: routes.purchaseTransaction,
+      //       base: routes.purchaseTransaction,
+      //       showAsTab: false,
+      //     },
+      //   ],
+      // },
+      // {
+      //   menuValue: 'Customer',
+      //   route: routes.customer,
+      //   view:false,
+      //   hasSubRoute: true,
+      //   showSubRoute: false,
+      //   icon: 'users',
+      //   base: 'customers',
+      //   subMenus: [
+      //     {
+      //       separateRoute: true,
+      //       menuValue: 'Customers',
+      //       tittle: 'Customers',
+      //       route: routes.customer,
+      //       base: 'customer',
+      //       icon: 'users',
+      //       showAsTab: false,
+      //     },
+      //     {
+      //       separateRoute: true,
+      //       menuValue: 'Customer Details',
+      //       tittle: 'Customer Details',
+      //       route: routes.customerdetails,
+      //       base: 'customerdetailspage',
+      //       icon: 'file',
+      //       showAsTab: false,
+      //     },
+      //     {
+      //       separateRoute: true,
+      //       menuValue: 'Vendors',
+      //       tittle: 'Vendors',
+      //       route: routes.vendorsList,
+      //       base: 'vendors',
+      //       icon: 'users',
+      //       showAsTab: false,
+      //     },
+      //   ],
+      // },
     ],
   },
   {
-    tittle: 'Customers',
+    tittle: 'Vendors',
     active: false,
     icon: '',
     showAsTab: false,
     separateRoute: false,
     menu: [
-      {
-        menuValue: 'Customers',
-        route: routes.customer,
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'users',
-        base: 'customer',
-        subMenus: [],
-      },
-      {
-        menuValue: 'Customer Details',
-        route: routes.customerdetails,
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'file',
-        base: 'customerdetailspage',
-        subMenus: [],
-      },
+      // {
+      //   menuValue: 'Customers',
+      //   route: routes.customer,
+      //   hasSubRoute: false,
+      //   showSubRoute: false,
+      //   icon: 'users',
+      //   base: 'customer',
+      //   subMenus: [],
+      // },
+      // {
+      //   menuValue: 'Customer Details',
+      //   route: routes.customerdetails,
+      //   hasSubRoute: false,
+      //   showSubRoute: false,
+      //   icon: 'file',
+      //   base: 'customerdetailspage',
+      //   subMenus: [],
+      // },
       {
         menuValue: 'Vendors',
         route: routes.vendorsList,
@@ -986,91 +1042,91 @@ public sideBar: any[] = [
       },
     ],
   },
-  {
-    tittle: 'Signature',
-    active: false,
-    icon: 'airplay',
-    showAsTab: false,
-    separateRoute: false,
-    menu: [
-      {
-        menuValue: 'List of Signature',
-        route: routes.signaturelist,
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'clipboard',
-        base: 'signature-list',
-        subMenus: [],
-      },
-      {
-        menuValue: 'Signature Invoice',
-        route: routes.signatureinvoice,
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'box',
-        base: 'signature-invoice',
-        subMenus: [],
-      },
-    ],
-  },
-  {
-    tittle: 'Sales',
-    active: false,
-    icon: 'airplay',
-    showAsTab: false,
-    separateRoute: false,
-    menu: [
-      {
-        menuValue: 'Invoices',
-        route: routes.dashboard,
-        hasSubRoute: true,
-        showSubRoute: false,
-        icon: 'clipboard',
-        base: 'invoices',
-        subMenus: [
-          {
-            menuValue: 'Invoices List',
-            route: routes.invoiceList,
-            base: routes.invoiceList,
-          },
+  // {
+  //   tittle: 'Signature',
+  //   active: false,
+  //   icon: 'airplay',
+  //   showAsTab: false,
+  //   separateRoute: false,
+  //   menu: [
+  //     {
+  //       menuValue: 'List of Signature',
+  //       route: routes.signaturelist,
+  //       hasSubRoute: false,
+  //       showSubRoute: false,
+  //       icon: 'clipboard',
+  //       base: 'signature-list',
+  //       subMenus: [],
+  //     },
+  //     {
+  //       menuValue: 'Signature Invoice',
+  //       route: routes.signatureinvoice,
+  //       hasSubRoute: false,
+  //       showSubRoute: false,
+  //       icon: 'box',
+  //       base: 'signature-invoice',
+  //       subMenus: [],
+  //     },
+  //   ],
+  // },
+  // {
+  //   tittle: 'Sales',
+  //   active: false,
+  //   icon: 'airplay',
+  //   showAsTab: false,
+  //   separateRoute: false,
+  //   menu: [
+  //     {
+  //       menuValue: 'Invoices',
+  //       route: routes.dashboard,
+  //       hasSubRoute: true,
+  //       showSubRoute: false,
+  //       icon: 'clipboard',
+  //       base: 'invoices',
+  //       subMenus: [
+  //         {
+  //           menuValue: 'Invoices List',
+  //           route: routes.invoiceList,
+  //           base: routes.invoiceList,
+  //         },
 
-          {
-            menuValue: 'Invoice Details (Admin)',
-            route: routes.invoicedetailsadmin,
-            base: routes.invoicedetailsadmin,
-          },
-          {
-            menuValue: 'Invoice Details (Customer)',
-            route: routes.invoicedetails,
-            base: routes.invoicedetails,
-          },
-          {
-            menuValue: 'Invoices Template',
-            route: routes.invoicetemplate,
-            base: routes.invoicetemplate,
-          },
-        ],
-      },
-      {
-        menuValue: 'Recurring Invoices',
-        route: routes.recurringinvoices,
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'clipboard',
-        base: 'recurring-pages',
-        subMenus: [],
-      },
-      {
-        menuValue: 'Credit Notes',
-        route: routes.creditnotes,
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'edit',
-        base: 'credit-note-pages',
-        subMenus: [],
-      },
-    ],
-  },
+  //         {
+  //           menuValue: 'Invoice Details (Admin)',
+  //           route: routes.invoicedetailsadmin,
+  //           base: routes.invoicedetailsadmin,
+  //         },
+  //         {
+  //           menuValue: 'Invoice Details (Customer)',
+  //           route: routes.invoicedetails,
+  //           base: routes.invoicedetails,
+  //         },
+  //         {
+  //           menuValue: 'Invoices Template',
+  //           route: routes.invoicetemplate,
+  //           base: routes.invoicetemplate,
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       menuValue: 'Recurring Invoices',
+  //       route: routes.recurringinvoices,
+  //       hasSubRoute: false,
+  //       showSubRoute: false,
+  //       icon: 'clipboard',
+  //       base: 'recurring-pages',
+  //       subMenus: [],
+  //     },
+  //     {
+  //       menuValue: 'Credit Notes',
+  //       route: routes.creditnotes,
+  //       hasSubRoute: false,
+  //       showSubRoute: false,
+  //       icon: 'edit',
+  //       base: 'credit-note-pages',
+  //       subMenus: [],
+  //     },
+  //   ],
+  // },
 
   {
     tittle: 'Purchases',
@@ -1088,24 +1144,24 @@ public sideBar: any[] = [
         base: 'purchasepage',
         subMenus: [],
       },
-      {
-        menuValue: 'Purchase Orders',
-        route: routes.purchaseorders,
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'shopping-bag',
-        base: 'purchase-orders',
-        subMenus: [],
-      },
-      {
-        menuValue: 'Debit Notes',
-        route: routes.debitnotes,
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'file-text',
-        base: 'debit-notes',
-        subMenus: [],
-      },
+      // {
+      //   menuValue: 'Purchase Orders',
+      //   route: routes.purchaseorders,
+      //   hasSubRoute: false,
+      //   showSubRoute: false,
+      //   icon: 'shopping-bag',
+      //   base: 'purchase-orders',
+      //   subMenus: [],
+      // },
+      // {
+      //   menuValue: 'Debit Notes',
+      //   route: routes.debitnotes,
+      //   hasSubRoute: false,
+      //   showSubRoute: false,
+      //   icon: 'file-text',
+      //   base: 'debit-notes',
+      //   subMenus: [],
+      // },
     ],
   },
   {
@@ -1135,33 +1191,33 @@ public sideBar: any[] = [
       },
     ],
   },
-  {
-    tittle: 'Quotations',
-    active: false,
-    icon: 'airplay',
-    showAsTab: false,
-    separateRoute: false,
-    menu: [
-      {
-        menuValue: 'Quotations',
-        route: routes.quotations,
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'clipboard',
-        base: 'quotationspage',
-        subMenus: [],
-      },
-      {
-        menuValue: 'Delivery Challans',
-        route: routes.deliveryChallansList,
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'file-text',
-        base: 'delivery-challans',
-        subMenus: [],
-      },
-    ],
-  },
+  // {
+  //   tittle: 'Quotations',
+  //   active: false,
+  //   icon: 'airplay',
+  //   showAsTab: false,
+  //   separateRoute: false,
+  //   menu: [
+  //     {
+  //       menuValue: 'Quotations',
+  //       route: routes.quotations,
+  //       hasSubRoute: false,
+  //       showSubRoute: false,
+  //       icon: 'clipboard',
+  //       base: 'quotationspage',
+  //       subMenus: [],
+  //     },
+  //     {
+  //       menuValue: 'Delivery Challans',
+  //       route: routes.deliveryChallansList,
+  //       hasSubRoute: false,
+  //       showSubRoute: false,
+  //       icon: 'file-text',
+  //       base: 'delivery-challans',
+  //       subMenus: [],
+  //     },
+  //   ],
+  // },
   {
     tittle: 'Reports',
     active: false,
@@ -1275,572 +1331,572 @@ public sideBar: any[] = [
         base: 'roles-permission',
         subMenus: [],
       },
-      {
-        menuValue: 'Delete Account Request',
-        route: routes.deleteaccountrequest,
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'trash-2',
-        base: 'delete-account-request',
-        subMenus: [],
-      },
+      // {
+      //   menuValue: 'Delete Account Request',
+      //   route: routes.deleteaccountrequest,
+      //   hasSubRoute: false,
+      //   showSubRoute: false,
+      //   icon: 'trash-2',
+      //   base: 'delete-account-request',
+      //   subMenus: [],
+      // },
     ],
   },
-  {
-    tittle: 'Membership',
-    active: false,
-    icon: 'airplay',
-    showAsTab: false,
-    separateRoute: false,
-    menu: [
-      {
-        menuValue: 'Membership',
-        route: routes.membership,
-        hasSubRoute: true,
-        showSubRoute: false,
-        icon: 'book',
-        base: 'membership',
-        subMenus: [
-          {
-            menuValue: 'Membership Plans',
-            route: routes.membershipplans,
-            base: routes.membershipplans,
-          },
-          {
-            menuValue: 'Membership Addons',
-            route: routes.membershipaddons,
-            base: routes.membershipaddons,
-          },
-          {
-            menuValue: 'Subscribers',
-            route: routes.subscribers,
-            base: routes.subscribers,
-          },
-          {
-            menuValue: 'Transactions',
-            route: routes.transactions,
-            base: routes.transactions,
-          },
-        ],
-      },
-    ],
-  },
-  {
-    tittle: 'Content (CMS)',
-    active: false,
-    icon: 'file',
-    showAsTab: false,
-    separateRoute: false,
-    menu: [
-      {
-        menuValue: 'Pages',
-        route: routes.pages,
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'folder',
-        base: 'pages',
-        subMenus: [],
-      },
-      {
-        menuValue: 'Blogs',
-        route: routes.blogs,
-        hasSubRoute: true,
-        showSubRoute: false,
-        icon: 'grid',
-        base: 'blog',
-        subMenus: [
-          {
-            menuValue: 'All Blogs',
-            route: routes.allBlogs,
-            base: routes.allBlogs,
-          },
-          {
-            menuValue: 'Categories',
-            route: routes.categories,
-            base: routes.categories,
-          },
-          {
-            menuValue: 'Blog comments',
-            route: routes.blogcomments,
-            base: routes.blogcomments,
-          },
-        ],
-      },
-      {
-        menuValue: 'Location',
-        route: routes.paymentsList,
-        hasSubRoute: true,
-        showSubRoute: false,
-        icon: 'map-pin',
-        base: 'location',
-        subMenus: [
-          {
-            menuValue: 'Countries',
-            route: routes.countries,
-            base: routes.countries,
-          },
-          {
-            menuValue: 'States',
-            route: routes.states,
-            base: routes.states,
-          },
-          {
-            menuValue: 'Cities',
-            route: routes.cities,
-            base: routes.cities,
-          },
-        ],
-      },
-      {
-        menuValue: 'Testimonials',
-        route: routes.testimonials,
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'message-square',
-        base: 'testimonial-page',
-        subMenus: [],
-      },
-      {
-        menuValue: 'FAQ',
-        route: routes.faq,
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'alert-circle',
-        base: 'faq',
-        subMenus: [],
-      },
-    ],
-  },
-  {
-    tittle: 'Support',
-    active: false,
-    icon: 'airplay',
-    showAsTab: false,
-    separateRoute: false,
-    menu: [
-      {
-        menuValue: 'Contact Messages',
-        route: routes.contactmessages,
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'printer',
-        base: 'contact-messages',
-        subMenus: [],
-      },
-      {
-        menuValue: 'Tickets',
-        route: routes.tickets,
-        hasSubRoute: true,
-        showSubRoute: false,
-        icon: 'save',
-        base: 'tickets',
-        subMenus: [
-          {
-            menuValue: 'Tickets',
-            route: routes.tickets,
-            base: routes.tickets,
-          },
-          {
-            menuValue: 'Tickets List',
-            route: routes.ticketslist,
-            base: routes.ticketslist,
-          },
-          {
-            menuValue: 'Tickets Kanban',
-            route: routes.ticketskanban,
-            base: routes.ticketskanban,
-          },
-          {
-            menuValue: 'Ticket Overview',
-            route: routes.ticketdetails,
-            base: routes.ticketdetails,
-          },
-        ],
-      },
-    ],
-  },
+  // {
+  //   tittle: 'Membership',
+  //   active: false,
+  //   icon: 'airplay',
+  //   showAsTab: false,
+  //   separateRoute: false,
+  //   menu: [
+  //     {
+  //       menuValue: 'Membership',
+  //       route: routes.membership,
+  //       hasSubRoute: true,
+  //       showSubRoute: false,
+  //       icon: 'book',
+  //       base: 'membership',
+  //       subMenus: [
+  //         {
+  //           menuValue: 'Membership Plans',
+  //           route: routes.membershipplans,
+  //           base: routes.membershipplans,
+  //         },
+  //         {
+  //           menuValue: 'Membership Addons',
+  //           route: routes.membershipaddons,
+  //           base: routes.membershipaddons,
+  //         },
+  //         {
+  //           menuValue: 'Subscribers',
+  //           route: routes.subscribers,
+  //           base: routes.subscribers,
+  //         },
+  //         {
+  //           menuValue: 'Transactions',
+  //           route: routes.transactions,
+  //           base: routes.transactions,
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
+  // {
+  //   tittle: 'Content (CMS)',
+  //   active: false,
+  //   icon: 'file',
+  //   showAsTab: false,
+  //   separateRoute: false,
+  //   menu: [
+  //     {
+  //       menuValue: 'Pages',
+  //       route: routes.pages,
+  //       hasSubRoute: false,
+  //       showSubRoute: false,
+  //       icon: 'folder',
+  //       base: 'pages',
+  //       subMenus: [],
+  //     },
+  //     {
+  //       menuValue: 'Blogs',
+  //       route: routes.blogs,
+  //       hasSubRoute: true,
+  //       showSubRoute: false,
+  //       icon: 'grid',
+  //       base: 'blog',
+  //       subMenus: [
+  //         {
+  //           menuValue: 'All Blogs',
+  //           route: routes.allBlogs,
+  //           base: routes.allBlogs,
+  //         },
+  //         {
+  //           menuValue: 'Categories',
+  //           route: routes.categories,
+  //           base: routes.categories,
+  //         },
+  //         {
+  //           menuValue: 'Blog comments',
+  //           route: routes.blogcomments,
+  //           base: routes.blogcomments,
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       menuValue: 'Location',
+  //       route: routes.paymentsList,
+  //       hasSubRoute: true,
+  //       showSubRoute: false,
+  //       icon: 'map-pin',
+  //       base: 'location',
+  //       subMenus: [
+  //         {
+  //           menuValue: 'Countries',
+  //           route: routes.countries,
+  //           base: routes.countries,
+  //         },
+  //         {
+  //           menuValue: 'States',
+  //           route: routes.states,
+  //           base: routes.states,
+  //         },
+  //         {
+  //           menuValue: 'Cities',
+  //           route: routes.cities,
+  //           base: routes.cities,
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       menuValue: 'Testimonials',
+  //       route: routes.testimonials,
+  //       hasSubRoute: false,
+  //       showSubRoute: false,
+  //       icon: 'message-square',
+  //       base: 'testimonial-page',
+  //       subMenus: [],
+  //     },
+  //     {
+  //       menuValue: 'FAQ',
+  //       route: routes.faq,
+  //       hasSubRoute: false,
+  //       showSubRoute: false,
+  //       icon: 'alert-circle',
+  //       base: 'faq',
+  //       subMenus: [],
+  //     },
+  //   ],
+  // },
+  // {
+  //   tittle: 'Support',
+  //   active: false,
+  //   icon: 'airplay',
+  //   showAsTab: false,
+  //   separateRoute: false,
+  //   menu: [
+  //     {
+  //       menuValue: 'Contact Messages',
+  //       route: routes.contactmessages,
+  //       hasSubRoute: false,
+  //       showSubRoute: false,
+  //       icon: 'printer',
+  //       base: 'contact-messages',
+  //       subMenus: [],
+  //     },
+  //     {
+  //       menuValue: 'Tickets',
+  //       route: routes.tickets,
+  //       hasSubRoute: true,
+  //       showSubRoute: false,
+  //       icon: 'save',
+  //       base: 'tickets',
+  //       subMenus: [
+  //         {
+  //           menuValue: 'Tickets',
+  //           route: routes.tickets,
+  //           base: routes.tickets,
+  //         },
+  //         {
+  //           menuValue: 'Tickets List',
+  //           route: routes.ticketslist,
+  //           base: routes.ticketslist,
+  //         },
+  //         {
+  //           menuValue: 'Tickets Kanban',
+  //           route: routes.ticketskanban,
+  //           base: routes.ticketskanban,
+  //         },
+  //         {
+  //           menuValue: 'Ticket Overview',
+  //           route: routes.ticketdetails,
+  //           base: routes.ticketdetails,
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
 
-  {
-    tittle: 'Pages',
-    active: false,
-    icon: 'file',
-    showAsTab: false,
-    separateRoute: false,
-    menu: [
-      {
-        menuValue: 'Profile',
-        route: routes.profile,
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'user-plus',
-        base: 'profile',
-        subMenus: [],
-      },
-      {
-        menuValue: 'Authentication',
-        route: routes.dashboard,
-        hasSubRoute: true,
-        showSubRoute: false,
-        icon: 'lock',
-        base: '',
-        subMenus: [
-          { menuValue: 'Login', route: routes.login, base: routes.login },
-          {
-            menuValue: 'Register',
-            route: routes.register,
-            base: routes.register,
-          },
-          {
-            menuValue: 'Forgot Password',
-            route: routes.forgot_password,
-            base: routes.forgot_password,
-          },
-          {
-            menuValue: 'Lock Screen',
-            route: routes.lock_screen,
-            base: routes.lock_screen,
-          },
-        ],
-      },
+  // {
+  //   tittle: 'Pages',
+  //   active: false,
+  //   icon: 'file',
+  //   showAsTab: false,
+  //   separateRoute: false,
+  //   menu: [
+  //     {
+  //       menuValue: 'Profile',
+  //       route: routes.profile,
+  //       hasSubRoute: false,
+  //       showSubRoute: false,
+  //       icon: 'user-plus',
+  //       base: 'profile',
+  //       subMenus: [],
+  //     },
+  //     {
+  //       menuValue: 'Authentication',
+  //       route: routes.dashboard,
+  //       hasSubRoute: true,
+  //       showSubRoute: false,
+  //       icon: 'lock',
+  //       base: '',
+  //       subMenus: [
+  //         { menuValue: 'Login', route: routes.login, base: routes.login },
+  //         {
+  //           menuValue: 'Register',
+  //           route: routes.register,
+  //           base: routes.register,
+  //         },
+  //         {
+  //           menuValue: 'Forgot Password',
+  //           route: routes.forgot_password,
+  //           base: routes.forgot_password,
+  //         },
+  //         {
+  //           menuValue: 'Lock Screen',
+  //           route: routes.lock_screen,
+  //           base: routes.lock_screen,
+  //         },
+  //       ],
+  //     },
 
-      {
-        menuValue: 'Error Pages',
-        route: routes.errorPage404,
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'alert-octagon',
-        base: '1',
-      },
-      {
-        menuValue: 'Blank Page',
-        route: routes.blankPage,
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'file',
-        base: 'blank-page',
-        subMenus: [],
-      },
-      {
-        menuValue: 'Google Maps',
-        route: routes.googleMaps,
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'map-pin',
-        base: 'google-maps',
-        subMenus: [],
-      },
-    ],
-  },
-  {
-    tittle: 'UI Interface',
-    active: false,
-    icon: 'layers',
-    showAsTab: false,
-    separateRoute: false,
-    menu: [
-      {
-        menuValue: 'Base UI',
-        route: routes.dashboard,
-        hasSubRoute: true,
-        showSubRoute: false,
-        icon: 'shield',
-        base: 'base-ui',
-        subMenus: [
-          {
-            menuValue: 'Alerts',
-            route: routes.alert,
-            base: routes.alert,
-          },
-          {
-            menuValue: 'Accordions',
-            route: routes.accordions,
-            base: routes.accordions,
-          },
-          { menuValue: 'Avatar', route: routes.avatar, base: routes.avatar },
-          { menuValue: 'Badges', route: routes.badges, base: routes.badges },
-          {
-            menuValue: 'Buttons',
-            route: routes.buttons,
-            base: routes.buttons,
-          },
-          {
-            menuValue: 'Button Group',
-            route: routes.buttonGroup,
-            base: routes.buttonGroup,
-          },
-          {
-            menuValue: 'Breadcrumb',
-            route: routes.breadcrumb,
-            base: routes.breadcrumb,
-          },
-          { menuValue: 'Cards', route: routes.cards, base: routes.cards },
-          {
-            menuValue: 'Carousel',
-            route: routes.carousel,
-            base: routes.carousel,
-          },
-          {
-            menuValue: 'Dropdowns',
-            route: routes.dropDown,
-            base: routes.dropDown,
-          },
-          { menuValue: 'Grid', route: routes.grid, base: routes.grid },
-          { menuValue: 'Images', route: routes.images, base: routes.images },
-          {
-            menuValue: 'Lightbox',
-            route: routes.lightBox,
-            base: routes.lightBox,
-          },
-          { menuValue: 'Media', route: routes.media, base: routes.media },
-          { menuValue: 'Modals', route: routes.modal, base: routes.modal },
-          {
-            menuValue: 'Offcanvas',
-            route: routes.offcanvas,
-            base: routes.offcanvas,
-          },
-          {
-            menuValue: 'Pagination',
-            route: routes.pagination,
-            base: routes.pagination,
-          },
+  //     {
+  //       menuValue: 'Error Pages',
+  //       route: routes.errorPage404,
+  //       hasSubRoute: false,
+  //       showSubRoute: false,
+  //       icon: 'alert-octagon',
+  //       base: '1',
+  //     },
+  //     {
+  //       menuValue: 'Blank Page',
+  //       route: routes.blankPage,
+  //       hasSubRoute: false,
+  //       showSubRoute: false,
+  //       icon: 'file',
+  //       base: 'blank-page',
+  //       subMenus: [],
+  //     },
+  //     {
+  //       menuValue: 'Google Maps',
+  //       route: routes.googleMaps,
+  //       hasSubRoute: false,
+  //       showSubRoute: false,
+  //       icon: 'map-pin',
+  //       base: 'google-maps',
+  //       subMenus: [],
+  //     },
+  //   ],
+  // },
+  // {
+  //   tittle: 'UI Interface',
+  //   active: false,
+  //   icon: 'layers',
+  //   showAsTab: false,
+  //   separateRoute: false,
+  //   menu: [
+  //     {
+  //       menuValue: 'Base UI',
+  //       route: routes.dashboard,
+  //       hasSubRoute: true,
+  //       showSubRoute: false,
+  //       icon: 'shield',
+  //       base: 'base-ui',
+  //       subMenus: [
+  //         {
+  //           menuValue: 'Alerts',
+  //           route: routes.alert,
+  //           base: routes.alert,
+  //         },
+  //         {
+  //           menuValue: 'Accordions',
+  //           route: routes.accordions,
+  //           base: routes.accordions,
+  //         },
+  //         { menuValue: 'Avatar', route: routes.avatar, base: routes.avatar },
+  //         { menuValue: 'Badges', route: routes.badges, base: routes.badges },
+  //         {
+  //           menuValue: 'Buttons',
+  //           route: routes.buttons,
+  //           base: routes.buttons,
+  //         },
+  //         {
+  //           menuValue: 'Button Group',
+  //           route: routes.buttonGroup,
+  //           base: routes.buttonGroup,
+  //         },
+  //         {
+  //           menuValue: 'Breadcrumb',
+  //           route: routes.breadcrumb,
+  //           base: routes.breadcrumb,
+  //         },
+  //         { menuValue: 'Cards', route: routes.cards, base: routes.cards },
+  //         {
+  //           menuValue: 'Carousel',
+  //           route: routes.carousel,
+  //           base: routes.carousel,
+  //         },
+  //         {
+  //           menuValue: 'Dropdowns',
+  //           route: routes.dropDown,
+  //           base: routes.dropDown,
+  //         },
+  //         { menuValue: 'Grid', route: routes.grid, base: routes.grid },
+  //         { menuValue: 'Images', route: routes.images, base: routes.images },
+  //         {
+  //           menuValue: 'Lightbox',
+  //           route: routes.lightBox,
+  //           base: routes.lightBox,
+  //         },
+  //         { menuValue: 'Media', route: routes.media, base: routes.media },
+  //         { menuValue: 'Modals', route: routes.modal, base: routes.modal },
+  //         {
+  //           menuValue: 'Offcanvas',
+  //           route: routes.offcanvas,
+  //           base: routes.offcanvas,
+  //         },
+  //         {
+  //           menuValue: 'Pagination',
+  //           route: routes.pagination,
+  //           base: routes.pagination,
+  //         },
 
-          {
-            menuValue: 'Progress Bars',
-            route: routes.progressBars,
-            base: routes.progressBars,
-          },
-          {
-            menuValue: 'Placeholders',
-            route: routes.placeholder,
-            base: routes.placeholder,
-          },
+  //         {
+  //           menuValue: 'Progress Bars',
+  //           route: routes.progressBars,
+  //           base: routes.progressBars,
+  //         },
+  //         {
+  //           menuValue: 'Placeholders',
+  //           route: routes.placeholder,
+  //           base: routes.placeholder,
+  //         },
           
-          {
-            menuValue: 'Spinner',
-            route: routes.spinner,
-            base: routes.rangeSlider,
-          },
-          { menuValue: 'Tabs', route: routes.tabs, base: routes.tabs },
-          { menuValue: 'Toasts', route: routes.toasts, base: routes.toasts },
-          {
-            menuValue: 'Tooltip',
-            route: routes.tooltip,
-            base: routes.tooltip,
-          },
-          {
-            menuValue: 'Typography',
-            route: routes.typography,
-            base: routes.typography,
-          },
-          { menuValue: 'Videos', route: routes.video, base: routes.video },
-        ],
-      },
-      {
-        menuValue: 'Elements',
-        route: routes.dashboard,
-        hasSubRoute: true,
-        showSubRoute: false,
-        icon: 'box',
-        base: 'elements',
-        subMenus: [
-          { menuValue: 'Ribbon', route: routes.ribbon, base: routes.ribbon },
-          {
-            menuValue: 'Clipboard',
-            route: routes.clipboards,
-            base: routes.clipboards,
-          },
-          {
-            menuValue: 'Drag & Drop',
-            route: routes.dragDrop,
-            base: routes.dragDrop,
-          },
-          {
-            menuValue: 'Rating',
-            route: routes.rating,
-            base: routes.rating,
-          },
-          {
-            menuValue: 'Text Editor',
-            route: routes.textEditor,
-            base: routes.textEditor,
-          },
-          {
-            menuValue: 'Counter',
-            route: routes.counter,
-            base: routes.counter,
-          },
-          {
-            menuValue: 'Scrollbar',
-            route: routes.scrollbar,
-            base: routes.scrollbar,
-          },
-          {
-            menuValue: 'Notification',
-            route: routes.notification,
-            base: routes.notification,
-          },
+  //         {
+  //           menuValue: 'Spinner',
+  //           route: routes.spinner,
+  //           base: routes.rangeSlider,
+  //         },
+  //         { menuValue: 'Tabs', route: routes.tabs, base: routes.tabs },
+  //         { menuValue: 'Toasts', route: routes.toasts, base: routes.toasts },
+  //         {
+  //           menuValue: 'Tooltip',
+  //           route: routes.tooltip,
+  //           base: routes.tooltip,
+  //         },
+  //         {
+  //           menuValue: 'Typography',
+  //           route: routes.typography,
+  //           base: routes.typography,
+  //         },
+  //         { menuValue: 'Videos', route: routes.video, base: routes.video },
+  //       ],
+  //     },
+  //     {
+  //       menuValue: 'Elements',
+  //       route: routes.dashboard,
+  //       hasSubRoute: true,
+  //       showSubRoute: false,
+  //       icon: 'box',
+  //       base: 'elements',
+  //       subMenus: [
+  //         { menuValue: 'Ribbon', route: routes.ribbon, base: routes.ribbon },
+  //         {
+  //           menuValue: 'Clipboard',
+  //           route: routes.clipboards,
+  //           base: routes.clipboards,
+  //         },
+  //         {
+  //           menuValue: 'Drag & Drop',
+  //           route: routes.dragDrop,
+  //           base: routes.dragDrop,
+  //         },
+  //         {
+  //           menuValue: 'Rating',
+  //           route: routes.rating,
+  //           base: routes.rating,
+  //         },
+  //         {
+  //           menuValue: 'Text Editor',
+  //           route: routes.textEditor,
+  //           base: routes.textEditor,
+  //         },
+  //         {
+  //           menuValue: 'Counter',
+  //           route: routes.counter,
+  //           base: routes.counter,
+  //         },
+  //         {
+  //           menuValue: 'Scrollbar',
+  //           route: routes.scrollbar,
+  //           base: routes.scrollbar,
+  //         },
+  //         {
+  //           menuValue: 'Notification',
+  //           route: routes.notification,
+  //           base: routes.notification,
+  //         },
 
-          {
-            menuValue: 'Timeline',
-            route: routes.timeline,
-            base: routes.timeline,
-          },
-          {
-            menuValue: 'Horizontal Timeline',
-            route: routes.horizontal,
-            base: routes.horizontal,
-          },
-          {
-            menuValue: 'Form Wizard',
-            route: routes.formWizard,
-            base: routes.formWizard,
-          },
-        ],
-      },
-      {
-        menuValue: 'Charts',
-        route: routes.dashboard,
-        hasSubRoute: true,
-        showSubRoute: false,
-        icon: 'bar-chart-2',
-        base: 'chart',
-        subMenus: [
-          {
-            menuValue: 'Apex Charts',
-            route: routes.apexChart,
-            base: routes.apexChart,
-          },
-          {
-            menuValue: 'Ng2 Charts',
-            route: routes.ngTwoCharts,
-            base: routes.ngTwoCharts,
-          }
-        ],
-      },
-      {
-        menuValue: 'Icons',
-        route: routes.dashboard,
-        hasSubRoute: true,
-        showSubRoute: false,
-        icon: 'award',
-        base: 'icon',
-        subMenus: [
-          {
-            menuValue: 'Fontawesome Icons',
-            route: routes.fontawesome,
-            base: routes.fontawesome,
-          },
-          {
-            menuValue: 'Feather Icons',
-            route: routes.feather,
-            base: routes.feather,
-          },
-          {
-            menuValue: 'Ionic Icons',
-            route: routes.ionic,
-            base: routes.ionic,
-          },
-          {
-            menuValue: 'Material Icons',
-            route: routes.material,
-            base: routes.material,
-          },
-          { menuValue: 'pe7 Icons', route: routes.pe7, base: routes.pe7 },
-          {
-            menuValue: 'Simpleline Icons',
-            route: routes.simpleLine,
-            base: routes.simpleLine,
-          },
-          {
-            menuValue: 'Themify Icons',
-            route: routes.themify,
-            base: routes.themify,
-          },
-          {
-            menuValue: 'Weather Icons',
-            route: routes.weather,
-            base: routes.weather,
-          },
-          {
-            menuValue: 'Typicon Icons',
-            route: routes.typicon,
-            base: routes.typicon,
-          },
-          { menuValue: 'Flag Icons', route: routes.flag, base: routes.flag },
-        ],
-      },
-      {
-        menuValue: 'Forms',
-        route: routes.dashboard,
-        hasSubRoute: true,
-        showSubRoute: false,
-        icon: 'file-plus',
-        base: 'forms',
-        subMenus: [
-          {
-            menuValue: 'Basic Inputs',
-            route: routes.basicForm,
-            base: routes.basicForm,
-          },
-          {
-            menuValue: 'Input Groups',
-            route: routes.inputGroups,
-            base: routes.inputGroups,
-          },
-          {
-            menuValue: 'Horizontal Form',
-            route: routes.horizontalForm,
-            base: routes.horizontalForm,
-          },
-          {
-            menuValue: 'Vertical Form',
-            route: routes.verticalForm,
-            base: routes.verticalForm,
-          },
-          {
-            menuValue: 'Form Mask',
-            route: routes.formMask,
-            base: routes.formMask,
-          },
-          {
-            menuValue: 'Form Validation',
-            route: routes.formValidation,
-            base: routes.formValidation,
-          },
-          {
-            menuValue: 'Form Select2',
-            route: routes.formSelect2,
-            base: routes.formSelect2,
-          },
-          {
-            menuValue: 'File Upload',
-            route: routes.fileUpload,
-            base: routes.fileUpload,
-          },
-        ],
-      },
-      {
-        menuValue: 'Tables',
-        route: routes.dashboard,
-        hasSubRoute: true,
-        showSubRoute: false,
-        icon: 'alert-octagon',
-        base: 'tables',
-        subMenus: [
-          {
-            menuValue: 'Basic Tables',
-            route: routes.basicTable,
-            base: routes.basicTable,
-          },
-          {
-            menuValue: 'Data Tables',
-            route: routes.dataTable,
-            base: routes.dataTable,
-          },
-        ],
-      },
-    ],
-  },
+  //         {
+  //           menuValue: 'Timeline',
+  //           route: routes.timeline,
+  //           base: routes.timeline,
+  //         },
+  //         {
+  //           menuValue: 'Horizontal Timeline',
+  //           route: routes.horizontal,
+  //           base: routes.horizontal,
+  //         },
+  //         {
+  //           menuValue: 'Form Wizard',
+  //           route: routes.formWizard,
+  //           base: routes.formWizard,
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       menuValue: 'Charts',
+  //       route: routes.dashboard,
+  //       hasSubRoute: true,
+  //       showSubRoute: false,
+  //       icon: 'bar-chart-2',
+  //       base: 'chart',
+  //       subMenus: [
+  //         {
+  //           menuValue: 'Apex Charts',
+  //           route: routes.apexChart,
+  //           base: routes.apexChart,
+  //         },
+  //         {
+  //           menuValue: 'Ng2 Charts',
+  //           route: routes.ngTwoCharts,
+  //           base: routes.ngTwoCharts,
+  //         }
+  //       ],
+  //     },
+  //     {
+  //       menuValue: 'Icons',
+  //       route: routes.dashboard,
+  //       hasSubRoute: true,
+  //       showSubRoute: false,
+  //       icon: 'award',
+  //       base: 'icon',
+  //       subMenus: [
+  //         {
+  //           menuValue: 'Fontawesome Icons',
+  //           route: routes.fontawesome,
+  //           base: routes.fontawesome,
+  //         },
+  //         {
+  //           menuValue: 'Feather Icons',
+  //           route: routes.feather,
+  //           base: routes.feather,
+  //         },
+  //         {
+  //           menuValue: 'Ionic Icons',
+  //           route: routes.ionic,
+  //           base: routes.ionic,
+  //         },
+  //         {
+  //           menuValue: 'Material Icons',
+  //           route: routes.material,
+  //           base: routes.material,
+  //         },
+  //         { menuValue: 'pe7 Icons', route: routes.pe7, base: routes.pe7 },
+  //         {
+  //           menuValue: 'Simpleline Icons',
+  //           route: routes.simpleLine,
+  //           base: routes.simpleLine,
+  //         },
+  //         {
+  //           menuValue: 'Themify Icons',
+  //           route: routes.themify,
+  //           base: routes.themify,
+  //         },
+  //         {
+  //           menuValue: 'Weather Icons',
+  //           route: routes.weather,
+  //           base: routes.weather,
+  //         },
+  //         {
+  //           menuValue: 'Typicon Icons',
+  //           route: routes.typicon,
+  //           base: routes.typicon,
+  //         },
+  //         { menuValue: 'Flag Icons', route: routes.flag, base: routes.flag },
+  //       ],
+  //     },
+  //     {
+  //       menuValue: 'Forms',
+  //       route: routes.dashboard,
+  //       hasSubRoute: true,
+  //       showSubRoute: false,
+  //       icon: 'file-plus',
+  //       base: 'forms',
+  //       subMenus: [
+  //         {
+  //           menuValue: 'Basic Inputs',
+  //           route: routes.basicForm,
+  //           base: routes.basicForm,
+  //         },
+  //         {
+  //           menuValue: 'Input Groups',
+  //           route: routes.inputGroups,
+  //           base: routes.inputGroups,
+  //         },
+  //         {
+  //           menuValue: 'Horizontal Form',
+  //           route: routes.horizontalForm,
+  //           base: routes.horizontalForm,
+  //         },
+  //         {
+  //           menuValue: 'Vertical Form',
+  //           route: routes.verticalForm,
+  //           base: routes.verticalForm,
+  //         },
+  //         {
+  //           menuValue: 'Form Mask',
+  //           route: routes.formMask,
+  //           base: routes.formMask,
+  //         },
+  //         {
+  //           menuValue: 'Form Validation',
+  //           route: routes.formValidation,
+  //           base: routes.formValidation,
+  //         },
+  //         {
+  //           menuValue: 'Form Select2',
+  //           route: routes.formSelect2,
+  //           base: routes.formSelect2,
+  //         },
+  //         {
+  //           menuValue: 'File Upload',
+  //           route: routes.fileUpload,
+  //           base: routes.fileUpload,
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       menuValue: 'Tables',
+  //       route: routes.dashboard,
+  //       hasSubRoute: true,
+  //       showSubRoute: false,
+  //       icon: 'alert-octagon',
+  //       base: 'tables',
+  //       subMenus: [
+  //         {
+  //           menuValue: 'Basic Tables',
+  //           route: routes.basicTable,
+  //           base: routes.basicTable,
+  //         },
+  //         {
+  //           menuValue: 'Data Tables',
+  //           route: routes.dataTable,
+  //           base: routes.dataTable,
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
   {
     tittle: 'Settings',
     active: false,
@@ -1868,34 +1924,34 @@ public sideBar: any[] = [
       },
     ],
   },
-  {
-    tittle: 'Extras',
-    active: false,
-    icon: 'airplay',
-    showAsTab: false,
-    separateRoute: false,
-    menu: [
-      {
-        menuValue: 'Documentation',
+  // {
+  //   tittle: 'Extras',
+  //   active: false,
+  //   icon: 'airplay',
+  //   showAsTab: false,
+  //   separateRoute: false,
+  //   menu: [
+  //     {
+  //       menuValue: 'Documentation',
       
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'file-text',
-        base: 'file-text',
-        subMenus: [],
-      },
-      {
-        menuValue: 'Change Log',
-        changeLogVersion: true,
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'lock',
-        base: 'lock',
-        subMenus: [],
-      }
+  //       hasSubRoute: false,
+  //       showSubRoute: false,
+  //       icon: 'file-text',
+  //       base: 'file-text',
+  //       subMenus: [],
+  //     },
+  //     {
+  //       menuValue: 'Change Log',
+  //       changeLogVersion: true,
+  //       hasSubRoute: false,
+  //       showSubRoute: false,
+  //       icon: 'lock',
+  //       base: 'lock',
+  //       subMenus: [],
+  //     }
       
-    ],
-  },
+  //   ],
+  // },
 ];
 
 public getSideBarData: BehaviorSubject<Array<SideBarData>> =

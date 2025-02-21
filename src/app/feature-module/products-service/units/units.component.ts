@@ -27,6 +27,9 @@ export class UnitsComponent {
   dataSource!: MatTableDataSource<units>;
   public searchDataValue = '';
   //** / pagination variables
+  unitToDelete: number = 0;
+  unitToEdit: any = {};
+  newUnit: any = {};
 
   constructor(
     private data: DataService,
@@ -49,7 +52,7 @@ export class UnitsComponent {
       apiRes.data.map((res: units, index: number) => {
         const serialNumber = index + 1;
         if (index >= pageOption.skip && serialNumber <= pageOption.limit) {
-          res.id = serialNumber;
+          res.sNo = serialNumber;
           this.units.push(res);
           this.serialNumberArray.push(serialNumber);
         }
@@ -90,5 +93,31 @@ export class UnitsComponent {
 
   toggleCollapse() {
     this.isCollapsed = !this.isCollapsed;
+  }
+
+  setUnitToEdit(unit_id: number) {
+    this.unitToEdit = this.units.find((Unit) => Unit.unit_id === unit_id);
+  }
+
+  updateUnit() {
+    this.data.updateUnits(this.unitToEdit).subscribe((res) => {
+      this.getTableData({ skip: 0, limit: this.pageSize });
+    });
+  }
+
+  addUnit() {
+    this.data.addUnits(this.newUnit).subscribe((res) => {
+      this.getTableData({ skip: 0, limit: this.pageSize });
+    });
+  }
+
+  setUnitToDelete(sNo: number) {
+    this.unitToDelete = sNo;
+  }
+
+  deleteUnit(sNo: number) {
+    this.data.deleteUnits(sNo).subscribe((res) => {
+      this.getTableData({ skip: 0, limit: this.pageSize });
+    });
   }
 }

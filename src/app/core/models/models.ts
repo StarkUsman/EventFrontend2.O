@@ -8,6 +8,7 @@ export interface apiResultFormat {
   totalData: number;
 }
 export interface vendor {
+  id: number;
   sNo: number;
   name: string;
   img: string;
@@ -376,18 +377,30 @@ export interface purchase {
   paymentmode: string;
   date: string | number;
   status: string;
+  purch_id: number;
+  vendor_id: string;
+  purchase_date: string | number;
+  due_date: string | number;
+  reference_no: string;
+  invoice_sr_no: string;
+  products: Array<productlist>;
+  signature_text: string;
+  signature_img: string;
+  total_amount: number;
 }
 export interface units {
-  id: number;
-  unit: string;
-  short: string;
+  sNo: number;
+  unit_id: number;
+  unit_name: string;
+  symbol: string;
 }
 export interface productlist {
+  sNo: number,
   id: number;
   item: string;
   code: string | number;
   category: string;
-  units: string;
+  unit: string;
   quantity: number;
   sales: number;
   purchase: number;

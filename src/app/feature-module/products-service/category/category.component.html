@@ -142,12 +142,12 @@
                       <tbody>
                         @for (data of category; track data; let i = $index) {
                           <tr>
-                            <td>{{data.id}}</td>
+                            <td>{{data.sNo}}</td>
                             <td><a href="" class="product-list-item-img"><img [src]="data.img" alt="product-list"><span>{{data.category}}</span></a></td>
                             <td>{{data.total}}</td>
                             <td class="d-flex align-items-center">
-                              <a class=" btn-action-icon me-2"  href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#edit_category"><i class="feather icon-edit"></i></a>
-                              <a class=" btn-action-icon" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete_modal"><i class="feather icon-trash-2"></i></a>
+                              <a class=" btn-action-icon me-2"  href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#edit_category" (click)="setCategoryToEdit(data.id)"><i class="feather icon-edit"></i></a>
+                              <a class=" btn-action-icon" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete_modal" (click)="setCategoryToDelete(data.id)"><i class="feather icon-trash-2"></i></a>
                             </td>
                           </tr>
                         }
@@ -270,10 +270,10 @@
                           <div class="col-lg-12 col-sm-12">
                             <div class="input-block mb-3">
                               <label for="Name">Name <span class="text-danger">*</span></label>
-                              <input type="text"  class="form-control" placeholder="Enter Title">
+                              <input type="text"  class="form-control" placeholder="Enter Title" [(ngModel)]="newCategory.category">
                             </div>
                           </div>
-                          <div class="col-lg-12 col-sm-12">
+                          <!-- <div class="col-lg-12 col-sm-12">
                             <div class="input-block mb-3">
                               <label for="Slug">Slug</label>
                               <input type="text" class="form-control" placeholder="Enter Slug">
@@ -291,7 +291,7 @@
                                 <mat-option value="customer3">Tutorial</mat-option>
                               </mat-select>
                             </div>
-                          </div>
+                          </div> -->
                           <div class="col-lg-12 col-sm-12">
                             <div class="input-block mb-0 pb-0">
                               <label for="Image">Image</label>
@@ -328,7 +328,7 @@
               </div>
               <div class="modal-footer">
                 <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</a>
-                <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn">Add Category</a>
+                <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn" (click)="addCategory()">Add Category</a>
               </div>
             </div>
           </div>
@@ -356,16 +356,16 @@
                           <div class="col-lg-12 col-sm-12">
                             <div class="input-block mb-3">
                               <label for="Name">Name <span class="text-danger">*</span></label>
-                              <input type="text"  class="form-control" value="Advertising" placeholder="Enter Title">
+                              <input type="text"  class="form-control" [(ngModel)]="categoryToEdit.category" placeholder="Enter Title">
                             </div>
                           </div>
-                          <div class="col-lg-12 col-sm-12">
+                          <!-- <div class="col-lg-12 col-sm-12">
                             <div class="input-block mb-3">
                               <label for="Slug">Slug</label>
                               <input type="text" class="form-control" value="advertising" placeholder="Enter Slug">
                             </div>
-                          </div>
-                          <div class="col-lg-12 col-sm-12">
+                          </div> -->
+                          <!-- <div class="col-lg-12 col-sm-12">
                             <div class="input-block mb-3">
                               <label for="Parent">Parent Category</label>
                               <mat-select [(ngModel)]="parent2" [ngModelOptions]="{standalone: true}" class="select custom-mat-select">
@@ -377,7 +377,7 @@
                                 <mat-option value="customer3">Tutorial</mat-option>
                               </mat-select>
                             </div>
-                          </div>
+                          </div> -->
                           <div class="col-lg-12 col-sm-12">
                             <div class="input-block mb-0 pb-0">
                               <label for="Image">Image</label>
@@ -414,7 +414,7 @@
               </div>
               <div class="modal-footer">
                 <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</a>
-                <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn">Update</a>
+                <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn" (click)="updateCategory()">Update</a>
               </div>
             </div>
           </div>
@@ -433,7 +433,7 @@
                 <div class="modal-btn delete-action">
                   <div class="row">
                     <div class="col-6">
-                      <button type="reset" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-continue-btn">Delete</button>
+                      <button type="reset" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-continue-btn" (click)="deleteCategory(categoryToDelete)">Delete</button>
                     </div>
                     <div class="col-6">
                       <button type="submit" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-cancel-btn">Cancel</button>

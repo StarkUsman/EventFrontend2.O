@@ -25,6 +25,7 @@ export class ProductListComponent {
     dataSource!: MatTableDataSource<productlist>;
     public searchDataValue = '';
     //** / pagination variables
+    productToDelete: number = 0;
   
 
   constructor(private data: DataService,private pagination: PaginationService , private router: Router) {
@@ -46,7 +47,7 @@ export class ProductListComponent {
       apiRes.data.map((res: productlist, index: number) => {
         const serialNumber = index + 1;
         if (index >= pageOption.skip && serialNumber <= pageOption.limit) {
-          res.id = serialNumber;
+          res.sNo = serialNumber;
           this.productlist.push(res);
           this.serialNumberArray.push(serialNumber);
         }
@@ -113,5 +114,15 @@ export class ProductListComponent {
   public toggleData  = false;
   openContent() {
     this.toggleData = !this.toggleData;
+  }
+
+  setProductToDelete(product_id: number) {
+    this.productToDelete = product_id;
+  }
+
+  deleteProduct(product_id: number) {
+    this.data.deleteProduct(product_id).subscribe((res) => {
+      this.getTableData({ skip: 0, limit: this.pageSize });
+    });
   }
 }
