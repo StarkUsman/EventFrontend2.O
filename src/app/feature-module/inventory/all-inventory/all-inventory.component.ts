@@ -112,7 +112,7 @@ tableData2: [],
   }
 
   removeStock() {
-    this.inventoryUpdated.quantity = (parseFloat(this.inventoryUpdated.quantity) - parseFloat(this.inventoryUpdated.quantityRemoved)) < 0 ? '0' : (parseFloat(this.inventoryUpdated.quantity) - parseFloat(this.inventoryUpdated.quantityRemoved)).toString();
+    this.inventoryUpdated.quantity = (parseFloat(this.inventoryUpdated.quantity) - parseFloat(this.inventoryUpdated.quantityAdded)) < 0 ? '0' : (parseFloat(this.inventoryUpdated.quantity) - parseFloat(this.inventoryUpdated.quantityAdded)).toString();
     //delete unit from inventoryUpdated
     delete this.inventoryUpdated.units;
     this.data.updateinventory(this.inventoryUpdated).subscribe((res: any) => {
@@ -121,9 +121,6 @@ tableData2: [],
   }
 
   setinventoryToDelete(inventory: any) {
-    console.log("====================================");
-    console.log(inventory);
-    console.log("====================================");
     this.inventoryToDelete = inventory.id;
     this.data.deleteinventory(this.inventoryToDelete).subscribe((res: any) => {});
     
