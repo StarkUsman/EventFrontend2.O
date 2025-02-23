@@ -27,6 +27,7 @@ export class PurchasesComponent {
   dataSource!: MatTableDataSource<purchase>;
   public searchDataValue = '';
   //** / pagination variables
+  itemToDetele: number = 0;
 
   constructor(
     private data: DataService,
@@ -92,5 +93,15 @@ export class PurchasesComponent {
   public toggleData = false;
   openContent() {
     this.toggleData = !this.toggleData;
+  }
+
+  setItemToDelete(purchase: any){
+    this.itemToDetele = purchase.id;
+  }
+
+  deleteItem(){
+    this.data.deletepurchase(this.itemToDetele).subscribe((res: any) => {
+      this.getTableData({ skip: 0, limit: this.pageSize });
+    });
   }
 }

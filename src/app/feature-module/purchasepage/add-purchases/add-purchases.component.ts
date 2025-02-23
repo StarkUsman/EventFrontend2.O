@@ -45,11 +45,25 @@ export class AddPurchasesComponent implements OnInit {
   public pageSelection: Array<pageSelection> = [];
   public totalPages = 0;
   //** / pagination variables
+  allVendors: any = [];
+  allProducts: any = [];
+  newPurchase: any = {};
+  selectedProduct: any = {};
+  selectedProducts: any = [];
+  selectedProductEdit: any = {};
+  total_purch_amount: any = 0;
+  product_to_remove: any = {};
 
   constructor(private data: DataService) {}
 
   ngOnInit(): void {
     this.getTableData();
+    this.data.getVendors().subscribe((res) => {
+      this.allVendors = res.data;
+    });
+    this.data.getProductlist().subscribe((res) => {
+      this.allProducts = res.data;
+    });
   }
   private getTableData(): void {
     this.editcreditnotes = [];
@@ -146,5 +160,87 @@ export class AddPurchasesComponent implements OnInit {
   }
   onRemove(event: File) {
     this.files.splice(this.files.indexOf(event), 1);
+  }
+
+  onProductSelect(product: any) {
+    if (product) {
+      product.quantity = 1;
+      let price = product.purchasePrice.replace(/[^0-9.]/g, '');
+      price = parseFloat(price);
+      product.amount =  price * product.quantity;
+      this.selectedProducts.push(product);
+  
+      this.allProducts = this.allProducts.filter((p: any) => p.id !== product.id);
+  
+      this.selectedProduct = null;
+    }
+  }
+
+  setDeleteProduct(product: any) {
+    this.product_to_remove = product;
+  }
+
+  deleteProduct() {
+    this.selectedProducts = this.selectedProducts.filter((p: any) => p.id !== this.product_to_remove.id);
+    this.allProducts.push(this.product_to_remove);
+  }
+
+  setEditProduct(product: any) {
+    product.price = parseFloat(product.purchasePrice.replace(/[^0-9.]/g, ''));
+    product.discount = 0;
+    product.tax = "0";
+    this.selectedProductEdit = product;
+  }
+
+  updateProduct() {
+    this.selectedProductEdit.purchasePrice = "$" + this.selectedProductEdit.price;
+    this.selectedProductEdit.amount = (this.selectedProductEdit.price * this.selectedProductEdit.quantity) - this.selectedProductEdit.discount;
+    this.selectedProductEdit.amount = this.selectedProductEdit.amount + (this.selectedProductEdit.amount * (parseFloat(this.selectedProductEdit.tax) / 100));
+    this.selectedProducts = this.selectedProducts.map((p: any) => {
+      if (p.id === this.selectedProductEdit.id) {
+        p = this.selectedProductEdit;
+      }
+      return p;
+    });
+  }
+
+  calculateTotalAmount() {
+    let total = 0;
+    this.selectedProducts.forEach((p: any) => {
+      total += p.amount;
+    });
+    return total;
+  }
+
+  addPurchase() {
+    // remove img from products
+    this.selectedProducts = this.selectedProducts.map((p: any) => {
+      delete p.img;
+      delete p.sNo;
+      return p;
+    });
+
+    this.newPurchase.products = this.selectedProducts;
+    this.newPurchase.total_amount = this.calculateTotalAmount();
+    this.newPurchase.status = "Pending";
+    this.newPurchase.paymentmode = "cash";
+    this.newPurchase.signature_img = "assets/img/signature.svg"
+
+    // make api call for each product selectedProducts
+    this.selectedProducts.forEach((p: any) => {
+      this.data.addPurchaseProduct(p).subscribe((res) => {
+      });
+    });
+
+    // make api call for vendors
+    let vendor = this.allVendors.find((v: any) => v.id === this.newPurchase.vendor.id);
+    vendor.balance = vendor.balance.replace(/[^0-9.]/g, '');
+    vendor.balance = parseFloat(vendor.balance) + this.newPurchase.total_amount;
+
+    this.data.updateVendor(vendor).subscribe((res) => {
+    });
+    
+    this.data.addPurchase(this.newPurchase).subscribe((res) => {
+    });
   }
 }

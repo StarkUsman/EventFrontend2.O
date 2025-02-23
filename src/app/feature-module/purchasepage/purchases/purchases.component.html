@@ -107,8 +107,8 @@
                               [src]="data.img"
                               alt="User Image"
                             /></a> -->
-                            <a [routerLink]="routes.profile"
-                              >{{ data.vendor_id }} <span>{{ data.phone }}</span></a
+                            <a [routerLink]="routes.vendorsList"
+                              >{{ data.vendor.name }} <span>{{ data.vendor.phone }}</span></a
                               >
                             </h2>
                           </td>
@@ -154,6 +154,7 @@
                                           href="javascript:void(0);"
                                           data-bs-toggle="modal"
                                           data-bs-target="#delete_modal"
+                                          (click)="setItemToDelete(data)"
                                           ><i class="far fa-trash-alt me-2"></i>Delete</a
                                           >
                                         </li>
@@ -164,7 +165,7 @@
                                             ><i class="far fa-eye me-2"></i>View</a
                                             >
                                           </li>
-                                          <li>
+                                          <!-- <li>
                                             <a
                                               class="dropdown-item"
                                               [routerLink]="routes.purchase"
@@ -188,7 +189,7 @@
                                                   ></i
                                                   >Convert to Purchase Return</a
                                                   >
-                                                </li>
+                                                </li> -->
                                               </ul>
                                             </div>
                                           </div>
@@ -515,6 +516,7 @@
                                       type="reset"
                                       data-bs-dismiss="modal"
                                       class="w-100 btn btn-primary paid-continue-btn"
+                                      (click)="deleteItem()"
                                       >
                                       Delete
                                     </button>

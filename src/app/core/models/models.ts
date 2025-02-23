@@ -378,6 +378,7 @@ export interface purchase {
   date: string | number;
   status: string;
   purch_id: number;
+  vendor: any | {};
   vendor_id: string;
   purchase_date: string | number;
   due_date: string | number;
@@ -616,6 +617,7 @@ export interface invoice {
   img: string;
 }
 export interface inventory {
+  id: number;
   sNo: number;
   item: string;
   code: string | number;

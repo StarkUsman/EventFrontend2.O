@@ -24,7 +24,10 @@ export class AllInventoryComponent {
  public totalData = 0;
  dataSource!: MatTableDataSource<inventory>;
  // pagination variables end
-  
+ inventoryUpdated: any = {};
+ inventoryToDelete: any = {};
+ bootstrap: any;
+
   constructor(private data: DataService, private pagination: PaginationService,
     private router: Router) {
       this.pagination.tablePageSize.subscribe((res: tablePageSize) => {
@@ -93,5 +96,37 @@ tableData2: [],
   public toggleData  = false;
   openContent() {
     this.toggleData = !this.toggleData;
+  }
+
+  setinventory(inventory: inventory) {
+    this.inventoryUpdated = inventory;
+  }
+
+  addStock() {
+    this.inventoryUpdated.quantity = (parseFloat(this.inventoryUpdated.quantity) + parseFloat(this.inventoryUpdated.quantityAdded)).toString();
+    //delete unit from inventoryUpdated
+    delete this.inventoryUpdated.units;
+    this.data.updateinventory(this.inventoryUpdated).subscribe((res: any) => {
+      this.getTableData({ skip: 0, limit: this.pageSize });
+    } );
+  }
+
+  removeStock() {
+    this.inventoryUpdated.quantity = (parseFloat(this.inventoryUpdated.quantity) - parseFloat(this.inventoryUpdated.quantityRemoved)) < 0 ? '0' : (parseFloat(this.inventoryUpdated.quantity) - parseFloat(this.inventoryUpdated.quantityRemoved)).toString();
+    //delete unit from inventoryUpdated
+    delete this.inventoryUpdated.units;
+    this.data.updateinventory(this.inventoryUpdated).subscribe((res: any) => {
+      this.getTableData({ skip: 0, limit: this.pageSize });
+    } );
+  }
+
+  setinventoryToDelete(inventory: any) {
+    console.log("====================================");
+    console.log(inventory);
+    console.log("====================================");
+    this.inventoryToDelete = inventory.id;
+    this.data.deleteinventory(this.inventoryToDelete).subscribe((res: any) => {});
+    
+    this.tableData = this.tableData.filter((res: any) => res.id !== this.inventoryToDelete);
   }
 }

@@ -518,12 +518,21 @@ export class DataService {
       );
   }
   public getinventory() {
-    return this.http.get<apiResultFormat>('assets/JSON/inventory.json').pipe(
+    return this.http.get<apiResultFormat>('http://localhost:3000/inventory').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
     );
   }
+
+  public updateinventory(inventory: any) {
+    return this.http.put(`http://localhost:3000/inventory/${inventory.id}`, inventory);
+  }
+
+  public deleteinventory(id: number) {
+    return this.http.delete(`http://localhost:3000/inventory/${id}`);
+  }
+
   public getpurchase() {
     return this.http.get<apiResultFormat>('http://localhost:3000/purchase').pipe(
       map((res: apiResultFormat) => {
@@ -531,6 +540,19 @@ export class DataService {
       })
     );
   }
+
+  public addPurchaseProduct(product: any) {
+    return this.http.post('http://localhost:3000/products/addQuantity', product);
+  }
+
+  public addPurchase(purchase: any) {
+    return this.http.post('http://localhost:3000/purchase', purchase);
+  }
+
+  public deletepurchase(sNo: number) {
+    return this.http.delete(`http://localhost:3000/purchase/${sNo}`);
+  }
+
   public getpurchaseorder() {
     return this.http
       .get<apiResultFormat>('assets/JSON/purchaseorder.json')

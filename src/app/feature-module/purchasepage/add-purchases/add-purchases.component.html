@@ -15,33 +15,22 @@
                   type="text"
                   class="form-control"
                   placeholder="Enter Purchases Id"
+                  [(ngModel)]="newPurchase.purch_id"
                   />
                 </div>
               </div>
               <div class="col-lg-4 col-md-6 col-sm-12">
                 <div class="input-block mb-3">
                   <label htmlFor="label">Select Vendor</label>
-                  <ul class="form-group-plus css-equal-heights">
-                    <li>
                       <mat-select
-                        [(ngModel)]="country"
+                        [(ngModel)]="newPurchase.vendor"
                         [ngModelOptions]="{ standalone: true }"
                         class="select custom-mat-select"
                         >
-                        <mat-option value="India">Choose Vendor</mat-option>
-                        <mat-option value="Vendor1">Vendor1</mat-option>
-                        <mat-option value="Vendor2">Vendor2</mat-option>
-                        <mat-option value="Vendor3">Vendor3</mat-option>
+                        <mat-option *ngFor="let vendor of allVendors" [value]="vendor">
+                          {{ vendor.name }}
+                        </mat-option>
                       </mat-select>
-                    </li>
-                    <li>
-                      <a
-                        class="btn btn-primary form-plus-btn"
-                        [routerLink]="routes.addCustomer"
-                        ><i class="fas fa-plus-circle"></i
-                      ></a>
-                    </li>
-                  </ul>
                 </div>
               </div>
               <div class="col-lg-4 col-md-6 col-sm-12">
@@ -52,9 +41,7 @@
                     type="text"
                     class="datetimepicker form-control"
                     placeholder="Select Date"
-                    
-                    
-                    
+                    [(ngModel)]="newPurchase.purchase_date"
                     bsDatepicker [bsConfig]="{ adaptivePosition: true }"
                     [(bsValue)]="myDateValue"
                     />
@@ -68,6 +55,7 @@
                       type="text"
                       class="datetimepicker form-control"
                       placeholder="Select Date"
+                      [(ngModel)]="newPurchase.due_date"
                       
                       
                       bsDatepicker [bsConfig]="{ adaptivePosition: true }"
@@ -83,6 +71,7 @@
                         type="text"
                         class="form-control"
                         placeholder="Enter Phone Number"
+                        [(ngModel)]="newPurchase.reference_no"
                         />
                       </div>
                     </div>
@@ -93,6 +82,7 @@
                           type="text"
                           class="form-control"
                           placeholder="Enter Supplier Invoice Serial No"
+                          [(ngModel)]="newPurchase.invoice_sr_no"
                           />
                         </div>
                       </div>
@@ -102,14 +92,14 @@
                           <ul class="form-group-plus css-equal-heights">
                             <li>
                               <mat-select
-                                [(ngModel)]="products"
+                                [(ngModel)]="selectedProduct"
                                 [ngModelOptions]="{ standalone: true }"
+                                (selectionChange)="onProductSelect($event.value)"
                                 class="select custom-mat-select"
                                 >
-                                <mat-option value="products">Select Product</mat-option>
-                                <mat-option value="products1">Customer 1</mat-option>
-                                <mat-option value="products2">Customer 2</mat-option>
-                                <mat-option value="products3">Customer 3</mat-option>
+                                <mat-option *ngFor="let product of allProducts" [value]="product">
+                                  {{ product.item }}
+                                </mat-option>
                               </mat-select>
                             </li>
                             <li>
@@ -140,20 +130,20 @@
                                 <th mat-sort-header="unit">Unit</th>
                                 <th mat-sort-header="rate">Rate</th>
                                 <th mat-sort-header="discount">Discount</th>
-                                <th mat-sort-header="tax">Tax</th>
+                                <th mat-sort-header="tax">Tax %</th>
                                 <th mat-sort-header="amount">Amount</th>
                                 <th mat-sort-header="action">Action</th>
                               </tr>
                             </thead>
                             <tbody>
-                              @for (data of editcreditnotes; track data; let i = $index) {
+                              @for (data of selectedProducts; track data; let i = $index) {
                                 <tr>
-                                  <td>{{ data.product }}</td>
+                                  <td>{{ data.item }}</td>
                                   <td>{{ data.quantity }}</td>
                                   <td>{{ data.unit }}</td>
-                                  <td>{{ data.rate }}</td>
-                                  <td>{{ data.discount }}</td>
-                                  <td>{{ data.tax }}</td>
+                                  <td>{{ data.purchasePrice }}</td>
+                                  <td>{{ data.discount || 0 }}</td>
+                                  <td>{{ data.tax || 0 }}</td>
                                   <td>{{ data.amount }}</td>
                                   <td class="d-flex align-items-center">
                                     <a
@@ -161,12 +151,14 @@
                                       class="btn-action-icon me-2"
                                       data-bs-toggle="modal"
                                       data-bs-target="#add_discount"
+                                      (click)="setEditProduct(data)"
                                       ><span><i class="feather icon-edit"></i></span
                                     ></a>
                                     <a
                                       href="javascript:void(0);"
                                       class="btn-action-icon"
                                       data-bs-toggle="modal"
+                                      (click)="setDeleteProduct(data)"
                                       data-bs-target="#delete_discount"
                                       ><span><i class="feather icon-trash-2"></i></span
                                     ></a>
@@ -185,7 +177,7 @@
                           <div class="form-group-bank">
                             <div class="invoice-total-box">
                                   <div class="invoice-total-footer">
-                                    <h4>Total Amount <span>$107.80</span></h4>
+                                    <h4>Total Amount: <span>{{ calculateTotalAmount() }}</span></h4>
                                   </div>
                                 </div>
                                 <div class="input-block mb-3">
@@ -194,6 +186,7 @@
                                     type="text"
                                     class="form-control"
                                     placeholder="Enter Signature Name"
+                                    [(ngModel)]="newPurchase.signature_text"
                                     />
                                   </div>
                                   <div class="col-md-12">
@@ -224,7 +217,7 @@
                           </div>
                           <div class="text-end">
                             <button type="reset" class="btn btn-primary cancel me-2">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button [routerLink]="routes.purchase" type="submit" class="btn btn-primary" (click)="addPurchase()">Save</button>
                           </div>
                         </div>
                       </div>
@@ -236,7 +229,7 @@
                       <div class="modal-content">
                         <div class="modal-header border-0 pb-0">
                           <div class="form-header modal-header-title text-start mb-0">
-                            <h4 class="mb-0">Add Tax & Discount</h4>
+                            <h4 class="mb-0">Configure Product</h4>
                           </div>
                           <button
                             type="button"
@@ -251,12 +244,23 @@
                           <div class="row">
                             <div class="col-lg-12 col-md-12">
                               <div class="input-block mb-3">
+                                <label htmlFor="label">Quantity</label>
+                                <input
+                                  id="label"
+                                  type="number"
+                                  class="form-control"
+                                  [(ngModel)]="selectedProductEdit.quantity"
+                                  />
+                                </div>
+                              </div>
+                            <div class="col-lg-12 col-md-12">
+                              <div class="input-block mb-3">
                                 <label htmlFor="label">Rate</label>
                                 <input
                                   id="label"
                                   type="number"
                                   class="form-control"
-                                  placeholder="120"
+                                  [(ngModel)]="selectedProductEdit.price"
                                   />
                                 </div>
                               </div>
@@ -267,18 +271,18 @@
                                     id="label"
                                     type="number"
                                     class="form-control"
-                                    placeholder="0"
+                                    [(ngModel)]="selectedProductEdit.discount"
                                     />
                                   </div>
                                 </div>
                                 <div class="col-lg-12 col-md-12">
                                   <div class="form-group mb-0">
                                     <label htmlFor="label">Tax</label>
-                                    <select class="form-select">
-                                      <option>N/A</option>
-                                      <option>5%</option>
-                                      <option>10%</option>
-                                      <option>15%</option>
+                                    <select class="form-select" [(ngModel)]="selectedProductEdit.tax">
+                                      <option value="0">N/A</option>
+                                      <option value="5">5%</option>
+                                      <option value="10">10%</option>
+                                      <option value="15">15%</option>
                                     </select>
                                   </div>
                                 </div>
@@ -295,6 +299,7 @@
                                   href="javascript:void(0);"
                                   data-bs-dismiss="modal"
                                   class="btn btn-primary paid-continue-btn"
+                                  (click)="updateProduct()"
                                   >Save</a
                                   >
                                 </div>
@@ -309,13 +314,13 @@
                               <div class="modal-content">
                                 <div class="modal-body">
                                   <div class="form-header">
-                                    <h3>Delete Product / Services</h3>
-                                    <p>Are you sure want to delete?</p>
+                                    <h3>Remove Product</h3>
+                                    <p>Are you sure want to remove?</p>
                                   </div>
                                   <div class="modal-btn delete-action">
                                     <div class="row">
                                       <div class="col-6">
-                                        <a href="javascript:void(0);" class="btn btn-primary paid-continue-btn">Delete</a>
+                                        <a data-bs-dismiss="modal" (click)="deleteProduct()" class="btn btn-primary paid-continue-btn">Delete</a>
                                       </div>
                                       <div class="col-6">
                                         <a
