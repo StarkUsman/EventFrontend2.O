@@ -83,10 +83,10 @@
                             aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
                             <div class="dropdown-menu dropdown-menu-right">
                               <ul>
-                                <!-- <li>
+                                <li>
                                   <a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal"
-                                    data-bs-target="#edit_inventory"><i class="far fa-edit me-2"></i>Edit</a>
-                                  </li> -->
+                                    data-bs-target="#delete_stock"><i class="far fa-edit me-2"></i>Edit</a>
+                                  </li>
                                   <li>
                                     <a class="dropdown-item" href="javascript:void(0);" (click)="setinventoryToDelete(data)"><i class="far fa-trash-alt me-2"></i>Delete</a>
                                     </li>
@@ -199,6 +199,7 @@
                   <label htmlFor="label">Sale Price</label>
                   <input id="label" type="text" class="form-control" [(ngModel)]="inventoryUpdated.sales" />
                 </div>
+              </div>
               <div class="col-lg-12">
                 <div class="input-block mb-3 mb-0">
                   <label htmlFor="label">Notes</label>

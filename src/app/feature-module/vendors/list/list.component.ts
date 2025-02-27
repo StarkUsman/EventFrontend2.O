@@ -30,6 +30,7 @@ export class ListComponent {
   vendorToEdit: any = {};
   newVendor: any = {};  
   // pagination variables end
+  isAdminLoggedIn = 0;
 
   constructor(
     private data: DataService,
@@ -100,17 +101,35 @@ export class ListComponent {
     this.vendorToEdit = this.tableData.find((vendor) => vendor.sNo === sNo);
   }
 
+  nameError = false;
+
   updateVendor() {
+    if (!this.vendorToEdit.name || this.vendorToEdit.name.trim() === '') {
+      this.nameError = true;
+      return;
+    }
+    
+    this.nameError = false;
+
     this.data.updateVendor(this.vendorToEdit).subscribe((res) => {
       this.getTableData({ skip: 0, limit: this.pageSize });
     });
   }
 
+
   addVendor() {
+    if (!this.newVendor.name || this.newVendor.name.trim() === '') {
+      this.nameError = true;
+      return;
+    }
+  
+    this.nameError = false;
+
     this.data.addVendor(this.newVendor).subscribe((res) => {
       this.getTableData({ skip: 0, limit: this.pageSize });
+      this.newVendor = {};
     });
-  }
+  }  
 
   setVendorToDelete(sNo: number) {
     this.vendorToDelete = sNo;

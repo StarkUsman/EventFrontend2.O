@@ -4,7 +4,7 @@
     <h5>Vendors</h5>
     <div class="list-btn">
       <ul class="filter-list">
-        <li>
+        <!-- <li>
           <a
             (click)="openContent()"  (keydown.enter)="openContent()" tabindex="0"
             matTooltip="Filter"
@@ -15,8 +15,8 @@
               ><img src="assets/img/icons/filter-icon.svg" alt="filter" /></span
               >Filter
             </a>
-          </li>
-          <li class="">
+          </li> -->
+          <!-- <li class="">
             <div class="dropdown dropdown-action">
               <a
                 href="javascript:void(0);"
@@ -47,19 +47,19 @@
                     </ul>
                   </div>
                 </div>
-              </li>
-              <li>
+              </li> -->
+              <!-- <li>
                 <a class="btn-filters"  matTooltip="Print" href="javascript:void(0);"
                   ><span><i class="feather icon-printer"></i></span>
                 </a>
-              </li>
-              <li>
+              </li> -->
+              <!-- <li>
                 <a class="btn btn-import" href="javascript:void(0);"
                   ><span
                   ><i class="feather icon-check-square me-2"></i> Import</span
                   ></a
                   >
-                </li>
+                </li> -->
                 <li>
                   <a
                     class="btn btn-primary"
@@ -139,7 +139,7 @@
                                 <td>{{ data.created }}</td>
                                 <td>{{ data.balance }}</td>
                                 <td class="d-flex align-items-center">
-                                  <a [routerLink]="routes.vendorsLedger" class="btn btn-greys me-2"
+                                  <a [routerLink]="routes.vendorsLedger" class="btn btn-greys me-2" [queryParams]="{ id: data.id }"
                                     ><i class="fa fa-eye me-1"></i> Ledger</a
                                     >
                                     <div class="dropdown dropdown-action">
@@ -164,6 +164,7 @@
                                             </li>
                                             <li>
                                               <a
+                                                *ngIf="isAdminLoggedIn == 1"
                                                 class="dropdown-item"
                                                 href="javascript:void(0);"
                                                 data-bs-toggle="modal"
@@ -337,8 +338,11 @@
                               <div class="row">
                                 <div class="col-lg-12 col-sm-12">
                                   <div class="input-block mb-3">
-                                    <label for="name">Name</label>
-                                    <input type="text" class="form-control" [(ngModel)]="newVendor.name" placeholder="Enter Name" required="true">
+                                    <label for="name">Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" [(ngModel)]="newVendor.name" #nameInput="ngModel" placeholder="Enter Name" required="true">
+                                    <div class="text-danger mt-1" *ngIf="nameInput.invalid && nameInput.touched">
+                                      Name is required.
+                                    </div>
                                   </div>
                                 </div>
                                 <div class="col-lg-12 col-sm-12">
@@ -353,17 +357,17 @@
                                     <input type="number" class="form-control" [(ngModel)]="newVendor.phone" placeholder="Enter Phone Number" required="true">
                                   </div>
                                 </div>
-                                <div class="col-lg-12 col-sm-12">
+                                <!-- <div class="col-lg-12 col-sm-12">
                                   <div class="input-block mb-0">
                                     <label for="balance">Closing Balance</label>
                                     <input type="number" class="form-control" [(ngModel)]="newVendor.balance" placeholder="Enter Closing Balance Amount" required="true">
                                   </div>
-                                </div>
+                                </div> -->
                               </div>
                             </div>
                             <div class="modal-footer">
                               <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</a>
-                              <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn" (click)="addVendor()">Add Vendor</a>
+                              <button href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn" (click)="addVendor()" [disabled]="nameInput.invalid">Add Vendor</button>
                             </div>
                           </div>
                         </div>
@@ -386,8 +390,11 @@
                               <div class="row">
                                 <div class="col-lg-12 col-md-12">
                                   <div class="input-block mb-3">
-                                    <label for="name">Name</label>
-                                    <input type="text" class="form-control" [(ngModel)]="vendorToEdit.name" placeholder="Enter Name">
+                                    <label for="name">Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" [(ngModel)]="vendorToEdit.name" #nameInputEdit="ngModel" placeholder="Enter Name" required="true">
+                                  </div>
+                                  <div class="text-danger mt-1" *ngIf="nameInputEdit.invalid && nameInputEdit.touched">
+                                    Name is required.
                                   </div>
                                 </div>
                                 <div class="col-lg-12 col-md-12">
@@ -402,17 +409,17 @@
                                     <input type="text" class="form-control" [(ngModel)]="vendorToEdit.phone" placeholder="Enter Reference Number">
                                   </div>
                                 </div>
-                                <div class="col-lg-12 col-md-12">
+                                <!-- <div class="col-lg-12 col-md-12">
                                   <div class="input-block mb-0">
                                     <label for="balance">Balance</label>
                                     <input type="text" class="form-control" [(ngModel)]="vendorToEdit.balance" placeholder="Enter Reference Number">
                                   </div>
-                                </div>
+                                </div> -->
                               </div>
                             </div>
                             <div class="modal-footer">
                               <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</a>
-                              <a data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn" (click)="updateVendor()">Update</a>
+                              <button data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn" (click)="updateVendor()" [disabled]="nameInputEdit.invalid">Update</button>
                             </div>
                           </div>
                         </div>

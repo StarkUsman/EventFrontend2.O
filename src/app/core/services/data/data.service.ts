@@ -255,6 +255,10 @@ export class DataService {
     );
   }
 
+  public getVendorById(id: number) {
+    return this.http.get(`http://localhost:3000/vendors/${id}`);
+  }
+
   public deleteVendor(sNo: number) {
     return this.http.delete(`http://localhost:3000/vendors/${sNo}`);
   }
@@ -265,6 +269,22 @@ export class DataService {
 
   public updateVendor(vendor: any) {
     return this.http.put(`http://localhost:3000/vendors/${vendor.id}`, vendor);
+  }
+
+  public getLedgerByVID(id: number) {
+    return this.http.get(`http://localhost:3000/ledger/${id}`);
+  }
+
+  public getCreditedLedger(id: number) {
+    return this.http.get(`http://localhost:3000/ledger/credit/${id}`);
+  }
+
+  public getDebitiedLedger(id: number) {
+    return this.http.get(`http://localhost:3000/ledger/debit/${id}`);
+  }
+
+  public getFilteredLedger(id: number, startDate: string, endDate: string, vendorName: string) {
+    return this.http.get(`http://localhost:3000/ledger/${id}?startDate=${startDate}&endDate=${endDate}&vendorName=${vendorName}`);
   }
 
   public getLedger() {
