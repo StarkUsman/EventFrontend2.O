@@ -80,7 +80,7 @@
                     <th mat-sort-header="id">Purchase ID</th>
                     <th mat-sort-header="person">Vendor</th>
                     <th mat-sort-header="totalamount">Amount</th>
-                    <th mat-sort-header="paymentmode">Payment Mode</th>
+                    <!-- <th mat-sort-header="paymentmode">Payment Mode</th> -->
                     <th mat-sort-header="date">Date</th>
                     <th mat-sort-header="status">Status</th>
                     <th>Action</th>
@@ -113,7 +113,7 @@
                             </h2>
                           </td>
                           <td>{{ data.total_amount }}</td>
-                          <td>{{ data.paymentmode }}</td>
+                          <!-- <td>{{ data.paymentmode }}</td> -->
                           <td>{{ data.purchase_date }}</td>
                           <td>
                             <span
@@ -145,10 +145,11 @@
                                       <a
                                         class="dropdown-item"
                                         [routerLink]="routes.editpurchases"
+                                        [queryParams]="{ id: data.id }"
                                         ><i class="far fa-edit me-2"></i>Edit</a
                                         >
                                       </li>
-                                      <li>
+                                      <!-- <li>
                                         <a
                                           class="dropdown-item"
                                           href="javascript:void(0);"
@@ -157,7 +158,7 @@
                                           (click)="setItemToDelete(data)"
                                           ><i class="far fa-trash-alt me-2"></i>Delete</a
                                           >
-                                        </li>
+                                        </li> -->
                                         <li>
                                           <a
                                             class="dropdown-item"

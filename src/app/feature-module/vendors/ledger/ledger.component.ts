@@ -18,8 +18,11 @@ export class LedgerComponent implements OnInit {
   startDate: string = '';
   endDate: string = '';
   vendorName: string = '';
-
+  isBalanceNegative: boolean = false;
+  closingBalanceAmount: number = 0;
   closingBalanceDate: string = new Date().toLocaleDateString();
+  filterByType: boolean = false;
+  selectedTransactionType: string = 'credit';
 
   constructor(private route: ActivatedRoute, private data: DataService) {}
 
@@ -32,6 +35,7 @@ export class LedgerComponent implements OnInit {
         this.ledgerToView.forEach((ledger: any) => {
           ledger.purch_id = ('000000' + ledger.purch_id).slice(-6);
         });
+        this.closingBalance();
       });
       this.data.getVendorById(id).subscribe((res: any) => {
         this.vendorToView = res;
@@ -50,12 +54,41 @@ export class LedgerComponent implements OnInit {
     this.updateLedger();
   }
 
+  // applyFilters() {
+  //   if(this.endDate && this.endDate !== ''){
+  //     this.closingBalanceDate = this.endDate;
+  //   }
+
+  //   this.data.getFilteredLedger(this.vendorId, this.startDate, this.endDate, this.vendorName).subscribe((res: any) => {
+  //     this.ledgerToView = res.data;
+  //     this.ledgerToView.forEach((ledger: any) => {
+  //       ledger.purch_id = ('000000' + ledger.purch_id).slice(-6);
+  //     });
+  //   });
+  // }
+
   applyFilters() {
+    if (this.endDate && this.endDate !== '') {
+      this.closingBalanceDate = this.endDate;
+    }
+  
+    // Fetch filtered ledger data based on selected filters
     this.data.getFilteredLedger(this.vendorId, this.startDate, this.endDate, this.vendorName).subscribe((res: any) => {
       this.ledgerToView = res.data;
       this.ledgerToView.forEach((ledger: any) => {
         ledger.purch_id = ('000000' + ledger.purch_id).slice(-6);
       });
+  
+      // Apply transaction type filter
+      if (this.filterByType) {
+        if (this.selectedTransactionType === 'credit') {
+          this.ledgerToView = this.ledgerToView.filter((ledger: any) => ledger.amountCredit > 0);
+        } else {
+          this.ledgerToView = this.ledgerToView.filter((ledger: any) => ledger.amountDebit > 0);
+        }
+      }
+
+      this.closingBalance();
     });
   }
 
@@ -86,7 +119,13 @@ export class LedgerComponent implements OnInit {
   }
 
   closingBalance() {
-    return this.totalDebit() - this.totalCredit();
+    if((this.totalCredit() - this.totalDebit()) < 0){
+      this.isBalanceNegative = true;
+      this.closingBalanceAmount = this.totalDebit() - this.totalCredit();
+    } else {
+      this.isBalanceNegative = false;
+      this.closingBalanceAmount = this.totalCredit() - this.totalDebit();
+    }
   }
 
   isCredit: boolean = true;

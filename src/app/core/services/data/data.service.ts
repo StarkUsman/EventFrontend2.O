@@ -287,6 +287,14 @@ export class DataService {
     return this.http.get(`http://localhost:3000/ledger/${id}?startDate=${startDate}&endDate=${endDate}&vendorName=${vendorName}`);
   }
 
+  public addLedger(ledger: any){
+    return this.http.post('http://localhost:3000/ledger', ledger);
+  }
+
+  public updateLedgerById(ledger: any){
+    return this.http.put(`http://localhost:3000/ledger/${ledger.id}`, ledger);
+  }
+
   public getLedger() {
     return this.http.get<apiResultFormat>('assets/JSON/ledger.json').pipe(
       map((res: apiResultFormat) => {
@@ -565,12 +573,24 @@ export class DataService {
     return this.http.post('http://localhost:3000/products/addQuantity', product);
   }
 
+  public removePurchaseProduct(product: any) {
+    return this.http.post('http://localhost:3000/products/removeQuantity', product);
+  }
+
   public addPurchase(purchase: any) {
     return this.http.post('http://localhost:3000/purchase', purchase);
   }
 
+  public editPurchase(purchase: any) {
+    return this.http.put(`http://localhost:3000/purchase/${purchase.id}`, purchase);
+  }
+
   public deletepurchase(sNo: number) {
     return this.http.delete(`http://localhost:3000/purchase/${sNo}`);
+  }
+
+  public getPurchaseById(id: number) {
+    return this.http.get(`http://localhost:3000/purchase/${id}`);
   }
 
   public getpurchaseorder() {

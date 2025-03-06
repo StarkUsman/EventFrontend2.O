@@ -43,6 +43,16 @@ export class PurchasesComponent {
   }
 
   private getTableData(pageOption: pageSelection): void {
+    const options: Intl.DateTimeFormatOptions = { 
+      timeZone: 'Asia/Karachi', 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit', 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      second: '2-digit'
+  };
+
     this.data.getpurchase().subscribe((apiRes: apiResultFormat) => {
       this.purchase = [];
       this.serialNumberArray = [];
@@ -51,6 +61,7 @@ export class PurchasesComponent {
         const serialNumber = index + 1;
         if (index >= pageOption.skip && serialNumber <= pageOption.limit) {
           res.sNo = serialNumber;
+          res.purchase_date = new Date(res.purchase_date).toLocaleString('en-US', options);
           this.purchase.push(res);
           this.serialNumberArray.push(serialNumber);
         }

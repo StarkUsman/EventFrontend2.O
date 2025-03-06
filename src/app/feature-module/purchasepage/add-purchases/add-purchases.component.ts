@@ -20,6 +20,8 @@ interface Food {
 })
 export class AddPurchasesComponent implements OnInit {
   myDateValue!: Date;
+  purchaseDateValue: Date = new Date();
+  dueDateValue: Date = new Date();
   public minDate!: Date;
   public maxDate!: Date;
   public routes = routes;
@@ -54,7 +56,12 @@ export class AddPurchasesComponent implements OnInit {
   total_purch_amount: any = 0;
   product_to_remove: any = {};
 
-  constructor(private data: DataService) {}
+  constructor(private data: DataService) {
+    this.newPurchase.purchase_date = this.purchaseDateValue;
+    this.dueDateValue.setMonth(this.purchaseDateValue.getMonth() + 1);
+    this.newPurchase.due_date = this.dueDateValue;
+
+  }
 
   ngOnInit(): void {
     this.getTableData();
@@ -63,6 +70,16 @@ export class AddPurchasesComponent implements OnInit {
     });
     this.data.getProductlist().subscribe((res) => {
       this.allProducts = res.data;
+    });
+    this.data.getpurchase().subscribe((res) => {
+      // set newPurchase.purch_id to last purch_id + 1 and make it 6 digit
+      let purch_id = res.data[0].purch_id;
+      purch_id = parseInt(purch_id) + 1;
+      purch_id = purch_id.toString();
+      while (purch_id.length < 6) {
+        purch_id = "0" + purch_id;
+      }
+      this.newPurchase.purch_id = purch_id;
     });
   }
   private getTableData(): void {
@@ -156,7 +173,14 @@ export class AddPurchasesComponent implements OnInit {
   ];
   files: File[] = [];
   onSelect(event: { addedFiles: File[] }) {
+    const file = event.addedFiles[0];
     this.files.push(...event.addedFiles);
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      this.newPurchase.signature_img = reader.result;
+    };
   }
   onRemove(event: File) {
     this.files.splice(this.files.indexOf(event), 1);
@@ -167,11 +191,11 @@ export class AddPurchasesComponent implements OnInit {
       product.quantity = 1;
       let price = product.purchasePrice.replace(/[^0-9.]/g, '');
       price = parseFloat(price);
-      product.amount =  price * product.quantity;
+      product.amount = price * product.quantity;
       this.selectedProducts.push(product);
-  
+
       this.allProducts = this.allProducts.filter((p: any) => p.id !== product.id);
-  
+
       this.selectedProduct = null;
     }
   }
@@ -212,7 +236,22 @@ export class AddPurchasesComponent implements OnInit {
     return total;
   }
 
+  // ledger function
+  addLedger(purch_id: any, vendor_id: any, amountDebit: any) {
+    let ledger = {
+      name: "SRV",
+      purch_id: purch_id,
+      vendor_id: vendor_id,
+      amountDebit: amountDebit,
+      amountCredit: 0
+    };
+
+    this.data.addLedger(ledger).subscribe((res) => { });
+  }
+
+
   addPurchase() {
+    this.newPurchase.purch_id = parseInt(this.newPurchase.purch_id);
     // remove img from products
     this.selectedProducts = this.selectedProducts.map((p: any) => {
       delete p.img;
@@ -224,8 +263,6 @@ export class AddPurchasesComponent implements OnInit {
     this.newPurchase.total_amount = this.calculateTotalAmount();
     this.newPurchase.status = "Pending";
     this.newPurchase.paymentmode = "cash";
-    this.newPurchase.signature_img = "assets/img/signature.svg"
-
     // make api call for each product selectedProducts
     this.selectedProducts.forEach((p: any) => {
       this.data.addPurchaseProduct(p).subscribe((res) => {
@@ -239,7 +276,9 @@ export class AddPurchasesComponent implements OnInit {
 
     this.data.updateVendor(vendor).subscribe((res) => {
     });
-    
+
+    this.addLedger(this.newPurchase.purch_id, this.newPurchase.vendor.id, this.newPurchase.total_amount)
+
     this.data.addPurchase(this.newPurchase).subscribe((res) => {
     });
   }

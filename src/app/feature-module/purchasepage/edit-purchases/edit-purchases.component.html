@@ -15,34 +15,24 @@
                   id="label"
                   type="text"
                   class="form-control"
-                  placeholder="Enter Purchases Id"
+                  disabled="true"
+                  [(ngModel)]="purchaseToEdit.purch_id"
                   />
                 </div>
               </div>
               <div class="col-lg-4 col-md-6 col-sm-12">
                 <div class="input-block mb-3">
                   <label htmlFor="label">Select Vendor</label>
-                  <ul class="form-group-plus css-equal-heights">
-                    <li>
                       <mat-select
-                        [(ngModel)]="country"
+                        disabled="true"
+                        [(ngModel)]="purchaseToEdit.vendor"
                         [ngModelOptions]="{ standalone: true }"
                         class="select custom-mat-select"
                         >
-                        <mat-option value="India">Choose Vendor</mat-option>
-                        <mat-option value="Vendor1">Vendor1</mat-option>
-                        <mat-option value="Vendor2">Vendor2</mat-option>
-                        <mat-option value="Vendor3">Vendor3</mat-option>
+                        <mat-option *ngFor="let vendor of allVendors" [value]="vendor">
+                          {{ vendor.name }}
+                        </mat-option>
                       </mat-select>
-                    </li>
-                    <li>
-                      <a
-                        class="btn btn-primary form-plus-btn"
-                        [routerLink]="routes.addCustomer"
-                        ><i class="fas fa-plus-circle"></i
-                      ></a>
-                    </li>
-                  </ul>
                 </div>
               </div>
               <div class="col-lg-4 col-md-6 col-sm-12">
@@ -53,11 +43,9 @@
                     type="text"
                     class="datetimepicker form-control"
                     placeholder="Select Date"
-                    
-                    
-                    
+                    [(ngModel)]="purchaseToEdit.purchase_date"
                     bsDatepicker [bsConfig]="{ adaptivePosition: true }"
-                    [(bsValue)]="myDateValue"
+                    [(bsValue)]="purchaseDateValue"
                     />
                   </div>
                 </div>
@@ -69,14 +57,13 @@
                       type="text"
                       class="datetimepicker form-control"
                       placeholder="Select Date"
-                      
-                      
+                      [(ngModel)]="purchaseToEdit.due_date"
                       bsDatepicker [bsConfig]="{ adaptivePosition: true }"
-                      [(bsValue)]="myDateValue"
+                      [(bsValue)]="dueDateValue"
                       />
                     </div>
                   </div>
-                  <div class="col-lg-4 col-md-6 col-sm-12">
+                  <!-- <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
                       <label htmlFor="label">Reference No</label>
                       <input
@@ -86,7 +73,7 @@
                         placeholder="Enter Phone Number"
                         />
                       </div>
-                    </div>
+                    </div> -->
                     <div class="col-lg-4 col-md-6 col-sm-12">
                       <div class="input-block mb-3">
                         <label for="Supplier">Supplier Invoice Serial No</label>
@@ -94,6 +81,7 @@
                           type="text"
                           class="form-control"
                           placeholder="Enter Supplier Invoice Serial No"
+                          [(ngModel)]="purchaseToEdit.invoice_sr_no"
                           />
                         </div>
                       </div>
@@ -103,14 +91,14 @@
                           <ul class="form-group-plus css-equal-heights">
                             <li>
                               <mat-select
-                                [(ngModel)]="products"
+                                [(ngModel)]="selectedProduct"
                                 [ngModelOptions]="{ standalone: true }"
+                                (selectionChange)="onProductSelect($event.value)"
                                 class="select custom-mat-select"
                                 >
-                                <mat-option value="products">Select Product</mat-option>
-                                <mat-option value="products1">Customer 1</mat-option>
-                                <mat-option value="products2">Customer 2</mat-option>
-                                <mat-option value="products3">Customer 3</mat-option>
+                                <mat-option *ngFor="let product of allProducts" [value]="product">
+                                  {{ product.item }}
+                                </mat-option>
                               </mat-select>
                             </li>
                             <li>
@@ -147,27 +135,29 @@
                               </tr>
                             </thead>
                             <tbody>
-                              @for (data of editcreditnotes; track data; let i = $index) {
+                              @for (data of selectedProducts; track data; let i = $index) {
                                 <tr>
-                                  <td>{{ data.product }}</td>
+                                  <td>{{ data.item }}</td>
                                   <td>{{ data.quantity }}</td>
                                   <td>{{ data.unit }}</td>
-                                  <td>{{ data.rate }}</td>
-                                  <td>{{ data.discount }}</td>
-                                  <td>{{ data.tax }}</td>
-                                  <td>{{ data.amount }}</td>
+                                  <td>{{ data.purchasePrice }}</td>
+                                  <td>{{ data.discount || 0 }}</td>
+                                  <td>{{ data.tax || 0 }}</td>
+                                  <td>PKR{{ data.amount }}</td>
                                   <td class="d-flex align-items-center">
                                     <a
                                       href="javascript:void(0);"
                                       class="btn-action-icon me-2"
                                       data-bs-toggle="modal"
                                       data-bs-target="#add_discount"
+                                      (click)="setEditProduct(data)"
                                       ><span><i class="feather icon-edit"></i></span
                                     ></a>
                                     <a
                                       href="javascript:void(0);"
                                       class="btn-action-icon"
                                       data-bs-toggle="modal"
+                                      (click)="setDeleteProduct(data)"
                                       data-bs-target="#delete_discount"
                                       ><span><i class="feather icon-trash-2"></i></span
                                     ></a>
@@ -180,134 +170,26 @@
                       </div>
                     </div>
                   </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <div class="row">
-                        <div class="col-lg-7">
-                          <div class="input-block mb-3">
-                            <label for="Discount">Discount Type</label>
-                            <mat-select
-                              [(ngModel)]="discount"
-                              [ngModelOptions]="{ standalone: true }"
-                              class="select custom-mat-select"
-                              >
-                              <mat-option value="discount1">Percentage(%)</mat-option>
-                              <mat-option value="discount2">Fixed</mat-option>
-                            </mat-select>
-                          </div>
-                        </div>
-                        <div class="col-lg-5">
-                          <div class="input-block mb-3">
-                            <label for="Discount">Discount(%)</label>
-                            <input type="text" class="form-control" placeholder="10" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="input-block mb-3">
-                        <label for="Tax">Tax</label>
-                        <mat-select
-                          [(ngModel)]="tax"
-                          [ngModelOptions]="{ standalone: true }"
-                          class="select custom-mat-select"
-                          >
-                          <mat-option value="Tax">No Tax</mat-option>
-                          <mat-option value="Tax1">IVA - (21%)</mat-option>
-                          <mat-option value="Tax2">IRPF - (-15%)</mat-option>
-                          <mat-option value="Tax3">PDV - (20%)</mat-option>
-                        </mat-select>
-                      </div>
-                    </div>
-                    <div class="col-md-4"></div>
-                  </div>
                   <div class="form-group-item border-0 p-0">
                     <div class="row">
-                      <div class="col-xl-6 col-lg-12">
-                        <div class="form-group-bank">
-                          <div class="row align-items-center">
-                            <div class="col-md-8">
-                              <div class="input-block mb-3">
-                                <label for="Bank">Select Bank</label>
-                                <mat-select
-                                  [(ngModel)]="selectbank"
-                                  [ngModelOptions]="{ standalone: true }"
-                                  class="select custom-mat-select"
-                                  >
-                                  <mat-option value="Bank1">Select Bank</mat-option>
-                                  <mat-option value="Bank1">SBI</mat-option>
-                                  <mat-option value="Bank2">IOB</mat-option>
-                                  <mat-option value="Bank3">Canara</mat-option>
-                                </mat-select>
-                              </div>
-                            </div>
-                            <div class="col-md-4">
-                              <div class="form-groups">
-                                <a
-                                  class="btn btn-primary"
-                                  href="javascript:void(0);"
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#bank_details"
-                                  >Add Bank</a
-                                  >
-                                </div>
-                              </div>
-                            </div>
-
-                            <div class="input-block mb-3 notes-form-group-info">
-                              <label for="Notes">Notes</label>
-                              <textarea
-                                class="form-control"
-                                placeholder="Enter Notes"
-                              ></textarea>
-                            </div>
-                            <div class="input-block mb-3 notes-form-group-info mb-0">
-                              <label for="Terms">Terms and Conditions</label>
-                              <textarea
-                                class="form-control"
-                                placeholder="Enter Terms and Conditions"
-                              ></textarea>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-xl-6 col-lg-12">
+                        <div class="col-xl-12 col-lg-12">
                           <div class="form-group-bank">
                             <div class="invoice-total-box">
-                              <div class="invoice-total-inner">
-                                <p>Taxable Amount <span>$120.00</span></p>
-                                <p>Discount <span>$13.20</span></p>
-                                <p>Vat <span>$0.00</span></p>
-                                <div class="status-toggle justify-content-between">
-                                  <div class="d-flex align-center">
-                                    <p>Round Off</p>
-                                    <input
-                                      id="rating_1"
-                                      class="check"
-                                      type="checkbox"
-                                      checked=""
-                                      />
-                                      <label for="rating_1" class="checktoggle checkbox-bg"
-                                        >checkbox</label
-                                        >
-                                      </div>
-                                      <span>$0.00</span>
-                                    </div>
-                                  </div>
                                   <div class="invoice-total-footer">
-                                    <h4>Total Amount <span>$107.80</span></h4>
+                                    <h4>Total Amount: <span>PKR{{ calculateTotalAmount() }}</span></h4>
                                   </div>
                                 </div>
-                                <div class="input-block mb-3">
+                                <!-- <div class="input-block mb-3">
                                   <label for="Signature">Signature Name</label>
                                   <input
                                     type="text"
                                     class="form-control"
                                     placeholder="Enter Signature Name"
                                     />
-                                  </div>
+                                  </div> -->
                                   <div class="col-md-12">
                                     <div class="input-block mb-3 mb-0 pb-0">
-                                      <label for="Signature">Signature Image</label>
+                                      <label for="Signature">Add Attachment</label>
                                       <ngx-dropzone
                                         (change)="onSelect($event)"
                                         class="service-upload add-credit"
@@ -333,7 +215,7 @@
                           </div>
                           <div class="text-end">
                             <button type="reset" class="btn btn-primary cancel me-2">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button [routerLink]="routes.purchase" type="submit" class="btn btn-primary" (click)="editPurchase()">Save</button>
                           </div>
 
                         </div>
@@ -346,7 +228,7 @@
                       <div class="modal-content">
                         <div class="modal-header border-0 pb-0">
                           <div class="form-header modal-header-title text-start mb-0">
-                            <h4 class="mb-0">Add Tax & Discount</h4>
+                            <h4 class="mb-0">Configure Product</h4>
                           </div>
                           <button
                             type="button"
@@ -361,12 +243,23 @@
                           <div class="row">
                             <div class="col-lg-12 col-md-12">
                               <div class="input-block mb-3">
+                                <label htmlFor="label">Quantity</label>
+                                <input
+                                  id="label"
+                                  type="number"
+                                  class="form-control"
+                                  [(ngModel)]="selectedProductEdit.quantity"
+                                  />
+                                </div>
+                              </div>
+                            <div class="col-lg-12 col-md-12">
+                              <div class="input-block mb-3">
                                 <label htmlFor="label">Rate</label>
                                 <input
                                   id="label"
                                   type="number"
                                   class="form-control"
-                                  placeholder="120"
+                                  [(ngModel)]="selectedProductEdit.price"
                                   />
                                 </div>
                               </div>
@@ -377,18 +270,18 @@
                                     id="label"
                                     type="number"
                                     class="form-control"
-                                    placeholder="0"
+                                    [(ngModel)]="selectedProductEdit.discount"
                                     />
                                   </div>
                                 </div>
                                 <div class="col-lg-12 col-md-12">
                                   <div class="form-group mb-0">
                                     <label htmlFor="label">Tax</label>
-                                    <select class="form-select">
-                                      <option>N/A</option>
-                                      <option>5%</option>
-                                      <option>10%</option>
-                                      <option>15%</option>
+                                    <select class="form-select" [(ngModel)]="selectedProductEdit.tax">
+                                      <option value="0">N/A</option>
+                                      <option value="5">5%</option>
+                                      <option value="10">10%</option>
+                                      <option value="15">15%</option>
                                     </select>
                                   </div>
                                 </div>
@@ -405,6 +298,7 @@
                                   href="javascript:void(0);"
                                   data-bs-dismiss="modal"
                                   class="btn btn-primary paid-continue-btn"
+                                  (click)="updateProduct()"
                                   >Save</a
                                   >
                                 </div>
@@ -425,7 +319,7 @@
                                   <div class="modal-btn delete-action">
                                     <div class="row">
                                       <div class="col-6">
-                                        <a href="javascript:void(0);" class="btn btn-primary paid-continue-btn">Delete</a>
+                                        <a data-bs-dismiss="modal" (click)="deleteProduct()" class="btn btn-primary paid-continue-btn">Delete</a>
                                       </div>
                                       <div class="col-6">
                                         <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-cancel-btn">Cancel</a>

@@ -368,6 +368,7 @@ export interface editcreditnotes {
   amount: number;
 }
 export interface purchase {
+  id: number;
   sNo: number;
   purchaseId: number;
   person: string;

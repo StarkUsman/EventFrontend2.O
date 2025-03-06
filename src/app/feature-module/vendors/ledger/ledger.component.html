@@ -27,9 +27,13 @@
         <div class="list-btn">
             <ul class="filter-list">
                 <li>
-                    <div class="closing-balance">
-                        <span class="d-flex align-items-center"><i
-                                class="fa fa-refresh me-2 text-danger-light"></i>Closing Balance PKR: {{closingBalance()}}</span>
+                    <div *ngIf="isBalanceNegative" class="closing-balance">
+                        <span class="d-flex align-items-center text-danger-light"><i
+                                class="fa fa-refresh me-2 text-danger-light"></i>Closing Balance: -PKR{{closingBalanceAmount}}</span>
+                    </div>
+                    <div *ngIf="!(isBalanceNegative)" class="closing-balance">
+                        <span class="d-flex align-items-center bg-success-light"><i
+                                class="fa fa-refresh me-2 text-success-light"></i>Closing Balance: PKR{{closingBalanceAmount}}</span>
                     </div>
                 </li>
                 <li>
@@ -81,8 +85,8 @@
                                     <th>Name</th>
                                     <th>Purchase Voucher #</th>
                                     <th>Created</th>
-                                    <th>Debit</th>
                                     <th>Credit</th>
+                                    <th>Debit</th>
                                     <!-- <th>Closing Balance</th> -->
                                 </tr>
                             </thead>
@@ -94,8 +98,8 @@
                                         </td>
                                         <td>#{{data.purch_id}} </td>
                                         <td> {{data.createdAt}} </td>
-                                        <td><span class="badge bg-success-light">{{data.amountDebit}}</span></td>
-                                        <td><span class="badge bg-danger-light">{{data.amountCredit}}</span></td>
+                                        <td><span class="badge bg-success-light">{{data.amountCredit > 0 ? data.amountCredit : ''}}</span></td>
+                                        <td><span class="badge bg-danger-light">{{data.amountDebit > 0 ? data.amountDebit : ''}}</span></td>
                                         <!-- <td>{{data.balance}}</td> -->
                                     </tr>
                                     }
@@ -103,8 +107,8 @@
                                     <td colspan="3">
                                         <p>Closing Balance as on {{closingBalanceDate}}</p>
                                     </td>
-                                    <td><span class="text-success fw-600">{{totalDebit()}}</span></td>
-                                    <td colspan="2"><span class="text-primary fw-600">{{totalCredit()}}</span></td>
+                                    <td><span class="text-success fw-600">{{totalCredit()}}</span></td>
+                                    <td colspan="2"><span class="text-primary fw-600">{{totalDebit()}}</span></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -497,7 +501,8 @@
                   <div class="col-md-12">
                     <div id="checkBoxes1">
                       <div class="form-custom">
-                          <div *ngIf="!(filterByDate || filterByName)" class="my-4 filter-buttons">
+                        <!-- ###################################### -->
+                          <!-- <div *ngIf="!(filterByDate || filterByName)" class="my-4 filter-buttons">
                               <button type="button" class="btn me-2 w-100"
                                   [ngClass]="{'btn-success': isCredit, 'btn-outline-success': !isCredit}"
                                   (click)="toggleCredit()">
@@ -509,7 +514,35 @@
                                   (click)="toggleDebit()">
                                   Debit
                               </button>
-                          </div>
+                          </div> -->
+                          <!-- Filter by Transaction Type -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="filterByType"
+                                    [(ngModel)]="filterByType" name="filterByType">
+                                <label class="form-check-label" for="filterByType">
+                                    Filter by Debit/Credit
+                                </label>
+                            </div>
+
+                            <!-- Radio Buttons for Credit/Debit -->
+                            <div *ngIf="filterByType" class="mt-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" id="creditType"
+                                        [(ngModel)]="selectedTransactionType" name="transactionType" value="credit">
+                                    <label class="form-check-label" for="creditType">
+                                        Credit
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" id="debitType"
+                                        [(ngModel)]="selectedTransactionType" name="transactionType" value="debit">
+                                    <label class="form-check-label" for="debitType">
+                                        Debit
+                                    </label>
+                                </div>
+                            </div>
+
                           <!-- ######################################## -->
                           <div class="form-check fw-4">
                             <input class="form-check-input" type="checkbox" id="filterDate"
@@ -558,7 +591,7 @@
                 <button
                   type="submit"
                   class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary"
-                  [disabled]="!(filterByDate || filterByName)"
+                  [disabled]="!(filterByDate || filterByName || filterByType)"
                   (click)="applyFilters()"
                   >
                   Apply

@@ -9,12 +9,12 @@
           <div class="row align-item-center">
             <div class="col-lg-4 col-md-6 col-sm-12">
               <div class="input-block mb-3">
-                <label htmlFor="label">Purchases Id</label>
+                <label htmlFor="label">Purchases Voucher#</label>
                 <input
                   id="label"
                   type="text"
                   class="form-control"
-                  placeholder="Enter Purchases Id"
+                  disabled="true"
                   [(ngModel)]="newPurchase.purch_id"
                   />
                 </div>
@@ -43,7 +43,7 @@
                     placeholder="Select Date"
                     [(ngModel)]="newPurchase.purchase_date"
                     bsDatepicker [bsConfig]="{ adaptivePosition: true }"
-                    [(bsValue)]="myDateValue"
+                    [(bsValue)]="purchaseDateValue"
                     />
                   </div>
                 </div>
@@ -59,11 +59,11 @@
                       
                       
                       bsDatepicker [bsConfig]="{ adaptivePosition: true }"
-                      [(bsValue)]="myDateValue"
+                      [(bsValue)]="dueDateValue"
                       />
                     </div>
                   </div>
-                  <div class="col-lg-4 col-md-6 col-sm-12">
+                  <!-- <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
                       <label htmlFor="label">Reference No</label>
                       <input
@@ -74,7 +74,7 @@
                         [(ngModel)]="newPurchase.reference_no"
                         />
                       </div>
-                    </div>
+                    </div> -->
                     <div class="col-lg-4 col-md-6 col-sm-12">
                       <div class="input-block mb-3">
                         <label for="Supplier">Supplier Invoice Serial No</label>
@@ -144,7 +144,7 @@
                                   <td>{{ data.purchasePrice }}</td>
                                   <td>{{ data.discount || 0 }}</td>
                                   <td>{{ data.tax || 0 }}</td>
-                                  <td>{{ data.amount }}</td>
+                                  <td>PKR{{ data.amount }}</td>
                                   <td class="d-flex align-items-center">
                                     <a
                                       href="javascript:void(0);"
@@ -177,10 +177,10 @@
                           <div class="form-group-bank">
                             <div class="invoice-total-box">
                                   <div class="invoice-total-footer">
-                                    <h4>Total Amount: <span>{{ calculateTotalAmount() }}</span></h4>
+                                    <h4>Total Amount: <span>PKR{{ calculateTotalAmount() }}</span></h4>
                                   </div>
                                 </div>
-                                <div class="input-block mb-3">
+                                <!-- <div class="input-block mb-3">
                                   <label for="Signature">Signature Name</label>
                                   <input
                                     type="text"
@@ -188,16 +188,16 @@
                                     placeholder="Enter Signature Name"
                                     [(ngModel)]="newPurchase.signature_text"
                                     />
-                                  </div>
+                                  </div> -->
                                   <div class="col-md-12">
                                     <div class="input-block mb-3 mb-0 pb-0">
-                                      <label for="Signature">Signature Image</label>
+                                      <label for="Signature">Add Attachment</label>
                                       <ngx-dropzone
                                         (change)="onSelect($event)"
                                         class="service-upload add-credit"
                                         >
                                         <ngx-dropzone-label class="drop-browse align-center">
-                                          <span><i class="feather icon-upload-cloud me-2"></i>Upload Signature</span>
+                                          <span><i class="feather icon-upload-cloud me-2"></i>Upload Attachment</span>
                                         </ngx-dropzone-label>
                                         @for (f of files; track f) {
                                           <ngx-dropzone-image-preview
