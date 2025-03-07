@@ -364,6 +364,9 @@ export class routes {
   public static get expensesList(): string {
     return this.expenses + '/expenses-list';
   }
+  public static get editExpensesList(): string {
+    return this.expenses + '/edit-expenses';
+  }
   public static get addexpenses(): string {
     return this.expenses + '/add-expenses';
   }

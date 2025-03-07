@@ -585,6 +585,10 @@ export class DataService {
     return this.http.put(`http://localhost:3000/purchase/${purchase.id}`, purchase);
   }
 
+  public updatePurchaseStatus(purchaseId: number, status: string) {
+    return this.http.put(`http://localhost:3000/purchase/status/${purchaseId}`, { status });
+  }
+
   public deletepurchase(sNo: number) {
     return this.http.delete(`http://localhost:3000/purchase/${sNo}`);
   }

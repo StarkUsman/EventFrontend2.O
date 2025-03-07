@@ -7,6 +7,9 @@ import {
   editcreditnotes,
   pageSelection,
 } from 'src/app/core/models/models';
+import { ActivatedRoute } from '@angular/router';
+import { S } from '@angular/cdk/keycodes';
+import { co } from '@fullcalendar/core/internal-common';
 
 interface Food {
   value: string;
@@ -14,20 +17,21 @@ interface Food {
 }
 
 @Component({
-  selector: 'app-add-purchases',
-  templateUrl: './add-purchases.component.html',
-  styleUrls: ['./add-purchases.component.scss'],
+  selector: 'app-edit-purchases',
+  templateUrl: './edit-purchases.component.html',
+  styleUrls: ['./edit-purchases.component.scss'],
 })
-export class AddPurchasesComponent implements OnInit {
-  myDateValue!: Date;
+export class EditPurchasesComponent implements OnInit {
   purchaseDateValue: Date = new Date();
   dueDateValue: Date = new Date();
+  selectbank = 'Bank1';
+  myDateValue!: Date;
   public minDate!: Date;
   public maxDate!: Date;
   public routes = routes;
   country = 'India';
   products = 'products';
-  selectbank = 'Bank1';
+  bank = 'bank';
   discount = 'discount1';
   tax = 'Tax';
   public editcreditnotes: Array<editcreditnotes> = [];
@@ -49,19 +53,16 @@ export class AddPurchasesComponent implements OnInit {
   //** / pagination variables
   allVendors: any = [];
   allProducts: any = [];
-  newPurchase: any = {};
+  purchaseToEdit: any = {};
   selectedProduct: any = {};
   selectedProducts: any = [];
+  oldPurchaseRef: any = {};
   selectedProductEdit: any = {};
   total_purch_amount: any = 0;
   product_to_remove: any = {};
+  ledgerToUpdate: any = {};
 
-  constructor(private data: DataService) {
-    this.newPurchase.purchase_date = this.purchaseDateValue;
-    this.dueDateValue.setMonth(this.purchaseDateValue.getMonth() + 1);
-    this.newPurchase.due_date = this.dueDateValue;
-
-  }
+  constructor(private route: ActivatedRoute, private data: DataService) {}
 
   ngOnInit(): void {
     this.getTableData();
@@ -71,17 +72,45 @@ export class AddPurchasesComponent implements OnInit {
     this.data.getProductlist().subscribe((res) => {
       this.allProducts = res.data;
     });
-    this.data.getpurchase().subscribe((res) => {
-      // set newPurchase.purch_id to last purch_id + 1 and make it 6 digit
-      let purch_id = res.data[0].purch_id;
-      purch_id = parseInt(purch_id) + 1;
-      purch_id = purch_id.toString();
-      while (purch_id.length < 6) {
-        purch_id = "0" + purch_id;
-      }
-      this.newPurchase.purch_id = purch_id;
+    this.route.queryParams.subscribe(params => {
+      let id = params['id'];
+      this.data.getPurchaseById(id).subscribe((res: any) => {
+        this.purchaseToEdit = res;
+        this.purchaseDateValue = new Date(this.purchaseToEdit.purchase_date);
+        this.dueDateValue = new Date(this.purchaseToEdit.due_date);
+        this.purchaseToEdit.vendor = this.allVendors.find((v: any) => v.id === this.purchaseToEdit.vendor.id);
+        this.selectedProducts = this.purchaseToEdit.products;
+        this.oldPurchaseRef = JSON.parse(JSON.stringify(res));
+        this.total_purch_amount = this.calculateTotalAmount();
+        this.allProducts = this.allProducts.filter((p: any) => {
+          let found = this.selectedProducts.find((sp: any) => sp.id === p.id);
+          return !found;
+        });
+
+        if (this.purchaseToEdit?.signature_img) {
+          const file = this.base64ToFile(
+            this.purchaseToEdit.signature_img,
+            'signature.png'
+          );
+          this.files.push(file);
+        }
+
+      });
     });
   }
+
+  base64ToFile(data: any, filename: string) {
+    const arr = data.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+  }
+
   private getTableData(): void {
     this.editcreditnotes = [];
     this.serialNumberArray = [];
@@ -179,9 +208,10 @@ export class AddPurchasesComponent implements OnInit {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-      this.newPurchase.signature_img = reader.result;
+      this.purchaseToEdit.signature_img = reader.result;
     };
   }
+
   onRemove(event: File) {
     this.files.splice(this.files.indexOf(event), 1);
   }
@@ -217,7 +247,7 @@ export class AddPurchasesComponent implements OnInit {
   }
 
   updateProduct() {
-    this.selectedProductEdit.purchasePrice = "PKR" + this.selectedProductEdit.price;
+    this.selectedProductEdit.purchasePrice = "$" + this.selectedProductEdit.price;
     this.selectedProductEdit.amount = (this.selectedProductEdit.price * this.selectedProductEdit.quantity) - this.selectedProductEdit.discount;
     this.selectedProductEdit.amount = this.selectedProductEdit.amount + (this.selectedProductEdit.amount * (parseFloat(this.selectedProductEdit.tax) / 100));
     this.selectedProducts = this.selectedProducts.map((p: any) => {
@@ -236,22 +266,23 @@ export class AddPurchasesComponent implements OnInit {
     return total;
   }
 
-  // ledger function
-  addLedger(purch_id: any, vendor_id: any, amountDebit: any) {
-    let ledger = {
-      name: "SRV",
-      purch_id: purch_id,
-      vendor_id: vendor_id,
-      amountDebit: amountDebit,
-      amountCredit: 0
-    };
+  updateLedger(purch_id: any, amountDebit: any) {
+    this.data.getLedgerByVID(this.purchaseToEdit.vendor.id).subscribe((res: any) => {
+      let ledgers = res.data;
+      // filter out the ledger with the same purch_id
+      let ledger = ledgers.find((l: any) => l.purch_id === purch_id);
+      if (ledger) {
+        this.ledgerToUpdate = ledger;
+        this.ledgerToUpdate.name = "ER";
+        this.ledgerToUpdate.amountDebit = amountDebit;
+        this.data.updateLedgerById(this.ledgerToUpdate).subscribe((res) => { });
+      }
+    });
 
-    this.data.addLedger(ledger).subscribe((res) => { });
   }
 
-
-  addPurchase() {
-    this.newPurchase.purch_id = parseInt(this.newPurchase.purch_id);
+  editPurchase() {
+    this.purchaseToEdit.purch_id = parseInt(this.purchaseToEdit.purch_id);
     // remove img from products
     this.selectedProducts = this.selectedProducts.map((p: any) => {
       delete p.img;
@@ -259,27 +290,25 @@ export class AddPurchasesComponent implements OnInit {
       return p;
     });
 
-    this.newPurchase.products = this.selectedProducts;
-    this.newPurchase.total_amount = this.calculateTotalAmount();
-    this.newPurchase.status = "Pending";
-    this.newPurchase.paymentmode = "cash";
-    // make api call for each product selectedProducts
+    this.purchaseToEdit.products = this.selectedProducts;
+    this.purchaseToEdit.total_amount = this.calculateTotalAmount();
+    this.purchaseToEdit.status = "Pending";
+    this.purchaseToEdit.paymentmode = "cash";
+
+    this.oldPurchaseRef.products.forEach((p: any) => {
+      this.data.removePurchaseProduct(p).subscribe((res) => {
+      });
+    });
+    
     this.selectedProducts.forEach((p: any) => {
       this.data.addPurchaseProduct(p).subscribe((res) => {
       });
     });
+    
+    this.updateLedger(this.oldPurchaseRef.purch_id, this.oldPurchaseRef.total_amount);
+    this.updateLedger(this.purchaseToEdit.purch_id, this.purchaseToEdit.total_amount)
 
-    // make api call for vendors
-    let vendor = this.allVendors.find((v: any) => v.id === this.newPurchase.vendor.id);
-    vendor.balance = vendor.balance.replace(/[^0-9.]/g, '');
-    vendor.balance = parseFloat(vendor.balance) + this.newPurchase.total_amount;
-
-    this.data.updateVendor(vendor).subscribe((res) => {
-    });
-
-    this.addLedger(this.newPurchase.purch_id, this.newPurchase.vendor.id, this.newPurchase.total_amount)
-
-    this.data.addPurchase(this.newPurchase).subscribe((res) => {
+    this.data.editPurchase(this.purchaseToEdit).subscribe((res) => {
     });
   }
 }

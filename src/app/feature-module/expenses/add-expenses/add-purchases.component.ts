@@ -217,7 +217,7 @@ export class AddPurchasesComponent implements OnInit {
   }
 
   updateProduct() {
-    this.selectedProductEdit.purchasePrice = "PKR" + this.selectedProductEdit.price;
+    this.selectedProductEdit.purchasePrice = "$" + this.selectedProductEdit.price;
     this.selectedProductEdit.amount = (this.selectedProductEdit.price * this.selectedProductEdit.quantity) - this.selectedProductEdit.discount;
     this.selectedProductEdit.amount = this.selectedProductEdit.amount + (this.selectedProductEdit.amount * (parseFloat(this.selectedProductEdit.tax) / 100));
     this.selectedProducts = this.selectedProducts.map((p: any) => {
