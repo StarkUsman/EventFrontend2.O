@@ -21,20 +21,6 @@
               </div>
               <div class="col-lg-4 col-md-6 col-sm-12">
                 <div class="input-block mb-3">
-                  <label htmlFor="label">Select Vendor</label>
-                      <mat-select
-                        [(ngModel)]="newPurchase.vendor"
-                        [ngModelOptions]="{ standalone: true }"
-                        class="select custom-mat-select"
-                        >
-                        <mat-option *ngFor="let vendor of allVendors" [value]="vendor">
-                          {{ vendor.name }}
-                        </mat-option>
-                      </mat-select>
-                </div>
-              </div>
-              <div class="col-lg-4 col-md-6 col-sm-12">
-                <div class="input-block mb-3">
                   <label htmlFor="label">Expense Date</label>
                   <input
                     id="label"
@@ -47,42 +33,14 @@
                     />
                   </div>
                 </div>
-                <div class="col-lg-4 col-md-6 col-sm-12">
-                  <div class="input-block mb-3">
-                    <label htmlFor="label">Due Date</label>
-                    <input
-                      id="labbel"
-                      type="text"
-                      class="datetimepicker form-control"
-                      placeholder="Select Date"
-                      [(ngModel)]="newPurchase.due_date"
-                      
-                      
-                      bsDatepicker [bsConfig]="{ adaptivePosition: true }"
-                      [(bsValue)]="dueDateValue"
-                      />
-                    </div>
-                  </div>
-                  <!-- <div class="col-lg-4 col-md-6 col-sm-12">
-                    <div class="input-block mb-3">
-                      <label htmlFor="label">Reference No</label>
-                      <input
-                        id="label"
-                        type="text"
-                        class="form-control"
-                        placeholder="Enter Phone Number"
-                        [(ngModel)]="newPurchase.reference_no"
-                        />
-                      </div>
-                    </div> -->
                     <div class="col-lg-4 col-md-6 col-sm-12">
                       <div class="input-block mb-3">
-                        <label for="Supplier">Supplier Invoice Serial No</label>
+                        <label for="Supplier">Refence Number</label>
                         <input
                           type="text"
                           class="form-control"
-                          placeholder="Enter Supplier Invoice Serial No"
-                          [(ngModel)]="newPurchase.invoice_sr_no"
+                          placeholder="Enter Reference No"
+                          [(ngModel)]="newPurchase.reference_no"
                           />
                         </div>
                       </div>

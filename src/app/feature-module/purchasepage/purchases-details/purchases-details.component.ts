@@ -80,6 +80,8 @@ export class PurchasesDetailsComponent implements OnInit {
 
     this.data.addLedger(ledger).subscribe((res) => { });
     this.data.updatePurchaseStatus(this.purchaseToView.id, "Paid").subscribe((res) => {});
+    //reload page
+    window.location.reload();
   }
 
 }

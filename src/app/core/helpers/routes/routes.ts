@@ -379,6 +379,9 @@ export class routes {
   public static get ediExpenses(): string {
     return this.expenses + '/edit-expenses';
   }
+  public static get expenseDetails(): string {
+    return this.expenses + '/expenses-details';
+  }
 
   public static get payments(): string {
     return this.baseUrl + '/payments';
@@ -402,17 +405,17 @@ export class routes {
   public static get invoiceItemCategory(): string {
     return this.items + '/invoice-category';
   }
-  public static get estimates(): string {
-    return this.baseUrl + '/estimates';
+  public static get reservations(): string {
+    return this.baseUrl + '/reservations';
   }
-  public static get estimatesList(): string {
-    return this.estimates + '/estimates-list';
+  public static get addreservation(): string {
+    return this.reservations + '/add-reservation';
   }
-  public static get estimatesView(): string {
-    return this.estimates + '/view-estimate';
+  public static get reservationList(): string {
+    return this.reservations + '/reservationList';
   }
-  public static get addEstimates(): string {
-    return this.estimates + '/add-estimate';
+  public static get editReservation(): string {
+    return this.reservations + '/edit-reservation';
   }
   public static get invoice(): string {
     return this.baseUrl + '/invoices';

@@ -1,217 +1,374 @@
-<!-- Page Header -->
-<div class="page-header">
-  <div class="row">
-    <div class="col-sm-12">
-      <h3 class="page-title">Estimate</h3>
-      <ul class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a [routerLink]="routes.dashboard">Dashboard</a>
+<div class="col-xl-12">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="header-title mb-4">Add Reservation</h4>
+
+      <ul class="nav nav-pills navtab-bg nav-justified">
+        <li class="nav-item">
+          <button
+            (click)="goToStage(1)"
+            data-bs-toggle="tab"
+            aria-expanded="false"
+            class="nav-link"
+            [class.active]="stage === 1"
+          >
+            Stage 1
+        </button>
         </li>
-        <li class="breadcrumb-item">
-          <a [routerLink]="routes.estimatesList">Estimate</a>
+        <li class="nav-item">
+          <button
+            (click)="goToStage(2)"
+            data-bs-toggle="tab"
+            aria-expanded="true"
+            class="nav-link"
+            [class.active]="stage === 2"
+            [disabled]="isStageDisabled(2)"
+          >
+            Stage 2
+        </button>
         </li>
-        <li class="breadcrumb-item active">Add Estimate</li>
+        <li class="nav-item">
+          <button
+            (click)="goToStage(3)"
+            data-bs-toggle="tab"
+            aria-expanded="false"
+            class="nav-link"
+            [class.active]="stage === 3"
+            [disabled]="isStageDisabled(3)"
+          >
+            Stage 3
+        </button>
+        </li>
+        <li class="nav-item">
+          <button
+            (click)="goToStage(4)"
+            data-bs-toggle="tab"
+            aria-expanded="false"
+            class="nav-link"
+            [class.active]="stage === 4"
+            [disabled]="isStageDisabled(4)"
+          >
+            Stage 4
+          </button>
+        </li>
       </ul>
+
+      <div *ngIf="stage === 1" class="reservation-container">
+    <div class="heading">
+      <h3 class="mb-4 clr">Enter Reservation Details</h3>
+    </div>
+    <form>
+      <div class="mb-3">
+        <label for="reservationName" class="form-label">Reservation Name <span style="color: red;">*</span></label>
+        <input type="text" id="reservationName" class="form-control"
+          [(ngModel)]="reservation.reservation_name" name="reservation_name">
+      </div>
+      <div class="mb-3">
+        <label for=" contactNumber" class="form-label">Contact Number <span style="color: red;">*</span></label>
+        <input type="text" id="contactNumber" class="form-control"
+          [(ngModel)]="reservation.contact_number" name="contact_number">
+      </div>
+      <div class="mb-3">
+        <label for="alt_contact_number" class="form-label">Alternate Contact Number</label>
+        <input type="text" id="alt_contact_number" class="form-control"
+          [(ngModel)]="reservation.alt_contact_number" name="alt_contact_number">
+      </div>
+      <div class="mb-3">
+        <label for="reserverName" class="form-label">Booking Type <span style="color: red;">*</span></label>
+        <!-- <input type="text" id="reserverName" class="form-control"
+        [(ngModel)]="reservation.booking_type" name="booking_type"> -->
+        <select class="form-control" *ngIf="events" [(ngModel)]="reservation.booking_type" name="booking_type" id="booking_type">
+          <option *ngFor="let event of events" [value]="event.event_name">
+            {{ event.event_name }}
+          </option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <input type="text" id="description" class="form-control"
+          [(ngModel)]="reservation.description" name="description">
+      </div>
+      <div class="mb-3 position-relative">
+        <label for="date" class="form-label">Date <span style="color: red;">*</span></label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-0">
+            <i class="bi bi-calendar-event text-primary"></i>
+          </span>
+          <input type="date" id="date" class="form-control dateInput"
+            [(ngModel)]="reservation.date" name="date">
+        </div>
+      </div>
+    </form>
+    <div class="btnAl">
+
+      <button class="btn btn-primary btnAll" (click)="cancelReservation()">
+        <i class="fa fa-times" style="font-size:19px;"></i> Cancel
+      </button>
+      <button class="btn btn-primary btnAll" (click)="nextStage()"
+        [disabled]="!isStage1Valid()">
+        Next <i class="fa fa-arrow-right"></i>
+      </button>
     </div>
   </div>
-</div>
-<!-- /Page Header -->
 
-<div class="row">
-  <div class="col-md-12">
-    <div class="card">
-      <div class="card-body">
-        <form (ngSubmit)="addEstimate()" [formGroup]="addEstimateForm">
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label htmlFor="label">Customer<span class="mandatory">*</span></label>
-                <select class="form-select" formControlName="customerName">
-                  <option>Select Customer</option>
-                  <option>Brian Johnson</option>
-                  <option>Marie Canales</option>
-                  <option>Barbara Moore</option>
-                  <option>Greg Lynch</option>
-                  <option>Karlene Chaidez</option>
-                </select>
-                @if (
-                  addEstimateForm.get('customerName')?.invalid &&
-                  addEstimateForm.get('customerName')?.touched
-                  ) {
-                  <div
-                    >
-                    <small class="text-danger">*Name required</small>
-                  </div>
-                }
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label htmlFor="label">From<span class="mandatory">*</span></label>
-                <div class="cal-icon">
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="dp"
-                    formControlName="estimateFrom"
-                    />
-                    @if (
-                      addEstimateForm.get('estimateFrom')?.invalid &&
-                      addEstimateForm.get('estimateFrom')?.touched
-                      ) {
-                      <div
-                        >
-                        <small class="text-danger">*From Date required</small>
-                      </div>
-                    }
-                  </div>
+  <div *ngIf="stage === 2" class="calendar-container">
+    <div class="heading">
+        <h5 *ngIf="month[0]===month[6]" class="mt-4 clr">{{month[0]}} {{year}}</h5>
+        <h5 *ngIf="!(month[0]===month[6])" class="mt-4 clr">{{month[0]}} - {{month[6]}} {{year}}</h5>
+      </div>
+
+    <div class="calendar">
+      <div class="timeline"
+        style="display: flex; flex-direction: column; justify-content: space-between; font-weight: bold; margin-bottom: 10px; margin-top: 100px;">
+          <div *ngFor="let slotType of slotTypes" class="time-marker" style="flex: 1; text-align: center;">{{ slotType }}</div>
+      </div>
+      <div class="days">
+        <div *ngFor="let day of days; let i = index" class="day"
+          style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+          <div *ngIf="!(i==3)" class="date-circle">
+            <p class="date-day">{{ days_cal[i] }}</p>
+          </div>          
+          <div *ngIf="(i==3)" class="date-circle-selected">
+            <p class="date-day">{{ days_cal[i] }}</p>
+          </div>          
+          <div class="events"
+            style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+            <div class="event"
+              *ngFor="let slotType of slotTypes"
+              style="border-bottom: 2px solid #ccc; padding-bottom: 10px;">
+              <div class="slot-card"
+                style="display: flex; flex-direction: column; align-items: center;">
+                <div class="radio-container" style="display: flex; gap: 15px;">
+                  <input type="radio" name="selected_slot"
+                    id="event-{{ slotType.toLowerCase() }}-{{ i }}-1"
+                    (change)="selectSlot({ day: day, type: slotType, slot: 1 })"
+                    [disabled]="isSlotDisabled({ day: day, type: slotType, slot: 1 })">
+                  <label for="event-{{ slotType.toLowerCase() }}-{{ i }}-1"
+                    class="slot">Slot
+                    1</label>
+
+                  <input type="radio" name="selected_slot"
+                    id="event-{{ slotType.toLowerCase() }}-{{ i }}-2"
+                    (change)="selectSlot({ day: day, type: slotType, slot: 2 })"
+                    [disabled]="isSlotDisabled({ day: day, type: slotType, slot: 2 })"
+                    class="slot">
+                  <label for="event-{{ slotType.toLowerCase() }}-{{ i }}-2"
+                    class="slot">Slot
+                    2</label>
                 </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label htmlFor="label">To<span class="mandatory">*</span></label>
-                  <div class="cal-icon">
-                    <input
-                      type="text"
-                      class="form-control"
-                      name="dp"
-                      formControlName="estimateTo"
-                      />
-                      @if (
-                        addEstimateForm.get('estimateTo')?.invalid &&
-                        addEstimateForm.get('estimateTo')?.touched
-                        ) {
-                        <div
-                          >
-                          <small class="text-danger">*To Date required</small>
-                        </div>
-                      }
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4 mt-3">
-                  <div class="form-group">
-                    <label htmlFor="label">Estimate Number<span class="mandatory">*</span></label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      formControlName="estimateNumber"
-                      />
-                      @if (
-                        addEstimateForm.get('estimateNumber')?.invalid &&
-                        addEstimateForm.get('estimateNumber')?.touched
-                        ) {
-                        <div
-                          >
-                          <small class="text-danger">*Estimate Number required</small>
-                        </div>
-                      }
-                    </div>
-                  </div>
-                  <div class="col-md-4 mt-3">
-                    <div class="form-group">
-                      <label htmlFor="label">Ref Number<span class="mandatory">*</span></label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        formControlName="customerRef"
-                        />
-                        @if (
-                          addEstimateForm.get('customerRef')?.invalid &&
-                          addEstimateForm.get('customerRef')?.touched
-                          ) {
-                          <div
-                            >
-                            <small class="text-danger">*Ref Number required</small>
-                          </div>
-                        }
-                      </div>
-                    </div>
-                  </div>
-                  <div class="table-responsive mt-4">
-                    <table class="table table-hover">
-                      <thead>
-                        <tr>
-                          <th>Items</th>
-                          <th>Quantity</th>
-                          <th>Price</th>
-                          <th>Amount</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>
-                            <input type="text" class="form-control" />
-                          </td>
-                          <td>
-                            <input type="text" class="form-control" />
-                          </td>
-                          <td>
-                            <input type="text" class="form-control" />
-                          </td>
-                          <td>
-                            <input type="text" class="form-control" disabled />
-                          </td>
-                          <td class="add-remove text-end">
-                            <i class="fas fa-plus-circle me-1"></i>
-                            <i class="fas fa-minus-circle"></i>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <input type="text" class="form-control" />
-                          </td>
-                          <td>
-                            <input type="text" class="form-control" />
-                          </td>
-                          <td>
-                            <input type="text" class="form-control" />
-                          </td>
-                          <td>
-                            <input type="text" class="form-control" disabled />
-                          </td>
-                          <td class="add-remove text-end">
-                            <i class="fas fa-plus-circle me-1"></i>
-                            <i class="fas fa-minus-circle"></i>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div class="table-responsive mt-4">
-                    <table class="table table-stripped table-center table-hover">
-                      <thead></thead>
-                      <tbody>
-                        <tr>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td class="text-end">Sub Total</td>
-                          <td class="text-end">0</td>
-                        </tr>
-                        <tr>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td class="text-end">Discount</td>
-                          <td class="text-end">0</td>
-                        </tr>
-                        <tr>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td class="text-end">Total</td>
-                          <td class="text-end">0</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div class="text-end mt-4">
-                    <button type="submit" class="btn btn-primary">Add Estimate</button>
-                  </div>
-                </form>
               </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="text-center mt-3 btnAl specialButton">
+      <button class="btn btn-secondary btnAll" (click)="prevStage()">
+        <i class="fa fa-arrow-left"></i> Back
+      </button>
+      <button class="btn btn-primary btnAll" (click)="nextStage()"
+        [disabled]="!isStage2Valid()">
+        Next <i class="fa fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <!-- Stage 3: Select Menus -->
+    <div *ngIf="stage === 3">
+      <div class="page-header">
+        <div class="content-page-header">
+          <h5>Menu Selection</h5>
+          </div>
+        </div>
+      <div class="row">
+        <div class="col-md-4" *ngFor="let menu of availableMenus">
+          <div class="card menu-card"
+            (click)="selectMenu(menu)"
+            [ngClass]="{'selected-menu': reservation.selectedMenu?.menu_id === menu.menu_id}"
+            style="cursor: pointer; transition: 0.3s; border: 2px solid transparent; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+
+            <div class="card-body">
+              <!-- Hidden Radio Button -->
+              <input type="radio"
+                id="menu-{{ menu.menu_id }}"
+                name="selectedMenu"
+                [value]="menu"
+                [(ngModel)]="reservation.selectedMenu"
+                (change)="selectMenu(menu)"
+                style="display: none;">
+
+              <h5 class="card-title">{{ menu.menu_name }}</h5>
+              <p class="card-text"><strong>Description:</strong> {{
+                menu.description }}</p>
+              <p class="card-text"><strong>Price:</strong> {{ menu.menu_price |
+                currency }}</p>
+
+              <ul style="padding-left: 15px;">
+                <li *ngFor="let item of menu.menu_items"
+                  style="font-size: 14px;">
+                  <span>{{ item.item_name }} - {{ item.price | currency
+                    }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3 mt-4" style="display: flex;justify-content: right;">
+        <label for="numPersons" class="form-label"
+          style="width: 200px; color: black;">Number of Persons</label>
+        <input type="number" id="numPersons" class="form-control"
+          [(ngModel)]="reservation.num_of_persons" name="num_of_persons"
+          min="1" style="border: 2px solid #007bff; width:auto;">
+      </div>
+
+      <div class="text-center mt-3 btnAl">
+        <button class="btn btn-secondary btnAll" (click)="prevStage()"
+          style="margin-right: 10px;">
+          <i class="fa fa-arrow-left"></i> Back
+        </button>
+        <button class="btn btn-primary btnAll" (click)="nextStage()"
+          [disabled]="!isStage3Valid()">
+          Next <i class="fa fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage 4: Final Review -->
+  <div *ngIf="stage === 4">
+    <div class="page-header">
+      <div class="content-page-header">
+        <h5>Additional Services</h5>
+        </div>
+      </div>
+
+    <!-- Display Selected Menu -->
+    <div *ngIf="reservation.selectedMenu">
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="menu-head">
+            <div>
+              <h5 class="card-title">{{ reservation.selectedMenu.menu_name }}</h5>
+              <p><strong>Price:</strong> {{ reservation.selectedMenu.menu_price |
+                currency }}</p>
+            </div>
+            <div>
+              <h5 class="card-title">Total Menu Price: {{reservation.selectedMenu.finalPrice}}</h5>
+            </div>
+          </div>
+            
+            <!-- Display selected menu items in a grid -->
+          <div class="menu-items-gallery">
+            <div *ngFor="let item of menuItems" class="menu-item-card">
+              <div class="menu-item-details">
+                <label class="menuItemLabel">{{ item.item_name }}</label>
+                <label class="menuItemLabel">{{ item.price | currency }}</label>
+                <button *ngIf="item.selected"
+                  class="btn btn-danger btn-sm btnAll"
+                  (click)="removeMenuItem(item)">
+                  <i class="fa fa-trash-alt"></i> Remove
+                </button>
+                <button *ngIf="!item.selected"
+                  class="btn btn-primary btn-sm btnAll"
+                  (click)="addMenuItem(item)">
+                  <i class="fa fa-plus"></i> Add Item
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Display Additional Services -->
+    <div class="mb-3 bdr">
+      <h5 class="card-title">Select Additional Services</h5>
+      <div class="menu-items-gallery">
+        <div *ngFor="let service of additionalServices"
+          class="menu-item-card"
+          (click)="toggleAdditionalService(service)"
+          [ngClass]="{ 'selected-service': service.selected }">
+          <input type="checkbox" style="display: none;"
+            id="service-{{ service.additional_service_id }}"
+            [(ngModel)]="service.selected">
+          <label class="menuItemLabel">
+            {{ service.additional_service_name }} - {{ service.price | currency
+            }}
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- additional services -->
+    <div *ngIf="checkService()" class="mb-3 bdr">
+      <form>
+        <div class="mb-3">
+          <h5>Additional Services</h5>
+        </div>
+        <div class="labels-row">
+          <span class="label">Item</span>
+          <span class="label">Price</span>
+          <span class="label">Quantity</span>
+          <span class="label">Total Price</span>
+          <button type="button" class="remove-btn"></button>
+        </div>
+        <div class="service-row" *ngFor="let service of additionalServicesSelected; let i = index" [attr.id]="'row-' + i">
+          <input class="itemName" type="text" [(ngModel)]="service.additional_service_name" name="itemName-{{ i }}" readonly>
+          <input type="number" [(ngModel)]="service.price" name="price-{{ i }}" class="price" (input)="updateTotal(service)">
+          <input type="number" [(ngModel)]="service.quantity" name="quantity-{{ i }}" class="quantity" (input)="updateTotal(service)">
+          <input type="number" [(ngModel)]="service.totalPrice" name="totalPrice-{{ i }}" class="total-price" readonly>
+          <button type="button" class="remove-btn fa fa-trash-alt" (click)="toggleAdditionalService(service)"></button>
+        </div>
+      </form>
+    </div>    
+    <!-- Calculate and Display Total Price -->
+    <div class="mb-3 bdr">
+      <h5>Discount</h5>
+      <form>
+        <div class="labels-row mlr">
+          <span class="label-2">Service</span>
+          <span class="label-2">Calculated Price</span>
+          <span class="label-2">Discount</span>
+          <span class="label-2">Total Payable</span>
+        </div>
+        <div class="service-row mlr">
+          <input type="text" class="itemName" [(ngModel)]="reservation.selectedMenu.menu_name" name="reservation.selectedMenu.menu_name" readonly>
+          <input type="number" class="price" [(ngModel)]="reservation.selectedMenu.price" name="reservation.selectedMenu.menu_price" readonly>
+          <input type="number" class="discount" [(ngModel)]="reservation.selectedMenu.discount" name="discount" (input)="calculateMenuPrice()" placeholder="0">
+          <input type="number" class="total-price" [(ngModel)]="reservation.selectedMenu.finalPrice" name="reservation.selectedMenu.totalPrice" readonly>
+        </div>
+        <!-- additonal service bill -->
+        <div *ngIf="checkService()" class="service-row mlr">
+          <input type="text" class="itemName" value="Additional Services" name="additionalServicesSelected" readonly>
+          <input type="number" class="price" [(ngModel)]="totalAdditionalPrice" name="Total" readonly>
+          <input type="number" class="discount" [(ngModel)]="reservation.additionalDiscount" name="additionalServicesSelectedDiscount" (input)="calculateAdditionalServicePrice()" placeholder="0">
+          <input type="number" class="total-price" [(ngModel)]="reservation.additionalPrice" name="additionalServicesSelectedFinalPrice" readonly>
+        </div>
+      </form>
+      <!-- <h4><strong>Grand Total: {{ getGrandTotal() | currency }}</strong></h4> -->
+    </div>
+
+    <div class="mb-3 bdr labels-row">
+      <h5>Total Payable Amount </h5>
+      <h5>{{ getGrandTotal() | currency }}</h5>
+    </div>
+
+    <!-- Navigation Buttons -->
+
+    <div class="text-center mt-3 btnAl">
+      <button class="btn btn-secondary btnAll" (click)="prevStage()">
+        <i class="fa fa-arrow-left"></i> Back
+      </button>
+      <button class="btn btn-primary btnAll" (click)="saveReservation()"
+        style="width: 100px;">
+        Finish <i class="fa fa-check"></i>
+      </button>
+    </div>
+  </div>
+
+</div>
+</div>
+</div>

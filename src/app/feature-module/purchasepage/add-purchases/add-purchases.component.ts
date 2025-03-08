@@ -73,7 +73,7 @@ export class AddPurchasesComponent implements OnInit {
     });
     this.data.getpurchase().subscribe((res) => {
       // set newPurchase.purch_id to last purch_id + 1 and make it 6 digit
-      let purch_id = res.data[0].purch_id;
+      let purch_id = res.data[0] ? res.data[0].purch_id : 100;
       purch_id = parseInt(purch_id) + 1;
       purch_id = purch_id.toString();
       while (purch_id.length < 6) {

@@ -9,21 +9,21 @@ const routes: Routes = [
     children: [
      
       {
-        path: 'add-estimate',
+        path: 'add-reservation',
         loadChildren: () =>
           import('./add-estimates/add-estimates.module').then(
             (m) => m.AddEstimatesModule
           ),
       },
       {
-        path: 'edit-estimate',
+        path: 'edit-reservation',
         loadChildren: () =>
           import('./edit-estimate/edit-estimate.module').then(
             (m) => m.EditEstimateModule
           ),
       },
       {
-        path: 'view-estimate',
+        path: 'reservationList',
         loadChildren: () =>
           import('./view-estimate/view-estimate.module').then(
             (m) => m.ViewEstimateModule

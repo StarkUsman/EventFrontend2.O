@@ -124,7 +124,7 @@ const routes: Routes = [
           import('./items/items.module').then((m) => m.ItemsModule),
       },
       {
-        path: 'estimates',
+        path: 'reservations',
         loadChildren: () =>
           import('./estimates/estimates.module').then((m) => m.EstimatesModule),
       },

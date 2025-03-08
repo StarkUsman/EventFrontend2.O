@@ -53,7 +53,7 @@ export class ExpensesListComponent  {
       second: '2-digit'
   };
 
-    this.data.getpurchase().subscribe((apiRes: apiResultFormat) => {
+    this.data.getExpenses().subscribe((apiRes: apiResultFormat) => {
       this.purchase = [];
       this.serialNumberArray = [];
       this.totalData = apiRes.totalData;
@@ -110,9 +110,9 @@ export class ExpensesListComponent  {
     this.itemToDetele = purchase.id;
   }
 
-  deleteItem(){
-    this.data.deletepurchase(this.itemToDetele).subscribe((res: any) => {
-      this.getTableData({ skip: 0, limit: this.pageSize });
-    });
-  }
+  // deleteItem(){
+  //   this.data.deletepurchase(this.itemToDetele).subscribe((res: any) => {
+  //     this.getTableData({ skip: 0, limit: this.pageSize });
+  //   });
+  // }
 }

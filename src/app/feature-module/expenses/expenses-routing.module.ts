@@ -21,6 +21,13 @@ const routes: Routes = [
           import('./add-expenses/add-purchases.module').then(
             (m) => m.AddPurchasesModule
           ),
+      },
+      {
+        path: 'expenses-details',
+        loadChildren: () =>
+          import('./purchases-details/purchases-details.module').then(
+            (m) => m.PurchasesDetailsModule
+          ),
       }
     ],
   },

@@ -47,7 +47,6 @@ export class AddPurchasesComponent implements OnInit {
   public pageSelection: Array<pageSelection> = [];
   public totalPages = 0;
   //** / pagination variables
-  allVendors: any = [];
   allProducts: any = [];
   newPurchase: any = {};
   selectedProduct: any = {};
@@ -65,15 +64,15 @@ export class AddPurchasesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTableData();
-    this.data.getVendors().subscribe((res) => {
-      this.allVendors = res.data;
-    });
     this.data.getProductlist().subscribe((res) => {
       this.allProducts = res.data;
+      if (this.allProducts.length > 0) {
+        this.allProducts = this.allProducts.filter((p: any) => p.quantity > 0);
+      }
     });
-    this.data.getpurchase().subscribe((res) => {
+    this.data.getExpenses().subscribe((res) => {
       // set newPurchase.purch_id to last purch_id + 1 and make it 6 digit
-      let purch_id = res.data[0].purch_id;
+      let purch_id = res.data[0] ? res.data[0].purch_id : 100;
       purch_id = parseInt(purch_id) + 1;
       purch_id = purch_id.toString();
       while (purch_id.length < 6) {
@@ -236,20 +235,6 @@ export class AddPurchasesComponent implements OnInit {
     return total;
   }
 
-  // ledger function
-  addLedger(purch_id: any, vendor_id: any, amountDebit: any) {
-    let ledger = {
-      name: "SRV",
-      purch_id: purch_id,
-      vendor_id: vendor_id,
-      amountDebit: amountDebit,
-      amountCredit: 0
-    };
-
-    this.data.addLedger(ledger).subscribe((res) => { });
-  }
-
-
   addPurchase() {
     this.newPurchase.purch_id = parseInt(this.newPurchase.purch_id);
     // remove img from products
@@ -265,21 +250,11 @@ export class AddPurchasesComponent implements OnInit {
     this.newPurchase.paymentmode = "cash";
     // make api call for each product selectedProducts
     this.selectedProducts.forEach((p: any) => {
-      this.data.addPurchaseProduct(p).subscribe((res) => {
+      this.data.removePurchaseProduct(p).subscribe((res) => {
       });
     });
 
-    // make api call for vendors
-    let vendor = this.allVendors.find((v: any) => v.id === this.newPurchase.vendor.id);
-    vendor.balance = vendor.balance.replace(/[^0-9.]/g, '');
-    vendor.balance = parseFloat(vendor.balance) + this.newPurchase.total_amount;
-
-    this.data.updateVendor(vendor).subscribe((res) => {
-    });
-
-    this.addLedger(this.newPurchase.purch_id, this.newPurchase.vendor.id, this.newPurchase.total_amount)
-
-    this.data.addPurchase(this.newPurchase).subscribe((res) => {
+    this.data.addExpense(this.newPurchase).subscribe((res) => {
     });
   }
 }

@@ -560,6 +560,22 @@ export class DataService {
   public deleteinventory(id: number) {
     return this.http.delete(`http://localhost:3000/inventory/${id}`);
   }
+  
+  public getExpenses() {
+    return this.http.get<apiResultFormat>('http://localhost:3000/expenses').pipe(
+      map((res: apiResultFormat) => {
+        return res;
+      })
+    );
+  }
+  
+  public addExpense(expense: any) {
+    return this.http.post('http://localhost:3000/expenses', expense);
+  }
+
+  public getExpenseByID(id: number) {
+    return this.http.get(`http://localhost:3000/expenses/${id}`);
+  }
 
   public getpurchase() {
     return this.http.get<apiResultFormat>('http://localhost:3000/purchase').pipe(
@@ -1034,6 +1050,58 @@ public sideBar: any[] = [
         icon: 'users',
         base: 'vendors',
         subMenus: [],
+      },
+    ],
+  },
+  {
+    tittle: 'Reservations',
+    active: false,
+    icon: '',
+    showAsTab: false,
+    separateRoute: false,
+    menu: [
+      // {
+      //   menuValue: 'Customers',
+      //   route: routes.customer,
+      //   hasSubRoute: false,
+      //   showSubRoute: false,
+      //   icon: 'users',
+      //   base: 'customer',
+      //   subMenus: [],
+      // },
+      // {
+      //   menuValue: 'Customer Details',
+      //   route: routes.customerdetails,
+      //   hasSubRoute: false,
+      //   showSubRoute: false,
+      //   icon: 'file',
+      //   base: 'customerdetailspage',
+      //   subMenus: [],
+      // },
+      {
+        menuValue: 'Reservations',
+        route: routes.reservations,
+        hasSubRoute: true,
+        showSubRoute: false,
+        icon: 'users',
+        base: 'estimates',
+        subMenus: [
+          {
+            menuValue: 'Reservation List',
+            route: routes.reservationList,
+            base: routes.reservationList,
+          },
+          {
+            menuValue: 'Add Reservation',
+            route: routes.addreservation,
+            base: routes.addreservation,
+          },
+          // {
+          //   menuValue: 'Units',
+          //   route: routes.units,
+          //   base: routes.units,
+          // },
+        ],
       },
     ],
   },

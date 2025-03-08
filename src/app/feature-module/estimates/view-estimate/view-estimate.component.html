@@ -1,122 +1,90 @@
-<div class="row justify-content-center">
-  <div class="col-xl-8">
-    <div class="card">
-      <div class="card-body">
-        <div class="invoice-item">
-          <div class="row">
-            <div class="col-md-6">
-              <div class="invoice-logo">
-                <img src="assets/img/logo.png" alt="logo" />
-              </div>
-            </div>
-            <div class="col-md-6">
-              <p class="invoice-details">
-                <strong>Order:</strong> #00124 <br />
-                <strong>Issued:</strong> 20/07/2019
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Invoice Item -->
-        <div class="invoice-item">
-          <div class="row">
-            <div class="col-md-6">
-              <div class="invoice-info">
-                <strong class="customer-text">Invoice From</strong>
-                <p class="invoice-details invoice-details-two">
-                  Darren Elder <br />
-                  806 Twin Willow Lane, Old Forge,<br />
-                  Newyork, USA <br />
-                </p>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="invoice-info invoice-info2">
-                <strong class="customer-text">Invoice To</strong>
-                <p class="invoice-details">
-                  Walter Roberson <br />
-                  299 Star Trek Drive, Panama City, <br />
-                  Florida, 32405, USA <br />
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- /Invoice Item -->
-
-        <!-- Invoice Item -->
-        <div class="invoice-item">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="invoice-info">
-                <strong class="customer-text">Payment Method</strong>
-                <p class="invoice-details invoice-details-two">
-                  Debit Card <br />
-                  XXXXXXXXXXXX-2541 <br />
-                  HDFC Bank<br />
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- /Invoice Item -->
-
-        <!-- Invoice Item -->
-        <div class="invoice-item invoice-table-wrap">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="table-responsive">
-                <table class="invoice-table table table-bordered">
-                  <thead>
-                    <tr>
-                      <th>Description</th>
-                      <th class="text-center">Quantity</th>
-                      <th class="text-center">VAT</th>
-                      <th class="text-end">Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>General Consultation</td>
-                      <td class="text-center">1</td>
-                      <td class="text-center">$0</td>
-                      <td class="text-end">$100</td>
-                    </tr>
-                    <tr>
-                      <td>Video Call Booking</td>
-                      <td class="text-center">1</td>
-                      <td class="text-center">$0</td>
-                      <td class="text-end">$250</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="col-md-6 col-xl-4 ms-auto">
-              <div class="table-responsive">
-                <table class="invoice-table-two table">
-                  <tbody>
-                    <tr>
-                      <th>Subtotal:</th>
-                      <td><span>$350</span></td>
-                    </tr>
-                    <tr>
-                      <th>Discount:</th>
-                      <td><span>-10%</span></td>
-                    </tr>
-                    <tr>
-                      <th>Total Amount:</th>
-                      <td><span>$315</span></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- /Invoice Item -->
+<div class="page-header">
+  <div class="content-page-header">
+    <h5>Reservations</h5>
+    <div class="list-btn">
+      <ul class="filter-list">
+        <li>
+          <button class="btn btn-primary mb-3 primary-btn" (click)="addReservation()">
+            <i class="fa fa-plus"></i> Add Reservation
+        </button>
+          </li>
+        </ul>
       </div>
     </div>
+  </div>
+  <!-- /Page Header -->
+
+<div class="row custom-container">
+  <div class="col-sm-12">
+      <div class="card-table">
+          <div class="card-body">
+              <div class="table-responsive">
+                  <table class="table table-center table-hover">
+                      <thead class="thead-light">
+                          <tr>
+                              <th>ID</th>
+                              <th>Booking Name</th>
+                              <th>Contact Number</th>
+                              <th>Booking Type</th>
+                              <th>Date</th>
+                              <th>Hall</th>
+                              <th>Menu</th>
+                              <th>Actions</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr *ngFor="let reservation of reservations let i = index">
+                              <td>{{ i+1 }}</td>
+                              <td>{{ reservation.booking_name }}</td>
+                              <td>{{ reservation.contact_number }}</td>
+                              <td>{{ reservation.booking_type }}</td>
+                              <td>{{ reservation.slot_day }}</td>
+                              <td>{{ reservation.slot_type }}</td>
+                              <td>{{ getMenuName(reservation.menu_id) }}</td>
+                              <!-- <td>{{ getAdditionalServices(reservation.add_service_ids) }}</td> -->
+                              <!-- <td class="align-items-center">
+                                  <button class="btn btn-danger me-2" (click)="deleteReservation(reservation.booking_id)">
+                                      <i class="fa fa-trash-alt"></i> Delete
+                                  </button>
+                              </td> -->
+                              <td class="d-flex align-items-center">
+                                <div class="dropdown dropdown-action">
+                                  <a
+                                    href="javascript:void(0);"
+                                    class="btn-action-icon"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                    ><i class="fas fa-ellipsis-v"></i
+                                  ></a>
+                                  <div class="dropdown-menu dropdown-menu-right">
+                                    <ul>
+                                      <!-- <li>
+                                        <a
+                                          class="dropdown-item"
+                                          [routerLink]="routes.editproducts"
+                                          [queryParams]="{ id: data.id }"
+                                          ><i class="far fa-edit me-2"></i>Edit</a
+                                          >
+                                        </li> -->
+                                        <li>
+                                          <a
+                                            class="dropdown-item"
+                                            href="javascript:void(0);"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#delete_modal"
+                                            (click)="deleteReservation(reservation.booking_id)"
+                                            ><i class="far fa-trash-alt me-2"></i>Delete</a
+                                            >
+                                          </li>
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  </td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
   </div>
 </div>

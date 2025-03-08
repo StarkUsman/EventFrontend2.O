@@ -78,11 +78,10 @@
                   <tr>
                     <th mat-sort-header="sNo">#</th>
                     <th mat-sort-header="id">Expense ID</th>
-                    <th mat-sort-header="person">Vendor</th>
+                    <th mat-sort-header="status">Reference#</th>
                     <th mat-sort-header="totalamount">Amount</th>
                     <!-- <th mat-sort-header="paymentmode">Payment Mode</th> -->
                     <th mat-sort-header="date">Date</th>
-                    <th mat-sort-header="status">Status</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -92,42 +91,15 @@
                       <td>{{ data.sNo }}</td>
                       <td>
                         <a
-                          [routerLink]="routes.purchasesdetails"
-                          class="invoice-link"
-                          >{{ data.purch_id }}</a
-                          >
-                        </td>
-                        <td>
-                          <h2 class="table-avatar">
-                            <!-- <a
-                              [routerLink]="routes.profile"
-                              class="avatar avatar-sm me-2"
-                              ><img
-                              class="avatar-img rounded-circle"
-                              [src]="data.img"
-                              alt="User Image"
-                            /></a> -->
-                            <a [routerLink]="routes.vendorsList"
-                              >{{ data.vendor.name }} <span>{{ data.vendor.phone }}</span></a
-                              >
-                            </h2>
-                          </td>
-                          <td>{{ data.total_amount }}</td>
+                        [routerLink]="routes.purchasesdetails"
+                        class="invoice-link"
+                        >{{ data.purch_id }}</a
+                        >
+                      </td>
+                      <td>{{ data.reference_no }}</td>
+                          <td>PKR{{ data.total_amount }}</td>
                           <!-- <td>{{ data.paymentmode }}</td> -->
                           <td>{{ data.purchase_date }}</td>
-                          <td>
-                            <span
-                      [ngClass]="{
-                        'bg-success-light text-success-light':
-                          data.status === 'Paid',
-                        'bg-warning-light text-warning-light':
-                          data.status === 'Pending',
-                        'bg-danger-light': data.status === 'Cancelled'
-                      }"
-                              class="badge badge-pill"
-                              >{{ data.status }}</span
-                              >
-                            </td>
                             <td class="d-flex align-items-center">
                               <div class="dropdown dropdown-action">
                                 <a
@@ -141,14 +113,14 @@
                                   class="dropdown-menu dropdown-menu-right credit-note-dropdown"
                                   >
                                   <ul>
-                                    <li>
+                                    <!-- <li>
                                       <a
                                         class="dropdown-item"
                                         [routerLink]="routes.editexpenses"
                                         [queryParams]="{ id: data.id }"
                                         ><i class="far fa-edit me-2"></i>Edit</a
                                         >
-                                      </li>
+                                      </li> -->
                                       <!-- <li>
                                         <a
                                           class="dropdown-item"
@@ -162,7 +134,8 @@
                                         <li>
                                           <a
                                             class="dropdown-item"
-                                            [routerLink]="routes.purchasesdetails"
+                                            [routerLink]="routes.expenseDetails"
+                                            [queryParams]="{ id: data.id }"
                                             ><i class="far fa-eye me-2"></i>View</a
                                             >
                                           </li>
@@ -517,8 +490,8 @@
                                       type="reset"
                                       data-bs-dismiss="modal"
                                       class="w-100 btn btn-primary paid-continue-btn"
-                                      (click)="deleteItem()"
                                       >
+                                      <!-- (click)="deleteItem()" -->
                                       Delete
                                     </button>
                                   </div>
