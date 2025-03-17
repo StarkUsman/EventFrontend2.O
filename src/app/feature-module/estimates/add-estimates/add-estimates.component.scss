@@ -466,4 +466,80 @@
     justify-content: center; /* Center buttons */
     gap: 80%; /* Adjust spacing between buttons */
   }
+
   
+  .bookingTable thead{
+    background: none;
+    
+  }
+
+
+  .bookingTable th, .bookingTable td {
+    background-color: none;
+    text-align: center;
+    padding: 10px;
+    vertical-align: middle;
+    border: 1px solid rgba(117, 57, 255, 0.1);
+}
+.bookingTable tbody th {
+    font-size: 18px;
+    color: #7539ff;
+    background: rgba(117, 57, 255, 0.05);
+}
+.bookingTable .day {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #d1f3ff;
+    color: #42cdff;
+    margin: 0 auto 10px;
+    font-size: 20px;
+}
+.bookingTable .day.current {
+    color: #f06548;
+    background-color: #f065481a;
+}
+.bookingTable .btnRow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.bookingTable .btn {
+    background: none;
+    color: #7539ff;
+    border: 1px solid rgba(117, 57, 255, 0.2);
+    width: 100%;
+}
+.bookingTable .btn:hover {
+    background: rgba(117, 57, 255, 0.1);
+}
+.bookingTable .btn.available {
+    color: #0ab39c;
+    background-color: #0ab39c1a;
+    border-color: #0ab39c1a;
+}
+.bookingTable .btn.booked {
+    color: #f06548;
+    background-color: #f065481a;
+    border-color: #f065481a;
+}
+.bookingTable .btn.partiallyBooked {
+    color: #f7b84b;
+    background-color: #f7b84b1a;
+    border-color: #f7b84b1a;
+}
+
+.popover {
+    border: none;
+    box-shadow: 0 0 10px -3px rgba(0, 0, 0, 0.2);
+}
+.popover .popover-header {
+    background: none;
+    color: #7539ff;
+    border-color: rgba(0, 0, 0, 0.05);
+}

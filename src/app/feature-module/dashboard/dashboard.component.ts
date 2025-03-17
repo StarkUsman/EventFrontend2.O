@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 
 import {
   ChartComponent,
@@ -17,7 +17,7 @@ import {
   ApexFill,
   ApexResponsive,
 } from 'ng-apexcharts';
-import { routes, SideBarService } from 'src/app/core/core.index';
+import { routes, SideBarService, DataService } from 'src/app/core/core.index';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries | any;
@@ -43,14 +43,22 @@ export type ChartOptions = {
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
   @ViewChild('chart') chart!: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
   public chartOptions2: Partial<ChartOptions>;
   public layoutPosition = '1';
   public routes = routes;
+  people_to_be_served: number = 0;
+  pct_people_to_be_served_last_month: number = 0;
+  total_people_served: number = 0;
+  pct_total_people_served_last_month: number = 0;
+  reservations_this_month: number = 0;
+  pct_reservations_last_month: number = 0;
+  total_due_balance: number = 0;
+  pct_total_due_balance_last_month: number = 0;
 
-  constructor(private sideBar: SideBarService) {
+  constructor(private sideBar: SideBarService, private data: DataService) {
     this.chartOptions = {
       series: [
         {
@@ -153,5 +161,24 @@ export class DashboardComponent {
       this.layoutPosition = res;
     });
     // <* to check layout position *>
+  }
+
+  ngOnInit(): void {
+    this.data.getDashboardData().subscribe((res: any) => {
+
+      console.log("====================================");
+      console.log(res);
+      console.log("====================================");
+
+      this.people_to_be_served = res.people_to_be_served;
+      this.pct_people_to_be_served_last_month = res.pct_people_to_be_served_last_month
+      this.total_people_served = res.total_people_served;
+      this.pct_total_people_served_last_month = res.pct_total_people_served_last_month
+      this.reservations_this_month = res.reservations_this_month;
+      this.pct_reservations_last_month = res.pct_reservations_last_month
+      // this.reservations_last_month = res.reservations_last_month;
+      this.total_due_balance = res.total_due_balance;
+      // this.pct_total_due_balance_last_month = res.pct_total_due_balance_last_month
+    });
   }
 }

@@ -159,7 +159,7 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'location',
+        path: 'services',
         loadChildren: () =>
           import('./location/location.module').then((m) => m.LocationModule),
       },

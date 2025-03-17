@@ -46,7 +46,7 @@ export class ListComponent {
   }
 
   private getTableData(pageOption: pageSelection): void {
-    this.data.getVendors().subscribe((apiRes: apiResultFormat) => {
+    this.data.getVendorsOnly().subscribe((apiRes: apiResultFormat) => {
       console.log(apiRes);
       this.tableData = [];
       this.serialNumberArray = [];
@@ -125,6 +125,7 @@ export class ListComponent {
   
     this.nameError = false;
 
+    this.newVendor.category = 'vendor';
     this.data.addVendor(this.newVendor).subscribe((res) => {
       this.getTableData({ skip: 0, limit: this.pageSize });
       this.newVendor = {};

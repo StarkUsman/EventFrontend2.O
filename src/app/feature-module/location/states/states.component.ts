@@ -29,13 +29,19 @@ export class StatesComponent {
   dataSource!: MatTableDataSource<states>;
   public searchDataValue = '';
   //** / pagination variables
+
+  menuItems: any = [];
+  menuItemToEdit: any = {};
+  newMenuItem: any = {};
+  menuItemToDelete: any = {};
+
   constructor(
     private data: DataService,
     private pagination: PaginationService,
     private router: Router,
   ) {
     this.pagination.tablePageSize.subscribe((res: tablePageSize) => {
-      if (this.router.url == this.routes.states) {
+      if (this.router.url == this.routes.menuItems) {
         this.getTableData({ skip: res.skip, limit: res.limit });
         this.pageSize = res.pageSize;
       }
@@ -43,7 +49,7 @@ export class StatesComponent {
   }
 
   private getTableData(pageOption: pageSelection): void {
-    this.data.getstates().subscribe((apiRes: apiResultFormat) => {
+    this.data.getAllMenuItems().subscribe((apiRes: apiResultFormat) => {
       this.states = [];
       this.serialNumberArray = [];
       this.totalData = apiRes.totalData;
@@ -108,5 +114,33 @@ export class StatesComponent {
   public toggleData = false;
   openContent() {
     this.toggleData = !this.toggleData;
+  }
+
+  ngOnInit(): void {
+    
+  }
+
+  setMenuItemToEdit(menuItem: any) {
+    this.menuItemToEdit = menuItem;
+  }
+
+  setMenuItemToDelete(menuItem: any) {
+    this.menuItemToDelete = menuItem;
+  }
+
+  updateMenuItem() {
+    this.data.updateMenuItem(this.menuItemToEdit).subscribe((res: any) => {});
+    // window.location.reload();
+  }
+
+  addMenuItem() {
+    this.data.addMenuItem(this.newMenuItem).subscribe((res: any) => {});
+    window.location.reload();
+  }
+
+  deleteMenuItem() {
+    console.log(this.menuItemToDelete);
+    this.data.deleteMenuItem(this.menuItemToDelete).subscribe((res: any) => {});
+    this.states = this.states.filter((item) => item !== this.menuItemToDelete);
   }
 }

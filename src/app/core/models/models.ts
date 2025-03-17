@@ -16,6 +16,8 @@ export interface vendor {
   phone: string;
   created: string;
   balance: string;
+  category: string;
+  subcategory: string;
 }
 export interface customers {
   id: number;
@@ -420,6 +422,7 @@ export interface category {
   img: string;
   total: number;
   value: string;
+  description: string;
 }
 export interface payments {
   id: number;
@@ -480,6 +483,12 @@ export interface user {
   status: string;
 }
 export interface states {
+  menu_item_id: number;
+  item_name: string,
+  item_name_urdu: string,
+  description: string,
+  price: number,
+  category: string,
   sNo: number;
   countryCode: string;
   countryName: string;
@@ -487,11 +496,16 @@ export interface states {
   stateName: string;
 }
 export interface countries {
+  menu_id: number;
   sNo: number;
   countryCode: string;
   countryName: number;
   countryId: string;
   countryFlag: string;
+  menu_name: string;
+  menu_name_urdu: string;
+  menu_price: string;
+  isActive: any;
 }
 export interface cities {
   sNo: number;

@@ -35,7 +35,7 @@ export class CitiesComponent {
     private router: Router,
   ) {
     this.pagination.tablePageSize.subscribe((res: tablePageSize) => {
-      if (this.router.url == this.routes.cities) {
+      if (this.router.url == this.routes.addAdditionalServices) {
         this.getTableData({ skip: res.skip, limit: res.limit });
         this.pageSize = res.pageSize;
       }

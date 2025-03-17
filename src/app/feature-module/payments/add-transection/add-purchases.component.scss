@@ -1,0 +1,15 @@
+.arrowbox{
+    // align center
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: greenyellow;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.spaceBetween{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

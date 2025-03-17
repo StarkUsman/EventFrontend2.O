@@ -8,15 +8,25 @@ const routes: Routes = [
     component: PaymentsComponent,
     children: [
       {
-        path: 'payments-list',
+        path: 'transaction-list',
         loadChildren: () =>
-          import('./payments-list/payments-list.module').then((m) => m.PaymentsListModule),
+          import('./transactions/purchases.module').then((m) => m.PurchasesModule),
       },
       {
-        path: 'add-payment',
+        path: 'add-transaction',
         loadChildren: () =>
-          import('./add-payments/add-payments.module').then((m) => m.AddPaymentsModule),
+          import('./add-transection/add-purchases.module').then((m) => m.AddPurchasesModule),
       },
+      {
+        path: 'transaction-details',
+        loadChildren: () =>
+          import('./transaction-details/purchases-details.module').then((m) => m.PurchasesDetailsModule),
+      },
+      {
+        path: 'voucher-List',
+        loadChildren: () =>
+          import('./units/units.module').then((m) => m.UnitsModule),
+      }
     ],
   },
 ];
@@ -25,4 +35,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class PaymentsRoutingModule {}
+export class PaymentsRoutingModule { }

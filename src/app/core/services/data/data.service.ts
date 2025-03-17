@@ -247,12 +247,123 @@ export class DataService {
       })
     );
   }
+  public getMenus() {
+    return this.http.get<apiResultFormat>('http://localhost:3000/menus').pipe(
+      map((res: apiResultFormat) => {
+        return res;
+      })
+    );
+  }
+  
+  public addMenu(menu: any) {
+    return this.http.post('http://localhost:3000/menus', menu);
+  }
+  
+  public deleteMenu(id: number) {
+    return this.http.delete(`http://localhost:3000/menus/${id}`);
+  }
+  
+  public updateMenu(menu: any) {
+    return this.http.put(`http://localhost:3000/menus/${menu.menu_id}`, menu);
+  }
+  
+  public getMenuItems() {
+    return this.http.get(`http://localhost:3000/menu-items`);
+  }
+
+  public getAllMenuItems() {
+    return this.http.get<apiResultFormat>('http://localhost:3000/menu-items/formatted').pipe(
+      map((res: apiResultFormat) => {
+        return res;
+      })
+    );
+  }
+
+  public updateMenuItem(menuItem: any) {
+    return this.http.put(`http://localhost:3000/menu-items/${menuItem.menu_item_id}`, menuItem);
+  }
+
+  public addMenuItem(menuItem: any) {
+    return this.http.post('http://localhost:3000/menu-items', menuItem);
+  }
+
+  public deleteMenuItem(menuItem: any) {
+    return this.http.delete(`http://localhost:3000/menu-items/${menuItem.menu_item_id}`);
+  }
+
   public getVendors() {
     return this.http.get<apiResultFormat>('http://localhost:3000/vendors').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
     );
+  }
+
+  public getVendorsOnly() {
+    return this.http.get<apiResultFormat>('http://localhost:3000/vendors/category').pipe(
+      map((res: apiResultFormat) => {
+        return res;
+      })
+    );
+  }
+  public getVouchers() {
+    return this.http.get<apiResultFormat>('http://localhost:3000/vouchers').pipe(
+      map((res: apiResultFormat) => {
+        return res;
+      })
+    );
+  }
+
+  public deleteVoucher(sNo: number) {
+    return this.http.delete(`http://localhost:3000/vouchers/${sNo}`);
+  }
+
+  public addVoucher(voucher: any) {
+    return this.http.post('http://localhost:3000/vouchers', voucher);
+  }
+
+  public updateVoucher(voucher: any) {
+    return this.http.put(`http://localhost:3000/vouchers/${voucher.id}`, voucher);
+  }
+
+  public getAccountsCategory() {
+    return this.http.get<apiResultFormat>('http://localhost:3000/acategory').pipe(
+      map((res: apiResultFormat) => {
+        return res;
+      })
+    );
+  }
+
+  public addaCategory(category: any) {
+    return this.http.post('http://localhost:3000/acategory', category);
+  }
+
+  public updateaCategory(category: any) {
+    return this.http.put(`http://localhost:3000/acategory/${category.id}`, category);
+  }
+
+  public deleteaCategory(id: number) {
+    return this.http.delete(`http://localhost:3000/acategory/${id}`);
+  }
+
+  public getAccountsSubCategory() {
+    return this.http.get<apiResultFormat>('http://localhost:3000/asubcategory').pipe(
+      map((res: apiResultFormat) => {
+        return res;
+      })
+    );
+  }
+
+  public addaSubCategory(subcategory: any) {
+    return this.http.post('http://localhost:3000/asubcategory', subcategory);
+  }
+
+  public updateaSubCategory(subcategory: any) {
+    return this.http.put(`http://localhost:3000/asubcategory/${subcategory.id}`, subcategory);
+  }
+
+  public deleteaSubCategory(id: number) {
+    return this.http.delete(`http://localhost:3000/asubcategory/${id}`);
   }
 
   public getVendorById(id: number) {
@@ -611,6 +722,10 @@ export class DataService {
 
   public getPurchaseById(id: number) {
     return this.http.get(`http://localhost:3000/purchase/${id}`);
+  }
+
+  public getDashboardData() {
+    return this.http.get(`http://localhost:3000/dash`);
   }
 
   public getpurchaseorder() {
@@ -1024,15 +1139,15 @@ public sideBar: any[] = [
     showAsTab: false,
     separateRoute: false,
     menu: [
-      // {
-      //   menuValue: 'Customers',
-      //   route: routes.customer,
-      //   hasSubRoute: false,
-      //   showSubRoute: false,
-      //   icon: 'users',
-      //   base: 'customer',
-      //   subMenus: [],
-      // },
+      {
+        menuValue: 'Accounts',
+        route: routes.customer,
+        hasSubRoute: false,
+        showSubRoute: false,
+        icon: 'users',
+        base: 'accounts',
+        subMenus: [],
+      },
       // {
       //   menuValue: 'Customer Details',
       //   route: routes.customerdetails,
@@ -1087,20 +1202,20 @@ public sideBar: any[] = [
         base: 'estimates',
         subMenus: [
           {
-            menuValue: 'Reservation List',
+            menuValue: 'Reservations',
             route: routes.reservationList,
             base: routes.reservationList,
           },
           {
-            menuValue: 'Add Reservation',
-            route: routes.addreservation,
-            base: routes.addreservation,
+            menuValue: 'Menus',
+            route: routes.menu,
+            base: routes.menu,
           },
-          // {
-          //   menuValue: 'Units',
-          //   route: routes.units,
-          //   base: routes.units,
-          // },
+          {
+            menuValue: 'Menu-Items',
+            route: routes.menuItems,
+            base: routes.menuItems,
+          },
         ],
       },
     ],
@@ -1211,57 +1326,55 @@ public sideBar: any[] = [
   //   separateRoute: false,
   //   menu: [
   //     {
-  //       menuValue: 'Invoices',
+  //       menuValue: 'Transections',
   //       route: routes.dashboard,
   //       hasSubRoute: true,
   //       showSubRoute: false,
   //       icon: 'clipboard',
   //       base: 'invoices',
   //       subMenus: [
-  //         {
-  //           menuValue: 'Invoices List',
-  //           route: routes.invoiceList,
-  //           base: routes.invoiceList,
-  //         },
-
-  //         {
-  //           menuValue: 'Invoice Details (Admin)',
-  //           route: routes.invoicedetailsadmin,
-  //           base: routes.invoicedetailsadmin,
-  //         },
-  //         {
-  //           menuValue: 'Invoice Details (Customer)',
-  //           route: routes.invoicedetails,
-  //           base: routes.invoicedetails,
-  //         },
-  //         {
-  //           menuValue: 'Invoices Template',
-  //           route: routes.invoicetemplate,
-  //           base: routes.invoicetemplate,
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       menuValue: 'Recurring Invoices',
-  //       route: routes.recurringinvoices,
-  //       hasSubRoute: false,
-  //       showSubRoute: false,
-  //       icon: 'clipboard',
-  //       base: 'recurring-pages',
-  //       subMenus: [],
-  //     },
-  //     {
-  //       menuValue: 'Credit Notes',
-  //       route: routes.creditnotes,
-  //       hasSubRoute: false,
-  //       showSubRoute: false,
-  //       icon: 'edit',
-  //       base: 'credit-note-pages',
-  //       subMenus: [],
-  //     },
+          // {
+          //   menuValue: 'Transection List',
+          //   route: routes.invoiceList,
+          //   base: routes.invoiceList,
+          // },
+          // {
+          //   menuValue: 'Invoice Details (Admin)',
+          //   route: routes.invoicedetailsadmin,
+          //   base: routes.invoicedetailsadmin,
+          // },
+          // {
+          //   menuValue: 'Invoice Details (Customer)',
+          //   route: routes.invoicedetails,
+          //   base: routes.invoicedetails,
+          // },
+          // {
+          //   menuValue: 'Invoices Template',
+          //   route: routes.invoicetemplate,
+          //   base: routes.invoicetemplate,
+          // },
+      //   ],
+      // },
+      // {
+      //   menuValue: 'Recurring Invoices',
+      //   route: routes.recurringinvoices,
+      //   hasSubRoute: false,
+      //   showSubRoute: false,
+      //   icon: 'clipboard',
+      //   base: 'recurring-pages',
+      //   subMenus: [],
+      // },
+      // {
+      //   menuValue: 'Credit Notes',
+      //   route: routes.creditnotes,
+      //   hasSubRoute: false,
+      //   showSubRoute: false,
+      //   icon: 'edit',
+      //   base: 'credit-note-pages',
+      //   subMenus: [],
+      // },
   //   ],
   // },
-
   {
     tittle: 'Purchases',
     active: false,
@@ -1315,13 +1428,24 @@ public sideBar: any[] = [
         subMenus: [],
       },
       {
-        menuValue: 'Payments',
-        route: routes.paymentsList,
-        hasSubRoute: false,
+        menuValue: 'Transactions',
+        route: routes.transactionList,
+        hasSubRoute: true,
         showSubRoute: false,
         icon: 'credit-card',
         base: 'payments',
-        subMenus: [],
+        subMenus: [
+          {
+            menuValue: 'Transaction List',
+            route: routes.transactionList,
+            base: routes.transactionList,
+          },
+          {
+            menuValue: 'Vouchers',
+            route: routes.voucherList,
+            base: routes.voucherList,
+          },
+        ],
       },
     ],
   },

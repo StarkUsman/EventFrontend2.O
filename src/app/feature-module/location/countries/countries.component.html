@@ -1,26 +1,11 @@
 <!-- Page Header -->
 <div class="page-header">
   <div class="content-page-header">
-    <h5>Countries</h5>
+    <h5>Menu</h5>
     <div class="list-btn">
       <ul class="filter-list">
         <li>
-          <a
-            (click)="openContent()"  (keydown.enter)="openContent()" tabindex="0" matTooltip="Filter"
-            href="javascript:void(0);"
-            class="btn btn-filters w-auto popup-toggle"
-            ><span class="me-2"
-            ><img src="assets/img/icons/filter-icon.svg" alt="filter" /></span
-            >Filter
-          </a>
-        </li>
-        <li>
-          <a class="btn-filters"   matTooltip="Settings" href="javascript:void(0);"
-            ><span><i class="feather icon-settings"></i></span>
-          </a>
-        </li>
-        <li>
-          <a class="btn btn-primary" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#add_country">Add Countries</a>
+          <a class="btn btn-primary" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#add_menu" (click)="presetMenu()">Add Menu</a>
         </li>
       </ul>
     </div>
@@ -69,36 +54,28 @@
             <thead class="thead-light">
               <tr>
                 <th mat-sort-header="id">#</th>
-                <th mat-sort-header="countryCode">Country Code</th>
-                <th mat-sort-header="countryName">Country Name</th>
-                <th mat-sort-header="countryId">Country ID</th>
+                <th mat-sort-header="countryCode">Name</th>
+                <th mat-sort-header="countryName">Name Urdu</th>
+                <th mat-sort-header="countryId">Price</th>
+                <th mat-sort-header="countryStatus">Status</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              @for (country of countries; track country; let i = $index) {
+              @for (menu of countries; track menu; let i = $index) {
                 <tr>
-                  <td>{{ country.sNo }}</td>
-                  <td>{{ country.countryCode }}</td>
-                  <td>{{ country.countryName }}</td>
-                  <td>
-                    <h2>
-                      <img
-                        class="avatar-img rounded me-2"
-                        width="30"
-                        height="30"
-                        [src]="country.countryFlag"
-                        alt="User Image"
-                        />
-                      </h2>
-                      {{ country.countryId }}
-                    </td>
-                    <td class="d-flex align-items-center">
-                      <a class=" btn-action-icon me-2" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#edit_country"><i class="feather icon-edit"></i></a>
+                  <td>{{ menu.sNo }}</td>
+                  <td>{{ menu.menu_name }}</td>
+                  <td>{{ menu.menu_name_urdu }}</td>
+                  <td>{{ menu.menu_price }}</td>
+                  <td>{{ menu.isActive == 1 ? 'Active' : 'Inactive' }}</td>
+                  <td class="d-flex align-items-center">
+                      <a class=" btn-action-icon me-2" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#edit_menu" (click)="setMenuToEdit(menu)"><i class="feather icon-edit"></i></a>
                       <a
                         class="btn-action-icon"
                         href="javascript:void(0);"
                         data-bs-toggle="modal"
+                        (click)="setMenuToDelete(menu)"
                         data-bs-target="#delete_modal"
                         ><i class="feather icon-trash-2"></i
                       ></a>
@@ -339,7 +316,7 @@
 <!--/Add Asset -->
 
 <!-- Add Items Modal -->
-<div class="modal custom-modal fade" id="add_country" role="dialog">
+<div class="modal custom-modal fade" id="add_menu" role="dialog">
   <div class="modal-dialog modal-dialog-centered modal-md">
     <div class="modal-content">
       <div class="modal-header border-0 pb-0">
@@ -356,22 +333,92 @@
             <div class="card-body">
               <div class="form-groups-item border-0 pb-0">
                 <div class="row">
-                  <div class="col-lg-12 col-md-6 col-sm-12">
+                  <div class="col-lg-8 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
-                      <label for="Country">Country Code</label>
-                      <input type="text" class="form-control" placeholder="Enter Country Code">
+                      <label for="Country">Menu Name</label>
+                      <input type="text" class="form-control" placeholder="Enter Menu Name" [(ngModel)]="newMenu.menu_name">
                     </div>
                   </div>
-                  <div class="col-lg-12 col-md-6 col-sm-12">
+                  <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
-                      <label for="CountryID">Country ID</label>
-                      <input type="text" class="form-control" placeholder="Enter Country ID">
+                      <label for="Menu">Status</label>
+                      <div class="form-check d-flex align-items-center gap-2">
+                        <input class="form-check-input" type="checkbox" id="flexCheckDefault" [(ngModel)]="newMenu.isActive">
+                        <label class="form-check-label mt-3" for="flexCheckDefault">
+                          Active
+                        </label>
+                      </div>
+                    </div>
+                  </div>                  
+                  <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="input-block mb-3">
+                      <label for="CountryID">Description</label>
+                      <input type="text" class="form-control" value="AS" placeholder="Enter Description" [(ngModel)]="newMenu.description">
                     </div>
                   </div>
-                  <div class="col-lg-12 col-md-6 col-sm-12">
+                  <div class="col-lg-6 col-md-6 col-sm-12">
                     <div class="input-block">
-                      <label for="Country ">Country Name</label>
-                      <input type="text" class="form-control" placeholder="Enter Country Name">
+                      <label for="Country ">Menu Name Urdu</label>
+                      <input type="text" class="form-control" value="American Samoa" placeholder="Enter Menu Name Urdu" [(ngModel)]="newMenu.menu_name_urdu">
+                    </div>
+                  </div>
+                  <div class="col-lg-12 col-md-6 col-sm-12">
+                    <div class="input-block mb-3">
+                      <mat-form-field class="w-100">
+                        <mat-label>MenuItems</mat-label>
+                        <input type="text"
+                               placeholder="Select Menu Items"
+                               aria-label="MenuItem"
+                               matInput
+                               [formControl]="control"
+                               [matAutocomplete]="auto">
+                        <mat-autocomplete #auto="matAutocomplete">
+                          @for (option of filteredOptions | async; track option) {
+                            <mat-option [value]="option" (onSelectionChange)="addMenuItem(option)"
+                            >{{option}}</mat-option>
+                          }
+                        </mat-autocomplete>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-lg-12 col-md-6 col-sm-12">
+                    <div class="input-block mb-3">
+                      <div class="table-responsive">
+                        <table class="table table-stripped table-hover datatable">
+                          <thead class="thead-light">
+                            <tr>
+                              <th>#</th>
+                              <th>Name</th>
+                              <th>Price</th>
+                              <th>Category</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            @for (menu of menuItemsSelected; track menu; let i = $index) {
+                              <tr>
+                                <td>{{ i+1 }}</td>
+                                <td>{{ menu.item_name }}</td>
+                                <td>{{ menu.price }}</td>
+                                <td>{{ menu.category }}</td>
+                                <td class="d-flex align-items-center">
+                                    <a
+                                      class="btn-action-icon"
+                                      (click)="removeMenuItem(menu)"
+                                      ><i class="feather icon-trash-2"></i
+                                    ></a>
+                                  </td>
+                                </tr>
+                              }
+                            </tbody>
+                          </table>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-12 col-md-6 col-sm-12">
+                    <div class="input-block mb-3">
+                      <label for="Country">Menu Price</label>
+                      <input type="text" class="form-control" placeholder="Enter Menu Name" [(ngModel)]="newMenu.menu_price">
                     </div>
                   </div>
                 </div>
@@ -382,7 +429,7 @@
       </div>
       <div class="modal-footer">
         <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</a>
-        <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn">Add Countries</a>
+        <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn" (click)="addMenu()">Add Menu</a>
       </div>
     </div>
   </div>
@@ -401,7 +448,7 @@
         <div class="modal-btn delete-action">
           <div class="row">
             <div class="col-6">
-              <button type="reset" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-continue-btn">Delete</button>
+              <button type="reset" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-continue-btn" (click)="deleteMenu()">Delete</button>
             </div>
             <div class="col-6">
               <button type="submit" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-cancel-btn">Cancel</button>
@@ -415,12 +462,12 @@
 <!-- /Delete Items Modal -->
 
 <!-- Edit Items Modal -->
-<div class="modal custom-modal fade" id="edit_country" role="dialog">
+<div class="modal custom-modal fade" id="edit_menu" role="dialog">
   <div class="modal-dialog modal-dialog-centered modal-md">
     <div class="modal-content">
       <div class="modal-header border-0 pb-0">
         <div class="form-header modal-header-title text-start mb-0">
-          <h4 class="mb-0">Edit Country</h4>
+          <h4 class="mb-0">Edit Menu</h4>
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
 
@@ -432,22 +479,92 @@
             <div class="card-body">
               <div class="form-groups-item border-0 pb-0">
                 <div class="row">
-                  <div class="col-lg-12 col-md-6 col-sm-12">
+                  <div class="col-lg-8 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
-                      <label for="Country">Country Code</label>
-                      <input type="text" class="form-control" value="684" placeholder="Enter Country Code">
+                      <label for="Country">Menu Name</label>
+                      <input type="text" class="form-control" placeholder="Enter Menu Name" [(ngModel)]="menuToEdit.menu_name">
                     </div>
                   </div>
-                  <div class="col-lg-12 col-md-6 col-sm-12">
+                  <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
-                      <label for="CountryID">Country ID</label>
-                      <input type="text" class="form-control" value="AS" placeholder="Enter Country Id">
+                      <label for="Menu">Status</label>
+                      <div class="form-check d-flex align-items-center gap-2">
+                        <input class="form-check-input" type="checkbox" id="flexCheckDefault" [(ngModel)]="menuToEdit.isActive">
+                        <label class="form-check-label mt-3" for="flexCheckDefault">
+                          Active
+                        </label>
+                      </div>
+                    </div>
+                  </div>                  
+                  <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="input-block mb-3">
+                      <label for="CountryID">Description</label>
+                      <input type="text" class="form-control" value="AS" placeholder="Enter Description" [(ngModel)]="menuToEdit.description">
                     </div>
                   </div>
-                  <div class="col-lg-12 col-md-6 col-sm-12">
+                  <div class="col-lg-6 col-md-6 col-sm-12">
                     <div class="input-block">
-                      <label for="Country ">Country Name</label>
-                      <input type="text" class="form-control" value="American Samoa" placeholder="Enter Country Name">
+                      <label for="Country ">Menu Name Urdu</label>
+                      <input type="text" class="form-control" value="American Samoa" placeholder="Enter Menu Name Urdu" [(ngModel)]="menuToEdit.menu_name_urdu">
+                    </div>
+                  </div>
+                  <div class="col-lg-12 col-md-6 col-sm-12">
+                    <div class="input-block mb-3">
+                      <mat-form-field class="w-100">
+                        <mat-label>MenuItems</mat-label>
+                        <input type="text"
+                               placeholder="Select Menu Items"
+                               aria-label="MenuItem"
+                               matInput
+                               [formControl]="control"
+                               [matAutocomplete]="auto">
+                        <mat-autocomplete #auto="matAutocomplete">
+                          @for (option of filteredOptions | async; track option) {
+                            <mat-option [value]="option" (onSelectionChange)="addMenuItem(option)"
+                            >{{option}}</mat-option>
+                          }
+                        </mat-autocomplete>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-lg-12 col-md-6 col-sm-12">
+                    <div class="input-block mb-3">
+                      <div class="table-responsive">
+                        <table class="table table-stripped table-hover datatable">
+                          <thead class="thead-light">
+                            <tr>
+                              <th>#</th>
+                              <th>Name</th>
+                              <th>Price</th>
+                              <th>Category</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            @for (menu of menuItemsSelected; track menu; let i = $index) {
+                              <tr>
+                                <td>{{ i+1 }}</td>
+                                <td>{{ menu.item_name }}</td>
+                                <td>{{ menu.price }}</td>
+                                <td>{{ menu.category }}</td>
+                                <td class="d-flex align-items-center">
+                                    <a
+                                      class="btn-action-icon"
+                                      (click)="removeMenuItem(menu)"
+                                      ><i class="feather icon-trash-2"></i
+                                    ></a>
+                                  </td>
+                                </tr>
+                              }
+                            </tbody>
+                          </table>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-12 col-md-6 col-sm-12">
+                    <div class="input-block mb-3">
+                      <label for="Country">Menu Price</label>
+                      <input type="text" class="form-control" placeholder="Enter Menu Name" [(ngModel)]="menuToEdit.menu_price">
                     </div>
                   </div>
                 </div>
@@ -458,7 +575,7 @@
       </div>
       <div class="modal-footer">
         <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</a>
-        <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn">Edit Country</a>
+        <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn" (click)="updateMenu()">Edit Menu</a>
       </div>
     </div>
   </div>

@@ -32,6 +32,12 @@ export class routes {
   public static get customer(): string {
     return this.baseUrl + '/customer';
   }
+  public static get vendorCategory(): string {
+    return this.baseUrl + '/customer/category';
+  }
+  public static get vendorSubCategory(): string {
+    return this.baseUrl + '/customer/subcategory';
+  }
   public static get customerList(): string {
     return this.baseUrl + '/customer/list';
   }
@@ -386,6 +392,24 @@ export class routes {
   public static get payments(): string {
     return this.baseUrl + '/payments';
   }
+
+
+  public static get transactionList(): string {
+    return this.payments + '/transaction-list';
+  }
+  public static get addTransaction(): string {
+    return this.payments + '/add-transaction';
+  }
+  public static get transactionDetails(): string {
+    return this.payments + '/transaction-details';
+  }
+
+
+  public static get voucherList(): string {
+    return this.payments + '/voucher-List';
+  }
+
+
   public static get paymentsList(): string {
     return this.payments + '/payments-list';
   }
@@ -614,35 +638,35 @@ export class routes {
   public static get transactions(): string {
     return this.membership + '/transactions';
   }
-  public static get location(): string {
-    return this.baseUrl + '/location';
+  public static get services(): string {
+    return this.baseUrl + '/services';
   }
-  public static get cities(): string {
-    return this.location + '/cities';
+  public static get menu(): string {
+    return this.services + '/menu';
   }
-  public static get states(): string {
-    return this.location + '/states';
+  public static get menuItems(): string {
+    return this.services + '/menuItems';
   }
-  public static get addstate(): string {
-    return this.location + '/add-state';
+  public static get addMenu(): string {
+    return this.services + '/add-menu';
   }
-  public static get editstate(): string {
-    return this.location + '/edit-state';
+  public static get editMenu(): string {
+    return this.services + '/edit-menu';
   }
-  public static get addcity(): string {
-    return this.location + '/add-city';
+  public static get addMenuItem(): string {
+    return this.services + '/add-menuItems';
   }
-  public static get editcity(): string {
-    return this.location + '/edit-city';
+  public static get editMenyItem(): string {
+    return this.services + '/edit-menuItems';
   }
-  public static get addcountries(): string {
-    return this.location + '/add-countries';
+  public static get addAdditionalServices(): string {
+    return this.services + '/add-additional-Services';
   }
-  public static get editcountries(): string {
-    return this.location + '/edit-countries';
+  public static get editAdditionalService(): string {
+    return this.services + '/edit-additional-Services';
   }
-  public static get countries(): string {
-    return this.location + '/countries';
+  public static get additonalServices(): string {
+    return this.services + '/additional-Services';
   }
   public static get manageuser(): string {
     return this.baseUrl + '/manageusers';

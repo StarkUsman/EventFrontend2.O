@@ -27,10 +27,13 @@ export class AddEstimatesComponent implements OnInit {
     date: '',
     selected_slot: null,
     menus: [],  
-    num_of_persons: 0,
+    num_of_persons: 1,
     additional_services: [],
     selectedMenu: null, 
-    selected_items: [], 
+    selected_items: [],
+    booker_type: 'Other',
+    Discount: 0,
+    Advance: 0,
   };
   availableMenus: any[] = []; 
   menuItems: any[] = []; 
@@ -40,6 +43,9 @@ export class AddEstimatesComponent implements OnInit {
   bookings: any[] = [];
   totalAdditionalPrice: number = 0;
   events: any[] = [];
+  preBookingDiscount: any = "Dicount";
+  preBookingAdvance: any = "Advance Received";
+
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -143,12 +149,17 @@ export class AddEstimatesComponent implements OnInit {
       this.stage++;
     } else if (this.stage === 3 && this.isStage3Valid()) {
       this.stage++;
-      this.reservation.selectedMenu.price = this.reservation.selectedMenu.menu_price * this.reservation.num_of_persons;
+      this.reservation.selectedMenu.price = this.reservation.selectedMenu.menu_price;
       this.loadMenuItems(this.reservation.selectedMenu.menu_item_ids);
-      this.reservation.selectedMenu.finalPrice = this.reservation.selectedMenu.price;
+      this.reservation.selectedMenu.finalPrice = this.reservation.selectedMenu.price * this.reservation.num_of_persons;
       this.reservation.additionalPrice = 0;
       this.reservation.additionalDiscount = 0;
     }
+  }
+
+  updateMenuPriceTotal(price: number) {
+    this.reservation.selectedMenu.price = price;
+    this.reservation.selectedMenu.finalPrice = price * this.reservation.num_of_persons;
   }
 
   goToStage(stage: number) {
@@ -213,20 +224,31 @@ export class AddEstimatesComponent implements OnInit {
       }
     }
 
+    let booker_type = this.reservation.booker_type;
+    let booking_notes = this.reservation.notes;
+    let advance = this.reservation.Advance;
+    let discount = this.reservation.Discount;
+    let total_price = this.getGrandTotal();
+
     let booking = {
       booking_name: booking_name,
       contact_number: contact_number,
       alt_contact_number: alt_contact_number,
-      booking_type: booking_type,
+      booking_type: booker_type,
+      event_type: booking_type,
       description: description,
       date: date,
       slot_day: slot_day,
       slot_type: slot_type,
       slot_number: slot_number,
       number_of_persons: number_of_persons,
+      menu_id: menuId,
+      menu_items_ids: selected_menu_items_ids,
       add_service_ids: add_service_ids,
-      menu_id: menuId
-      // selected_menu_items_ids: selected_menu_items_ids
+      discount: discount,
+      advance: advance,
+      total_remaining: total_price,
+      notes: booking_notes,
     };
 
     try{
@@ -316,11 +338,20 @@ export class AddEstimatesComponent implements OnInit {
 
   getGrandTotal(): number {
     let total = this.reservation.selectedMenu.finalPrice + this.reservation.additionalPrice;
+    if (this.reservation.Discount > 0) {
+      total -= this.reservation.Discount;
+    }
+    if (this.reservation.Advance > 0) {
+      total -= this.reservation.Advance;
+    }
+
     return total;
   }
 
   updateSelectedServices(service: any) {
     if (service.selected) {
+      service.quantity = 1;
+      service.totalPrice = service.price;
       this.additionalServicesSelected.push(service);
     } else {
       const index = this.additionalServicesSelected.indexOf(service);
@@ -328,6 +359,7 @@ export class AddEstimatesComponent implements OnInit {
         this.additionalServicesSelected.splice(index, 1);
       }
     }
+    this.calculateAdditionalPrice();
   }
 
   calculateAdditionalPrice() {
@@ -352,10 +384,10 @@ export class AddEstimatesComponent implements OnInit {
   }
 
   calculateMenuPrice(){
-    this.reservation.selectedMenu.finalPrice = this.reservation.selectedMenu.price - this.reservation.selectedMenu.discount;
+    this.reservation.selectedMenu.finalPrice = this.reservation.selectedMenu.price;
   }
 
   calculateAdditionalServicePrice(){
-    this.reservation.additionalPrice = this.totalAdditionalPrice - this.reservation.additionalDiscount;
+    this.reservation.additionalPrice = this.totalAdditionalPrice;
   }
 }

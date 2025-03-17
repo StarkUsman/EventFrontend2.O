@@ -1,15 +1,15 @@
 <!-- Page Header -->
 <div class="page-header">
     <div class="content-page-header">
-        <h5>Customer Ledger</h5>
-        <div class="list-btn">
+        <h5>Account Ledger</h5>
+        <!-- <div class="list-btn">
             <ul class="filter-list">
                 <li>
                     <a class="btn btn-primary" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#add_ledger"><i
                             class="fa fa-plus-circle me-2" aria-hidden="true"></i>Create Ledger</a>
                 </li>
             </ul>
-        </div>
+        </div> -->
     </div>
 </div>
 <!-- /Page Header -->
@@ -18,18 +18,22 @@
     <div class="d-flex align-items-center justify-content-between">
         <div class="ledger-info mb-4">
             <div class="d-flex align-items-center">
-                <a [routerLink]="routes.profile" class="avatar me-2"><img class="avatar-img rounded-circle"
+                <a [routerLink] = "routes.profile" class="avatar me-2"><img class="avatar-img rounded-circle"
                         src="assets/img/profiles/avatar-14.jpg" alt="User Image"></a>
-                <h2><a [routerLink]="routes.profile">John Smith<a href="mailto:johnsmith@example.com"
-                            class="d-block mail-to">johnsmith&#64;example.com</a></a></h2>
+                <h2><a>{{vendorToView.name}}<a href="mailto:{{vendorToView.email}}"
+                            class="d-block mail-to">{{vendorToView.email}}</a></a></h2>
             </div>
         </div>
         <div class="list-btn">
             <ul class="filter-list">
                 <li>
-                    <div class="closing-balance">
-                        <span class="d-flex align-items-center"><i
-                                class="fa fa-refresh me-2 text-danger-light"></i>Closing Balance : $400</span>
+                    <div *ngIf="isBalanceNegative" class="closing-balance">
+                        <span class="d-flex align-items-center text-danger-light"><i
+                                class="fa fa-refresh me-2 text-danger-light"></i>Closing Balance: -PKR{{closingBalanceAmount}}</span>
+                    </div>
+                    <div *ngIf="!(isBalanceNegative)" class="closing-balance">
+                        <span class="d-flex align-items-center bg-success-light"><i
+                                class="fa fa-refresh me-2 text-success-light"></i>Closing Balance: PKR{{closingBalanceAmount}}</span>
                     </div>
                 </li>
                 <li>
@@ -54,6 +58,18 @@
                     <a class="btn-filters" href="javascript:void(0);" matTooltip="Print"><span><i
                                 class="feather icon-printer"></i></span> </a>
                 </li>
+                <li>
+                    <a
+                      (click)="openContent()"  (keydown.enter)="openContent()" tabindex="0"
+                      matTooltip="Filter"
+                      href="javascript:void(0);"
+                      class="btn btn-filters w-auto popup-toggle"
+                      >
+                      <span class="me-2"
+                        ><img src="assets/img/icons/filter-icon.svg" alt="filter" /></span
+                        >Filter
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
@@ -66,147 +82,54 @@
                         <table class="table table-stripped table-hover">
                             <thead class="thead-light">
                                 <tr>
-                                    <th>Id #</th>
-                                    <th>Date</th>
-                                    <th>Mode</th>
-                                    <th>Amount</th>
-                                    <th>Closing Balance</th>
-                                    <th class="no-sort">Action</th>
+                                    <th>Name</th>
+                                    <th>Purchase Voucher #</th>
+                                    <th>Created</th>
+                                    <th>Credit</th>
+                                    <th>Debit</th>
+                                    <!-- <th>Closing Balance</th> -->
                                 </tr>
                             </thead>
                             <tbody>
+                                @for (data of ledgerToView; track data; let i = $index) {
+                                    <tr>
+                                        <td>
+                                            <h2 class="ledger">{{ data.name }}</h2>
+                                        </td>
+                                        <td>#{{data.purch_id}} </td>
+                                        <td> {{data.createdAt}} </td>
+                                        <td><span class="badge bg-success-light">{{data.amountCredit > 0 ? data.amountCredit : ''}}</span></td>
+                                        <td><span class="badge bg-danger-light">{{data.amountDebit > 0 ? data.amountDebit : ''}}</span></td>
+                                        <!-- <td>{{data.balance}}</td> -->
+                                    </tr>
+                                    }
                                 <tr>
-                                    <td>
-                                        <h2 class="ledger">PAYOUT -1 <span>Payment Out</span></h2>
+                                    <td colspan="3">
+                                        <p>Closing Balance as on {{closingBalanceDate}}</p>
                                     </td>
-                                    <td>13 Aug 2023</td>
-                                    <td><span class="badge bg-success-light">Cash</span></td>
-                                    <td><span class="text-danger-light">-$200</span></td>
-                                    <td><span>$300</span></td>
-                                    <td class="text-start">
-                                        <div class="dropdown dropdown-action">
-                                            <a href="javascript:void(0);" class=" btn-action-icon " data-bs-toggle="dropdown"
-                                                aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                <ul>
-                                                    <li>
-                                                        <a class="dropdown-item" href="javascript:void(0);"
-                                                            data-bs-toggle="modal" data-bs-target="#edit_ledger"><i
-                                                                class="far fa-edit me-2"></i>Edit</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="javascript:void(0);"
-                                                            data-bs-toggle="modal" data-bs-target="#delete_modal"><i
-                                                                class="far fa-trash-alt me-2"></i>Delete</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h2 class="ledger">PAYOUT -2<span>Payment Out</span></h2>
-                                    </td>
-                                    <td>16 Aug 2023</td>
-                                    <td><span class="badge bg-success-light">Cash</span></td>
-                                    <td><span class="text-danger-light">-$100</span></td>
-                                    <td><span>$400</span></td>
-                                    <td class="text-start">
-                                        <div class="dropdown dropdown-action">
-                                            <a href="javascript:void(0);" class=" btn-action-icon " data-bs-toggle="dropdown"
-                                                aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                <ul>
-                                                    <li>
-                                                        <a class="dropdown-item" href="javascript:void(0);"
-                                                            data-bs-toggle="modal" data-bs-target="#edit_ledger"><i
-                                                                class="far fa-edit me-2"></i>Edit</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="javascript:void(0);"
-                                                            data-bs-toggle="modal" data-bs-target="#delete_modal"><i
-                                                                class="far fa-trash-alt me-2"></i>Delete</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h2 class="ledger">PAYIN -2<span>Payment In</span></h2>
-                                    </td>
-                                    <td>14 Aug 2023</td>
-                                    <td><span class="badge bg-success-light">Cash</span></td>
-                                    <td><span class="text-success-light">+$200</span></td>
-                                    <td><span>$500</span></td>
-                                    <td class="text-start">
-                                        <div class="dropdown dropdown-action">
-                                            <a href="javascript:void(0);" class=" btn-action-icon " data-bs-toggle="dropdown"
-                                                aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                <ul>
-                                                    <li>
-                                                        <a class="dropdown-item" href="javascript:void(0);"
-                                                            data-bs-toggle="modal" data-bs-target="#edit_ledger"><i
-                                                                class="far fa-edit me-2"></i>Edit</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="javascript:void(0);"
-                                                            data-bs-toggle="modal" data-bs-target="#delete_modal"><i
-                                                                class="far fa-trash-alt me-2"></i>Delete</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h2 class="ledger">PAYIN -1<span>Payment In</span></h2>
-                                    </td>
-                                    <td>12 Aug 2023</td>
-                                    <td><span class="badge bg-success-light">Cash</span></td>
-                                    <td><span class="text-success-light">+$500</span></td>
-                                    <td><span>$500</span></td>
-                                    <td class="text-start">
-                                        <div class="dropdown dropdown-action">
-                                            <a href="javascript:void(0);" class=" btn-action-icon " data-bs-toggle="dropdown"
-                                                aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                <ul>
-                                                    <li>
-                                                        <a class="dropdown-item" href="javascript:void(0);"
-                                                            data-bs-toggle="modal" data-bs-target="#edit_ledger"><i
-                                                                class="far fa-edit me-2"></i>Edit</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="javascript:void(0);"
-                                                            data-bs-toggle="modal" data-bs-target="#delete_modal"><i
-                                                                class="far fa-trash-alt me-2"></i>Delete</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">
-                                        <p>Closing Balance as on 17/10/2023</p>
-                                        <span>Payment In</span>
-                                    </td>
-                                    <td><span class="text-success fw-600">$3000.15</span></td>
-                                    <td colspan="2"><span class="text-primary fw-600">$500.24</span></td>
+                                    <td><span class="text-success fw-600">{{totalCredit()}}</span></td>
+                                    <td colspan="2"><span class="text-primary fw-600">{{totalDebit()}}</span></td>
                                 </tr>
                             </tbody>
                         </table>
-                        <div class="mt-4 float-end">
+                        <!-- <div class="mt-4 float-end">
                             <button type="button" data-bs-dismiss="modal" class="btn btn-success  me-2"><i
                                     class="fa-solid fa-arrow-down me-2"></i>Credit</button>
                             <button type="submit" data-bs-dismiss="modal" class="btn btn-danger"><i
                                     class="fa-solid fa-arrow-up me-2"></i>Debit</button>
-                        </div>
+                        </div> -->
+                        <!-- <div class="mt-4 float-end">
+                            <button type="button" class="btn me-2" 
+                                [ngClass]="{'btn-success': isCredit, 'btn-outline-success': !isCredit}"
+                                (click)="toggleCredit()">
+                                <i class="fa-solid fa-arrow-down me-2"></i> Credit
+                            </button>                        
+                            <button type="button" class="btn" 
+                                [ngClass]="{'btn-danger': isDebit, 'btn-outline-danger': !isDebit}"
+                                (click)="toggleDebit()">
+                                <i class="fa-solid fa-arrow-up me-2"></i> Debit
+                            </button>
+                        </div>                         -->
                     </div>
                 </div>
             </div>
@@ -215,6 +138,180 @@
     <!-- /Table -->
 
 </div>
+
+
+<!-- Add Asset -->
+<div class="toggle-sidebar">
+    <div class="sidebar-layout-filter">
+        <div class="sidebar-header">
+            <h5>Filter</h5>
+            <a href="javascript:void(0);" class="sidebar-closes"><i class="fa-regular fa-circle-xmark"></i></a>
+        </div>
+        <div class="sidebar-body">
+            <form action="#" autocomplete="off">
+                <!-- Customer -->
+                <div class="accordion" id="accordionMain1">
+                    <div class="card-header-new" id="headingOne">
+                        <h6 class="filter-title">
+                            <a href="javascript:void(0);" class="w-100" data-bs-toggle="collapse"
+                                data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Name
+                                <span class="float-end"><i class="fa-solid fa-chevron-down"></i></span>
+                            </a>
+                        </h6>
+                    </div>
+
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
+                        data-bs-parent="#accordionExample1">
+                        <div class="card-body-chat">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div id="checkBoxes1">
+                                        <div class="form-custom">
+                                            <input type="text" class="form-control" id="member_search1"
+                                                placeholder="Search here">
+                                            <span><img src="assets/img/icons/search.svg" alt="img"></span>
+                                        </div>
+                                        <div class="selectBox-cont">
+                                            <label class="custom_check w-100">
+                                                <input type="checkbox" name="username">
+                                                <span class="checkmark"></span> John Smith
+                                            </label>
+                                            <label class="custom_check w-100">
+                                                <input type="checkbox" name="username">
+                                                <span class="checkmark"></span> Johnny charles
+                                            </label>
+                                            <label class="custom_check w-100">
+                                                <input type="checkbox" name="username">
+                                                <span class="checkmark"></span> Pricilla Maureen
+                                            </label>
+                                            <label class="custom_check w-100">
+                                                <input type="checkbox" name="username">
+                                                <span class="checkmark"></span> Randall Hollis
+                                            </label>
+                                            <!-- View All -->
+                                            <div class="view-content">
+                                                <div class="viewall-One">
+                                                    <label class="custom_check w-100">
+                                                        <input type="checkbox" name="username">
+                                                        <span class="checkmark"></span> Robert George
+                                                    </label>
+                                                    <label class="custom_check w-100">
+                                                        <input type="checkbox" name="username">
+                                                        <span class="checkmark"></span> Sharonda Letha
+                                                    </label>
+                                                </div>
+                                                <div class="view-all">
+                                                    <a href="javascript:void(0);" class="viewall-button-One"><span
+                                                            class="me-2">View All</span><span><i
+                                                                class="fa fa-circle-chevron-down"></i></span></a>
+                                                </div>
+                                            </div>
+                                            <!-- /View All -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Customer -->
+
+                <!-- Reference -->
+                <div class="accordion" id="accordionMain4">
+                    <div class="card-header-new" id="headingFour">
+                        <h6 class="filter-title">
+                            <a href="javascript:void(0);" class="w-100 collapsed" data-bs-toggle="collapse"
+                                data-bs-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                                Reference
+                                <span class="float-end"><i class="fa-solid fa-chevron-down"></i></span>
+                            </a>
+                        </h6>
+                    </div>
+
+                    <div id="collapseFour" class="collapse" aria-labelledby="headingFour"
+                        data-bs-parent="#accordionExample4">
+                        <div class="card-body-chat">
+                            <div id="checkBoxes3">
+                                <div class="selectBox-cont">
+                                    <label class="custom_check w-100">
+                                        <input type="checkbox" name="category">
+                                        <span class="checkmark"></span> 25689825
+                                    </label>
+                                    <label class="custom_check w-100">
+                                        <input type="checkbox" name="category">
+                                        <span class="checkmark"></span> 25689826
+                                    </label>
+                                    <label class="custom_check w-100">
+                                        <input type="checkbox" name="category">
+                                        <span class="checkmark"></span> 25689829
+                                    </label>
+                                    <label class="custom_check w-100">
+                                        <input type="checkbox" name="category">
+                                        <span class="checkmark"></span> 25689830
+                                    </label>
+                                    <label class="custom_check w-100">
+                                        <input type="checkbox" name="category">
+                                        <span class="checkmark"></span> 25689827
+                                    </label>
+                                    <label class="custom_check w-100">
+                                        <input type="checkbox" name="category">
+                                        <span class="checkmark"></span> 25689828
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Reference-->
+
+                <!-- By Status -->
+                <div class="accordion accordion-last" id="accordionMain3">
+                    <div class="card-header-new" id="headingThree">
+                        <h6 class="filter-title">
+                            <a href="javascript:void(0);" class="w-100 collapsed" data-bs-toggle="collapse"
+                                data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                                Mode
+                                <span class="float-end"><i class="fa-solid fa-chevron-down"></i></span>
+                            </a>
+                        </h6>
+                    </div>
+
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
+                        data-bs-parent="#accordionExample3">
+                        <div class="card-body-chat">
+                            <div id="checkBoxes2">
+                                <div class="selectBox-cont">
+                                    <label class="custom_check w-100">
+                                        <input type="checkbox" name="payment-mode">
+                                        <span class="checkmark"></span> Credit
+                                    </label>
+                                    <label class="custom_check w-100">
+                                        <input type="checkbox" name="payment-mode">
+                                        <span class="checkmark"></span> Debit
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /By Status -->
+
+                <div class="filter-buttons">
+                    <button type="submit"
+                        class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary">
+                        Apply
+                    </button>
+                    <button type="submit"
+                        class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary">
+                        Reset
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--/Add Asset -->
 
 <!-- Add Ledger Modal -->
 <div class="modal custom-modal fade" id="add_ledger" role="dialog">
@@ -240,14 +337,20 @@
                         <div class="input-block mb-3">
                             <label for="date">Date</label>
                             <div class="cal-icon cal-icon-info">
-                                <input type="text" class="datetimepicker form-control" placeholder="Select Date"
-                                    bsDatepicker [bsConfig]="{ adaptivePosition: true }">
+                                <input type="text" class="datetimepicker form-control" bsDatepicker [bsConfig]="{ adaptivePosition: true }"
+                                    placeholder="Select Date">
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-12 col-md-12">
+                        <div class="input-block mb-3">
+                            <label for="reference">Reference</label>
+                            <input type="text" class="form-control" placeholder="Enter Reference Number">
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12">
                         <div class="input-block d-inline-flex align-center mb-0">
-                            <label for="Mode" class="me-5 mb-0">Mode</label>
+                            <label for="mode" class="me-5 mb-0">Mode</label>
                             <div>
                                 <label class="custom_radio me-3 mb-0">
                                     <input type="radio" name="payment" checked>
@@ -288,7 +391,7 @@
                     <div class="col-lg-12 col-md-12">
                         <div class="input-block mb-3">
                             <label for="amount">Amount</label>
-                            <input type="text" class="form-control" placeholder="$300">
+                            <input type="text" class="form-control" placeholder="$400">
                         </div>
                     </div>
                     <div class="col-lg-12 col-md-12">
@@ -301,8 +404,14 @@
                         </div>
                     </div>
                     <div class="col-lg-12 col-md-12">
+                        <div class="input-block mb-3">
+                            <label for="reference">Reference</label>
+                            <input type="text" class="form-control" placeholder="#25689825">
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12">
                         <div class="input-block d-inline-flex align-center mb-0">
-                            <label for="Mode" class="me-5 mb-0">Mode</label>
+                            <label for="mode" class="me-5 mb-0">Mode</label>
                             <div>
                                 <label class="custom_radio me-3 mb-0">
                                     <input type="radio" name="payment" checked>
@@ -352,3 +461,151 @@
     </div>
 </div>
 <!-- /Delete Items Modal -->
+
+<!-- Add Asset -->
+<div class="toggle-sidebar" [ngClass]="{ 'open-filter': Toggledata === true }">
+    <div class="sidebar-layout-filter">
+      <div class="sidebar-header">
+        <h5>Filter</h5>
+        <a (click)="openContent()" href="javascript:void(0);" class="sidebar-closes"
+          ><i class="fa-regular fa-circle-xmark"></i
+        ></a>
+      </div>
+      <div class="sidebar-body">
+        <form action="#" autocomplete="off">
+          <!-- Customer -->
+          <div class="accordion" id="accordionMain1">
+            <div class="card-header-new" id="headingOne">
+              <h6 class="filter-title">
+                <a
+                  href="javascript:void(0);"
+                  class="w-100"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseOne"
+                  aria-expanded="true"
+                  aria-controls="collapseOne"
+                  >
+                  Accounts
+                </a>
+              </h6>
+            </div>
+
+            <div
+              id="collapseOne"
+              class="collapse show"
+              aria-labelledby="headingOne"
+              data-bs-parent="#accordionExample1"
+              >
+              <div class="card-body-chat">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div id="checkBoxes1">
+                      <div class="form-custom">
+                        <!-- ###################################### -->
+                          <!-- <div *ngIf="!(filterByDate || filterByName)" class="my-4 filter-buttons">
+                              <button type="button" class="btn me-2 w-100"
+                                  [ngClass]="{'btn-success': isCredit, 'btn-outline-success': !isCredit}"
+                                  (click)="toggleCredit()">
+                                  Credit
+                              </button>
+                          
+                              <button type="button" class="btn w-100" 
+                                  [ngClass]="{'btn-danger': isDebit, 'btn-outline-danger': !isDebit}"
+                                  (click)="toggleDebit()">
+                                  Debit
+                              </button>
+                          </div> -->
+                          <!-- Filter by Transaction Type -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="filterByType"
+                                    [(ngModel)]="filterByType" name="filterByType">
+                                <label class="form-check-label" for="filterByType">
+                                    Filter by Debit/Credit
+                                </label>
+                            </div>
+
+                            <!-- Radio Buttons for Credit/Debit -->
+                            <div *ngIf="filterByType" class="mt-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" id="creditType"
+                                        [(ngModel)]="selectedTransactionType" name="transactionType" value="credit">
+                                    <label class="form-check-label" for="creditType">
+                                        Credit
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" id="debitType"
+                                        [(ngModel)]="selectedTransactionType" name="transactionType" value="debit">
+                                    <label class="form-check-label" for="debitType">
+                                        Debit
+                                    </label>
+                                </div>
+                            </div>
+
+                          <!-- ######################################## -->
+                          <div class="form-check fw-4">
+                            <input class="form-check-input" type="checkbox" id="filterDate"
+                                [(ngModel)]="filterByDate" name="filterDate">
+                            <label class="form-check-label" for="filterDate">
+                                Filter by Date
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="filterName"
+                                [(ngModel)]="filterByName" name="filterName">
+                            <label class="form-check-label" for="filterName">
+                                Filter by Name
+                            </label>
+                        </div>
+
+                        <!-- Date Filter Inputs -->
+                        <div *ngIf="filterByDate" class="mt-3">
+                            <label>Start Date:</label>
+                            <input type="date" class="form-control" [(ngModel)]="startDate"
+                                name="startDate">
+
+                            <label class="mt-2">End Date:</label>
+                            <input type="date" class="form-control" [(ngModel)]="endDate"
+                                name="endDate">
+                        </div>
+
+                        <!-- Name Filter Input -->
+                        <div *ngIf="filterByName" class="mt-3">
+                            <label>Account Name:</label>
+                            <input type="text" class="form-control" [(ngModel)]="vendorName"
+                                name="vendorName" placeholder="Enter Account Name">
+                        </div>
+                          <!-- ######################################## -->
+                        </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /Customer -->
+
+              <div class="filter-buttons">
+                <button
+                  type="submit"
+                  class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary"
+                  [disabled]="!(filterByDate || filterByName || filterByType)"
+                  (click)="applyFilters()"
+                  >
+                  Apply
+                </button>
+                <button
+                  type="submit"
+                  class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary"
+                  (click)="resetFilters()"
+                  >
+                  Reset
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!--/Add Asset -->

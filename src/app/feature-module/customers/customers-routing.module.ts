@@ -15,42 +15,50 @@ const routes: Routes = [
       {
         path: 'list',
         loadChildren: () =>
-          import('./customers-list/customer-list.module').then(
-            (m) => m.CustomerListModule
-          ),
+          import('./list/list.module').then((m) => m.ListModule),
       },
-      {
-        path: 'add',
-        loadChildren: () =>
-          import('./add-customer/add-customer.module').then(
-            (m) => m.AddCustomerModule
-          ),
-      },
-      {
-        path: 'edit',
-        loadChildren: () =>
-          import('./edit-customer/edit-customer.module').then(
-            (m) => m.EditCustomerModule
-          ),
-      },
-      {
-        path: 'active-customers',
-        loadChildren: () =>
-          import('./active-customers/active-customers.module').then(
-            (m) => m.ActiveCustomersModule
-          ),
-      },
-      {
-        path: 'deactive-customers',
-        loadChildren: () =>
-          import('./deactive-customers/deactive-customers.module').then(
-            (m) => m.DeactiveCustomersModule
-          ),
-      },
+      // {
+      //   path: 'add',
+      //   loadChildren: () =>
+      //     import('./add-customer/add-customer.module').then(
+      //       (m) => m.AddCustomerModule
+      //     ),
+      // },
+      // {
+      //   path: 'edit',
+      //   loadChildren: () =>
+      //     import('./edit-customer/edit-customer.module').then(
+      //       (m) => m.EditCustomerModule
+      //     ),
+      // },
+      // {
+      //   path: 'active-customers',
+      //   loadChildren: () =>
+      //     import('./active-customers/active-customers.module').then(
+      //       (m) => m.ActiveCustomersModule
+      //     ),
+      // },
+      // {
+      //   path: 'deactive-customers',
+      //   loadChildren: () =>
+      //     import('./deactive-customers/deactive-customers.module').then(
+      //       (m) => m.DeactiveCustomersModule
+      //     ),
+      // },
       {
         path: 'ledger',
         loadChildren: () =>
           import('./ledger/ledger.module').then((m) => m.LedgerModule),
+      },
+      {
+        path: 'category',
+        loadChildren: () =>
+          import('./category/category.module').then((m) => m.CategoryModule),
+      },
+      {
+        path: 'subcategory',
+        loadChildren: () =>
+          import('./units/units.module').then((m) => m.UnitsModule),
       },
     ],
   },
