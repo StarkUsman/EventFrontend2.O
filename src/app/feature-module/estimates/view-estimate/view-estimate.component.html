@@ -38,15 +38,9 @@
                               <td>{{ reservation.booking_name }}</td>
                               <td>{{ reservation.contact_number }}</td>
                               <td>{{ reservation.booking_type }}</td>
-                              <td>{{ reservation.slot_day }}</td>
-                              <td>{{ reservation.slot_type }}</td>
+                              <td>{{ reservation.date }}</td>
+                              <td>{{ reservation.SLOT.hall }}</td>
                               <td>{{ getMenuName(reservation.menu_id) }}</td>
-                              <!-- <td>{{ getAdditionalServices(reservation.add_service_ids) }}</td> -->
-                              <!-- <td class="align-items-center">
-                                  <button class="btn btn-danger me-2" (click)="deleteReservation(reservation.booking_id)">
-                                      <i class="fa fa-trash-alt"></i> Delete
-                                  </button>
-                              </td> -->
                               <td class="d-flex align-items-center">
                                 <div class="dropdown dropdown-action">
                                   <a

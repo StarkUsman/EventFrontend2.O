@@ -113,6 +113,7 @@ export class ListComponent {
 
     this.data.updateVendor(this.vendorToEdit).subscribe((res) => {
       this.getTableData({ skip: 0, limit: this.pageSize });
+      this.vendorToEdit = {};
     });
   }
 

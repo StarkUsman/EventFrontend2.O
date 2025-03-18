@@ -100,8 +100,16 @@
           <span class="input-group-text bg-light border-0">
             <i class="bi bi-calendar-event text-primary"></i>
           </span>
-          <input type="date" id="date" class="form-control dateInput"
-          [(ngModel)]="reservation.date" name="date">
+            <input
+              id="date"
+              type="text"
+              name="date"
+              class="datetimepicker form-control"
+              placeholder="Select Date"
+              [(ngModel)]="reservation.date"
+              bsDatepicker [bsConfig]="{ adaptivePosition: true }"
+              [(bsValue)]="reservation.date"
+              />
         </div>
       </div>
     </form>
@@ -138,10 +146,16 @@
             <th>{{slotType}}</th>
             <td *ngFor="let day of Days; let j = index">
                 <div class="btnRow">
-                  <button class="btn specialBtnMRN" [ngClass]="{'btnSelected': isSlotSelected(slotType, day, Date[j], 'Morning')}"
+                  <button class="btn specialBtnMRN" 
+                  [ngClass]="{'btnSelected': isSlotSelected(slotType, day, Date[j], 'Morning'),
+                  'slotBooked': isSlotBooked(slotType, day, Date[j], 'Morning')}"
+                  [disabled]= "isSlotBooked(slotType, day, Date[j], 'Morning')"
                   (click)="markSlotSelected(slotType, day, Date[j], 'Morning')"
                   >Morning</button>
-                  <button class="btn specialBtnEVN" [ngClass]="{'btnSelected': isSlotSelected(slotType, day, Date[j], 'Evening')}"
+                  <button class="btn specialBtnEVN" 
+                  [ngClass]="{'btnSelected': isSlotSelected(slotType, day, Date[j], 'Evening'),
+                    'slotBooked': isSlotBooked(slotType, day, Date[j], 'Evening')}"
+                  [disabled]= "isSlotBooked(slotType, day, Date[j], 'Evening')"
                   (click)="markSlotSelected(slotType, day, Date[j], 'Evening')"
                   >Evening</button>
                 </div>

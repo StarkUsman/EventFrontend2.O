@@ -24,7 +24,7 @@ export class AddEstimatesComponent implements OnInit {
     alt_contact_number: '',
     booking_type: '',
     description: '',
-    date: '',
+    date: new Date(),
     selected_slot: null,
     menus: [],  
     num_of_persons: 1,
@@ -59,17 +59,6 @@ export class AddEstimatesComponent implements OnInit {
     this.loadAdditionalServices();
     this.loadReservations();
     this.loadEvents();
-
-    let selectedDate = new Date();
-
-    ({ dates: this.Date, days: this.Days } = this.getWeekDatesSeparated(selectedDate, 0));
-
-
-
-    console.log("=========================================");
-    console.log("Dates:", this.Date);
-    console.log("Days:", this.Days);
-    console.log("=========================================");
   }
 
   getWeekDatesSeparated(dateSelected: Date, startDay: number = 0) {
@@ -91,9 +80,9 @@ export class AddEstimatesComponent implements OnInit {
         date.setDate(date.getDate() + 1);
     }
 
-    this.dateSelected = new Date().toDateString();
+    this.dateSelected = this.reservation.date.toDateString();
     this.dateSelected = this.dateSelected.split(' ')[2];
-    this.monthSelected = new Date().toDateString();
+    this.monthSelected = this.reservation.date.toDateString();
     this.monthSelected = this.monthSelected.split(' ')[1];
 
     return { dates, days };
@@ -112,24 +101,26 @@ export class AddEstimatesComponent implements OnInit {
     const year = day.split(" ")[1];
     let formattedDate = date + '_' + this.monthSelected + '_' + year;
 
+    return this.slotSelected && this.slotSelected.hall === slotType && this.slotSelected.date === formattedDate && this.slotSelected.slot === slot;
+  }
+
+  isSlotBooked(slotType: any, day: any, date: any, slot: any) {
+
+    const year = day.split(" ")[1];
+    let formattedDate = date + '_' + this.monthSelected + '_' + year;
+
     let slotToCompare = {hall: slotType, date: formattedDate, slot: slot};
 
     if(this.bookings){
       for (let i = 0; i < this.bookings.length; i++) {
         const booking = this.bookings[i];
-        
-        console.log("======================================")
-        console.log(booking.SLOT.toString());
-        console.log(slotToCompare);
-        console.log("======================================")
 
-        if (slotToCompare === booking.SLOT) {
+        if(slotToCompare.hall === booking.SLOT.hall && slotToCompare.date === booking.SLOT.date && slotToCompare.slot === booking.SLOT.slot){
           return true;
         }
       }
     }
-
-    return this.slotSelected && this.slotSelected.hall === slotType && this.slotSelected.date === formattedDate && this.slotSelected.slot === slot;
+    return false;
   }
 
   cancelReservation(){
@@ -219,6 +210,15 @@ export class AddEstimatesComponent implements OnInit {
   nextStage() {
     if (this.stage === 1 && this.isStage1Valid()) {
       this.initDays(this.reservation.date);
+      let selectedDate = this.reservation.date;
+
+      ({ dates: this.Date, days: this.Days } = this.getWeekDatesSeparated(selectedDate, 0));
+      console.log("=========================================");
+      console.log("Dates:", this.Date);
+      console.log("Days:", this.Days);
+      console.log("Selected Date:", selectedDate);
+      console.log(this.reservation.date);
+      console.log("=========================================");
       this.stage++;
     } else if (this.stage === 2 && this.isStage2Valid()) {
       this.stage++;
@@ -277,13 +277,7 @@ export class AddEstimatesComponent implements OnInit {
     let alt_contact_number = this.reservation.alt_contact_number;
     let booking_type = this.reservation.booking_type;
     let description = this.reservation.description;
-    // let date = this.reservation.selected_slot.day;
 
-    // const dateObj = new Date(this.reservation.selected_slot.day);
-    // dateObj.setDate(dateObj.getDate() + 1);
-    // let slot_day = dateObj.toISOString().split('T')[0];
-    // let slot_type = this.reservation.selected_slot.type;
-    // let slot_number = this.reservation.selected_slot.slot;
     let number_of_persons = this.reservation.num_of_persons;
     let add_service_ids = '';
     for (let i = 0; i < this.additionalServicesSelected.length; i++) {

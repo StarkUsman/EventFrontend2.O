@@ -29,8 +29,8 @@ export class ViewEstimateComponent  implements OnInit {
   }
 
   loadMenus() {
-    this.http.get<any[]>(`${this.backendUrl}/menus`).subscribe(
-      (data) => (this.menus = data),
+    this.http.get<{ data: any[] }>(`${this.backendUrl}/menus`).subscribe(
+      (data) => (this.menus = data.data),
       (error) => console.error('Error fetching menus:', error)
     );
   }
@@ -43,8 +43,12 @@ export class ViewEstimateComponent  implements OnInit {
   }
 
   getMenuName(menuId: number) {
-    const menu = this.menus.find((m) => m.menu_id == 1);
-    return menu ? menu.menu_name : 'Unknown Menu';
+    for(let i = 0; i < this.menus.length; i++) {
+      if(this.menus[i].menu_id === menuId) {
+        return this.menus[i].menu_name;
+      }
+    }
+
   }
 
   getAdditionalServices(serviceIds: string) {
