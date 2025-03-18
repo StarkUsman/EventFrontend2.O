@@ -53,7 +53,7 @@
         </li>
       </ul>
 
-      <div *ngIf="stage === 1" class="reservation-container">
+  <div *ngIf="stage === 1" class="reservation-container">
     <div class="heading">
       <h3 class="mb-4 clr">Enter Reservation Details</h3>
     </div>
@@ -73,7 +73,6 @@
         <input type="text" id="alt_contact_number" class="form-control"
           [(ngModel)]="reservation.alt_contact_number" name="alt_contact_number">
       </div>
-      <!-- input for booker_type with select options of Bride, Groom, Other. Other being selected by default -->
       <div class="mb-3">
         <label for="bookerType" class="form-label">Booking Type</label>
         <select class="form-control" [(ngModel)]="reservation.booker_type" name="booker_type" id="booker_type">
@@ -84,8 +83,6 @@
       </div>
       <div class="mb-3">
         <label for="reserverName" class="form-label">Event Type <span style="color: red;">*</span></label>
-        <!-- <input type="text" id="reserverName" class="form-control"
-        [(ngModel)]="reservation.booking_type" name="booking_type"> -->
         <select class="form-control" *ngIf="events" [(ngModel)]="reservation.booking_type" name="booking_type" id="booking_type">
           <option *ngFor="let event of events" [value]="event.event_name">
             {{ event.event_name }}
@@ -104,66 +101,53 @@
             <i class="bi bi-calendar-event text-primary"></i>
           </span>
           <input type="date" id="date" class="form-control dateInput"
-            [(ngModel)]="reservation.date" name="date">
+          [(ngModel)]="reservation.date" name="date">
         </div>
       </div>
     </form>
     <div class="btnAl">
-
+      
       <button class="btn btn-primary btnAll" (click)="cancelReservation()">
         <i class="fa fa-times" style="font-size:19px;"></i> Cancel
       </button>
       <button class="btn btn-primary btnAll" (click)="nextStage()"
-        [disabled]="!isStage1Valid()">
-        Next <i class="fa fa-arrow-right"></i>
-      </button>
-    </div>
+      [disabled]="!isStage1Valid()">
+      Next <i class="fa fa-arrow-right"></i>
+    </button>
   </div>
+</div>
 
-  <div *ngIf="stage === 2" class="calendar-container">
-
-    <div class="p-3">
-
+<div *ngIf="stage === 2" class="calendar-container">
+  
+  <div class="p-3">
       <div class="table-responsive">
         <table class="table bookingTable">
           <thead>
           <tr>
             <th class="border-0"></th>
-            <th>
-                  <div class="day current">13</div>
-                  <span>Monday, 2025</span>
-                </th>
-              <th>
-                  <div class="day">14</div>
-                  <span>Monday, 2025</span>
-              </th>
-              <th>
-                <div class="day">15</div>
-                  <span>Monday, 2025</span>
-              </th>
-              <th>
-                <div class="day">16</div>
-                  <span>Monday, 2025</span>
-              </th>
-              <th>
-                  <div class="day">17</div>
-                  <span>Monday, 2025</span>
-              </th>
-              <th>
-                  <div class="day">18</div>
-                  <span>Monday, 2025</span>
-                </th>
-              <th>
-                  <div class="day">19</div>
-                  <span>Monday, 2025</span>
-                </th>
-              </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <th>Luxury</th>
-            <td>
-                  <div class="btnRow">
+            
+            <th *ngFor="let day of Days; let i = index">
+              <div class="day" [ngClass]="{'current': Date[i] === dateSelected}" 
+              >{{Date[i]}}</div>
+              <span>{{day}}</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let slotType of slotTypes; let i = index">
+            <th>{{slotType}}</th>
+            <td *ngFor="let day of Days; let j = index">
+                <div class="btnRow">
+                  <button class="btn specialBtnMRN" [ngClass]="{'btnSelected': isSlotSelected(slotType, day, Date[j], 'Morning')}"
+                  (click)="markSlotSelected(slotType, day, Date[j], 'Morning')"
+                  >Morning</button>
+                  <button class="btn specialBtnEVN" [ngClass]="{'btnSelected': isSlotSelected(slotType, day, Date[j], 'Evening')}"
+                  (click)="markSlotSelected(slotType, day, Date[j], 'Evening')"
+                  >Evening</button>
+                </div>
+              </td>
+            <!-- <td>
+              <div class="btnRow">
                     <button class="btn available"
                     data-bs-trigger="focus"
                               data-bs-toggle="popover"
@@ -171,9 +155,9 @@
                               data-bs-custom-class="custom-popover"
                               data-bs-title="Client Information"
                               data-bs-content="This popover is themed via CSS variables.">
-                              Slot 1
+                              Morning
                       </button>
-                      <button class="btn booked">Slot 2</button>
+                      <button class="btn booked">Evening</button>
                     </div>
               </td>
               <td>
@@ -181,139 +165,19 @@
                       <button class="btn partiallyBooked">Slot 1</button>
                       <button class="btn">Slot 2</button>
                   </div>
-              </td>
-              <td>
-                  <div class="btnRow">
-                    <button class="btn">Slot 1</button>
-                    <button class="btn">Slot 2</button>
-                  </div>
-                </td>
-                <td>
-                  <div class="btnRow">
-                    <button class="btn">Slot 1</button>
-                      <button class="btn">Slot 2</button>
-                    </div>
-              </td>
-              <td>
-                <div class="btnRow">
-                      <button class="btn">Slot 1</button>
-                      <button class="btn">Slot 2</button>
-                  </div>
-              </td>
-              <td>
-                  <div class="btnRow">
-                    <button class="btn">Slot 1</button>
-                      <button class="btn">Slot 2</button>
-                  </div>
-                </td>
-                <td>
-                  <div class="btnRow">
-                    <button class="btn">Slot 1</button>
-                    <button class="btn">Slot 2</button>
-                  </div>
-              </td>
+              </td> -->
             </tr>
-            <tr>
-              <th>Premium</th>
-              <td>
-                <div class="btnRow">
-                  <button class="btn">Slot 1</button>
-                      <button class="btn">Slot 2</button>
-                  </div>
-              </td>
-              <td>
-                  <div class="btnRow">
-                      <button class="btn">Slot 1</button>
-                      <button class="btn">Slot 2</button>
-                  </div>
-              </td>
-              <td>
-                <div class="btnRow">
-                      <button class="btn">Slot 1</button>
-                      <button class="btn">Slot 2</button>
-                    </div>
-              </td>
-              <td>
-                  <div class="btnRow">
-                      <button class="btn">Slot 1</button>
-                      <button class="btn">Slot 2</button>
-                  </div>
-                </td>
-              <td>
-                  <div class="btnRow">
-                      <button class="btn">Slot 1</button>
-                      <button class="btn">Slot 2</button>
-                  </div>
-              </td>
-              <td>
-                <div class="btnRow">
-                  <button class="btn">Slot 1</button>
-                      <button class="btn">Slot 2</button>
-                    </div>
-                  </td>
-              <td>
-                  <div class="btnRow">
-                      <button class="btn">Slot 1</button>
-                      <button class="btn">Slot 2</button>
-                    </div>
-              </td>
-          </tr>
-          <tr>
-              <th>Normal</th>
-              <td>
-                <div class="btnRow">
-                  <button class="btn">Slot 1</button>
-                      <button class="btn">Slot 2</button>
-                    </div>
-              </td>
-              <td>
-                <div class="btnRow">
-                  <button class="btn">Slot 1</button>
-                      <button class="btn">Slot 2</button>
-                    </div>
-                  </td>
-              <td>
-                  <div class="btnRow">
-                      <button class="btn">Slot 1</button>
-                      <button class="btn">Slot 2</button>
-                  </div>
-              </td>
-              <td>
-                  <div class="btnRow">
-                      <button class="btn">Slot 1</button>
-                      <button class="btn">Slot 2</button>
-                  </div>
-              </td>
-              <td>
-                  <div class="btnRow">
-                      <button class="btn">Slot 1</button>
-                      <button class="btn">Slot 2</button>
-                  </div>
-              </td>
-              <td>
-                  <div class="btnRow">
-                      <button class="btn">Slot 1</button>
-                      <button class="btn">Slot 2</button>
-                  </div>
-              </td>
-              <td>
-                  <div class="btnRow">
-                      <button class="btn">Slot 1</button>
-                      <button class="btn">Slot 2</button>
-                    </div>
-              </td>
-          </tr>
           </tbody>
       </table>
     </div>
   </div>
 
-    <div class="heading">
+    <!-- <div class="heading">
       <h5 *ngIf="month[0]===month[6]" class="mt-4 clr">{{month[0]}} {{year}}</h5>
         <h5 *ngIf="!(month[0]===month[6])" class="mt-4 clr">{{month[0]}} - {{month[6]}} {{year}}</h5>
-      </div>
+      </div> -->
 
-    <div class="calendar">
+    <!-- <div class="calendar">
       <div class="timeline"
         style="display: flex; flex-direction: column; justify-content: space-between; font-weight: bold; margin-bottom: 10px; margin-top: 100px;">
           <div *ngFor="let slotType of slotTypes" class="time-marker" style="flex: 1; text-align: center;">{{ slotType }}</div>
@@ -357,7 +221,8 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
+    
     <div class="text-center mt-3 btnAl specialButton">
       <button class="btn btn-secondary btnAll" (click)="prevStage()">
         <i class="fa fa-arrow-left"></i> Back

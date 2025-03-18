@@ -45,6 +45,10 @@ export class AddEstimatesComponent implements OnInit {
   events: any[] = [];
   preBookingDiscount: any = "Dicount";
   preBookingAdvance: any = "Advance Received";
+  dateSelected: any = '';
+  monthSelected: any = '';
+  Date: any = [];
+  Days: any = [];
 
 
   constructor(private http: HttpClient, private router: Router) { }
@@ -55,6 +59,77 @@ export class AddEstimatesComponent implements OnInit {
     this.loadAdditionalServices();
     this.loadReservations();
     this.loadEvents();
+
+    let selectedDate = new Date();
+
+    ({ dates: this.Date, days: this.Days } = this.getWeekDatesSeparated(selectedDate, 0));
+
+
+
+    console.log("=========================================");
+    console.log("Dates:", this.Date);
+    console.log("Days:", this.Days);
+    console.log("=========================================");
+  }
+
+  getWeekDatesSeparated(dateSelected: Date, startDay: number = 0) {
+    let date = new Date(dateSelected);
+    let day = date.getDay();
+
+    let diff = (day < startDay ? 7 : 0) + day - startDay;
+    date.setDate(date.getDate() - diff);
+
+    let dates: string[] = [];
+    let days: string[] = [];
+
+    for (let i = 0; i < 7; i++) {
+        let formattedDate = date.toDateString().split(' ');
+
+        dates.push(formattedDate[2]);
+        days.push(`${formattedDate[0]} ${formattedDate[3]}`);
+
+        date.setDate(date.getDate() + 1);
+    }
+
+    this.dateSelected = new Date().toDateString();
+    this.dateSelected = this.dateSelected.split(' ')[2];
+    this.monthSelected = new Date().toDateString();
+    this.monthSelected = this.monthSelected.split(' ')[1];
+
+    return { dates, days };
+  }
+
+  slotSelected: any = null;
+
+  markSlotSelected(slotType: any, day: any, date: any, slot: any) {
+    const year = day.split(" ")[1];
+    let formattedDate = date + '_' + this.monthSelected + '_' + year;
+    this.slotSelected = {hall: slotType, date: formattedDate, slot: slot};
+  }
+
+  isSlotSelected(slotType: any, day: any, date: any, slot: any) {
+
+    const year = day.split(" ")[1];
+    let formattedDate = date + '_' + this.monthSelected + '_' + year;
+
+    let slotToCompare = {hall: slotType, date: formattedDate, slot: slot};
+
+    if(this.bookings){
+      for (let i = 0; i < this.bookings.length; i++) {
+        const booking = this.bookings[i];
+        
+        console.log("======================================")
+        console.log(booking.SLOT.toString());
+        console.log(slotToCompare);
+        console.log("======================================")
+
+        if (slotToCompare === booking.SLOT) {
+          return true;
+        }
+      }
+    }
+
+    return this.slotSelected && this.slotSelected.hall === slotType && this.slotSelected.date === formattedDate && this.slotSelected.slot === slot;
   }
 
   cancelReservation(){
@@ -103,8 +178,8 @@ export class AddEstimatesComponent implements OnInit {
 
   loadMenus() {
     // Fetch menus from API (replace with your real endpoint)
-    this.http.get<any[]>(`${this.backendUrl}/menus`).subscribe(data => {
-      this.availableMenus = data;
+    this.http.get<any[]>(`${this.backendUrl}/menus`).subscribe((data: any) => {
+      this.availableMenus = data.data;
     });
   }
 
@@ -188,7 +263,7 @@ export class AddEstimatesComponent implements OnInit {
   }
 
   isStage2Valid(): boolean {
-    return this.reservation.selected_slot !== null;
+    return this.slotSelected !== null;
   }
 
   isStage3Valid(): boolean {
@@ -202,13 +277,13 @@ export class AddEstimatesComponent implements OnInit {
     let alt_contact_number = this.reservation.alt_contact_number;
     let booking_type = this.reservation.booking_type;
     let description = this.reservation.description;
-    let date = this.reservation.selected_slot.day;
+    // let date = this.reservation.selected_slot.day;
 
-    const dateObj = new Date(this.reservation.selected_slot.day);
-    dateObj.setDate(dateObj.getDate() + 1);
-    let slot_day = dateObj.toISOString().split('T')[0];
-    let slot_type = this.reservation.selected_slot.type;
-    let slot_number = this.reservation.selected_slot.slot;
+    // const dateObj = new Date(this.reservation.selected_slot.day);
+    // dateObj.setDate(dateObj.getDate() + 1);
+    // let slot_day = dateObj.toISOString().split('T')[0];
+    // let slot_type = this.reservation.selected_slot.type;
+    // let slot_number = this.reservation.selected_slot.slot;
     let number_of_persons = this.reservation.num_of_persons;
     let add_service_ids = '';
     for (let i = 0; i < this.additionalServicesSelected.length; i++) {
@@ -229,6 +304,11 @@ export class AddEstimatesComponent implements OnInit {
     let advance = this.reservation.Advance;
     let discount = this.reservation.Discount;
     let total_price = this.getGrandTotal();
+    let SLOT = this.slotSelected;
+
+    console.log("======================================");
+    console.log("slot", SLOT);
+    console.log("======================================");
 
     let booking = {
       booking_name: booking_name,
@@ -237,10 +317,6 @@ export class AddEstimatesComponent implements OnInit {
       booking_type: booker_type,
       event_type: booking_type,
       description: description,
-      date: date,
-      slot_day: slot_day,
-      slot_type: slot_type,
-      slot_number: slot_number,
       number_of_persons: number_of_persons,
       menu_id: menuId,
       menu_items_ids: selected_menu_items_ids,
@@ -249,6 +325,7 @@ export class AddEstimatesComponent implements OnInit {
       advance: advance,
       total_remaining: total_price,
       notes: booking_notes,
+      SLOT: SLOT
     };
 
     try{

@@ -509,6 +509,29 @@
     justify-content: center;
     gap: 10px;
 }
+
+.specialBtnMRN{
+  background: blueviolet !important;
+  color: white !important;
+}
+
+.specialBtnMRN:hover{
+  background: orange !important;
+  color: white !important;
+  transition: 0.4s;
+}
+
+.specialBtnEVN:hover{
+  background: orange !important;
+  color: white !important;
+  transition: 0.4s;
+}
+
+.btnSelected{
+  background: orange !important;
+  color: white !important;
+}
+
 .bookingTable .btn {
     background: none;
     color: #7539ff;
