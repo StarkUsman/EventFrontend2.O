@@ -1,9 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { PaginationService, tablePageSize } from 'src/app/shared/sharedIndex';
 import { DataService, routes } from 'src/app/core/core.index';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+
 import {
   apiResultFormat,
   pageSelection,
@@ -15,7 +19,8 @@ import {
   templateUrl: './states.component.html',
   styleUrls: ['./states.component.scss'],
 })
-export class StatesComponent {
+export class StatesComponent implements OnInit {
+  control = new FormControl();
   public routes = routes;
   isCollapsed = false;
   name = 'country';
@@ -34,6 +39,8 @@ export class StatesComponent {
   menuItemToEdit: any = {};
   newMenuItem: any = {};
   menuItemToDelete: any = {};
+  filteredOptions!: Observable<string[]>;
+  categories: any = [];
 
   constructor(
     private data: DataService,
@@ -117,7 +124,22 @@ export class StatesComponent {
   }
 
   ngOnInit(): void {
-    
+    this.data.getCategory().subscribe((res: any) => {
+      for (let i = 0; i < res.data.length; i++) {
+        this.categories.push(res.data[i].category);
+      }
+
+      this.filteredOptions = this.control.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value || '')),
+      );
+    });
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.categories.filter((option: any) => option.toLowerCase().includes(filterValue));
   }
 
   setMenuItemToEdit(menuItem: any) {
