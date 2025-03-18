@@ -1483,15 +1483,15 @@ public sideBar: any[] = [
     showAsTab: false,
     separateRoute: false,
     menu: [
-      {
-        menuValue: 'Payment Summary',
-        route: routes.paymentsummary,
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'credit-card',
-        base: 'payment-summary',
-        subMenus: [],
-      },
+      // {
+      //   menuValue: 'Payment Summary',
+      //   route: routes.paymentsummary,
+      //   hasSubRoute: false,
+      //   showSubRoute: false,
+      //   icon: 'credit-card',
+      //   base: 'payment-summary',
+      //   subMenus: [],
+      // },
       {
         menuValue: 'Reports',
         hasSubRoute: true,

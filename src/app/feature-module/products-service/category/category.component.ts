@@ -14,7 +14,7 @@ import { apiResultFormat, category, pageSelection } from 'src/app/core/models/mo
 })
 export class CategoryComponent  {
   public routes = routes;
-  public category: Array<category> = [];
+  public category: Array<any> = [];
   isCollapsed = false;
   parent = 'none';
   parent2 = 'none';

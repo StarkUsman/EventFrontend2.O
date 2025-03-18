@@ -31,12 +31,12 @@
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-12">
                       <div class="input-block mb-3">
-                        <label for="Category">Category</label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          [(ngModel)]="productToEdit.category"
-                          />
+                        <label for="Category ">Category</label>
+                        <mat-select [(ngModel)]="productToEdit.category" [ngModelOptions]="{standalone: true}" class="select custom-mat-select">
+                          <mat-option *ngFor="let category of categories" [value]="category.id">
+                            {{ category.category }}
+                          </mat-option>
+                        </mat-select>                      
                         </div>
                       </div>
                         <div class="col-lg-4 col-md-6 col-sm-12">
@@ -49,7 +49,7 @@
                               />
                             </div>
                           </div>
-                          <div class="col-lg-4 col-md-6 col-sm-12">
+                          <!-- <div class="col-lg-4 col-md-6 col-sm-12">
                             <div class="input-block mb-3">
                               <label for="Selling">Selling Price  <span class="text-danger">  *</span></label>
                               <input
@@ -58,8 +58,8 @@
                                 [(ngModel)]="productToEdit.sellingPrice"
                                 />
                               </div>
-                            </div>
-                          <div class="col-lg-4 col-md-6 col-sm-12">
+                            </div> -->
+                          <!-- <div class="col-lg-4 col-md-6 col-sm-12">
                             <div class="input-block mb-3">
                               <label for="Quantity"> Quantity <span class="text-danger">  *</span></label>
                               <input
@@ -69,20 +69,19 @@
                                 name="name"
                                 />
                               </div>
-                            </div>
+                            </div> -->
                             <div class="col-lg-4 col-md-6 col-sm-12">
                               <div class="input-block mb-3">
                                 <label for="Units">Units</label>
-                                <mat-select [(ngModel)]="productToEdit.unit" class="select custom-mat-select">
-                                  <mat-option value="select units">Select Units</mat-option>
-                                  <mat-option value="pieces">Pieces</mat-option>
-                                  <mat-option value="box">Box</mat-option>
-                                  <mat-option value="box">Kilograms</mat-option>
-
+                                <mat-select [(ngModel)]="productToEdit.unit" [ngModelOptions]="{standalone: true}" class="select custom-mat-select">
+                                  <!-- use for loop over units and give unit name as option and unit id as value -->
+                                  <mat-option *ngFor="let unit of units" [value]="unit.unit_id">
+                                    {{unit.unit_name}}
+                                  </mat-option>
                                 </mat-select>
                               </div>
                             </div>
-                              <div class="col-lg-4 col-md-6 col-sm-12">
+                              <!-- <div class="col-lg-4 col-md-6 col-sm-12">
                                 <div class="input-block mb-3">
                                   <label for="Alert ">Alert Quantity </label>
                                   <input
@@ -93,7 +92,7 @@
                                     disabled="true"
                                     />
                                   </div>
-                                </div>
+                                </div> -->
                               </div>
                             </div>
                             <div class="form-group-item">

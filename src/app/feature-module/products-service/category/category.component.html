@@ -5,7 +5,7 @@
     <h5>Category </h5>
     <div class="list-btn">
       <ul class="filter-list">
-        <li>
+        <!-- <li>
           <a
             (click)="openContent()"  (keydown.enter)="openContent()" tabindex="0"
             matTooltip="Filter"
@@ -60,7 +60,7 @@
                   ><i class="feather icon-check-square me-2"></i> Import</span
                   ></a
                   >
-                </li>
+                </li> -->
                 <li>
                   <a
                     class="btn btn-primary"
@@ -135,7 +135,7 @@
                         <tr>
                           <th  mat-sort-header="id">#</th>
                           <th mat-sort-header="category">Category Name</th>
-                          <th mat-sort-header="total">Total Products</th>
+                          <th mat-sort-header="total">ShortName</th>
                           <th>Action</th>
                         </tr>
                       </thead>
@@ -144,7 +144,7 @@
                           <tr>
                             <td>{{data.sNo}}</td>
                             <td><a href="" class="product-list-item-img"><img [src]="data.img" alt="product-list"><span>{{data.category}}</span></a></td>
-                            <td>{{data.total}}</td>
+                            <td>{{data.shortName}}</td>
                             <td class="d-flex align-items-center">
                               <a class=" btn-action-icon me-2"  href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#edit_category" (click)="setCategoryToEdit(data.id)"><i class="feather icon-edit"></i></a>
                               <a class=" btn-action-icon" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete_modal" (click)="setCategoryToDelete(data.id)"><i class="feather icon-trash-2"></i></a>
@@ -273,6 +273,19 @@
                               <input type="text"  class="form-control" placeholder="Enter Title" [(ngModel)]="newCategory.category">
                             </div>
                           </div>
+                          <div class="col-lg-12 col-sm-12">
+                            <div class="input-block mb-3">
+                              <label for="Description">Description</label>
+                              <input type="text" class="form-control" placeholder="Enter Description" [(ngModel)]="newCategory.description">
+                            </div>
+                          </div>
+                          <div class="col-lg-12 col-sm-12">
+                            <div class="input-block mb-3">
+                              <label for="ShortName">Short Name</label>
+                              <input type="text" class="form-control" placeholder="Enter Short Name" [(ngModel)]="newCategory.shortName">
+                            </div>
+                          </div>
+
                           <!-- <div class="col-lg-12 col-sm-12">
                             <div class="input-block mb-3">
                               <label for="Slug">Slug</label>
@@ -357,6 +370,18 @@
                             <div class="input-block mb-3">
                               <label for="Name">Name <span class="text-danger">*</span></label>
                               <input type="text"  class="form-control" [(ngModel)]="categoryToEdit.category" placeholder="Enter Title">
+                            </div>
+                          </div>
+                          <div class="col-lg-12 col-sm-12">
+                            <div class="input-block mb-3">
+                              <label for="Description">Description</label>
+                              <input type="text" class="form-control" placeholder="Enter Description" [(ngModel)]="categoryToEdit.description">
+                            </div>
+                          </div>
+                          <div class="col-lg-12 col-sm-12">
+                            <div class="input-block mb-3">
+                              <label for="ShortName">Short Name</label>
+                              <input type="text" class="form-control" placeholder="Enter Short Name" [(ngModel)]="categoryToEdit.shortName">
                             </div>
                           </div>
                           <!-- <div class="col-lg-12 col-sm-12">

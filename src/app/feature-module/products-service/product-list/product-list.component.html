@@ -4,7 +4,7 @@
     <h5>Products</h5>
     <div class="list-btn">
       <ul class="filter-list">
-        <li>
+        <!-- <li>
           <a
             (click)="openContent()"  (keydown.enter)="openContent()" tabindex="0"
             matTooltip="Filter"
@@ -52,7 +52,7 @@
                 <a class="btn-filters" matTooltip="Print" href="javascript:void(0);"
                   ><span><i class="feather icon-printer"></i></span>
                 </a>
-              </li>
+              </li> -->
               <li>
                 <a class="btn btn-primary" [routerLink]="routes.addproducts"
                   ><i class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add
@@ -131,8 +131,8 @@
                           <th mat-sort-header="code">Code</th>
                           <th mat-sort-header="category">Category</th>
                           <th mat-sort-header="units">Units</th>
-                          <th mat-sort-header="quantity">Quantity</th>
-                          <th mat-sort-header="sellingPrice">Selling Price</th>
+                          <!-- <th mat-sort-header="quantity">Quantity</th> -->
+                          <!-- <th mat-sort-header="sellingPrice">Selling Price</th> -->
                           <th mat-sort-header="purchasePrice">Purchase Price</th>
                           <th>Actions</th>
                         </tr>
@@ -150,8 +150,8 @@
                               <td>{{ data.code }}</td>
                               <td>{{ data.category }}</td>
                               <td>{{ data.unit }}</td>
-                              <td>{{ data.quantity }}</td>
-                              <td>{{ data.sellingPrice }}</td>
+                              <!-- <td>{{ data.quantity }}</td> -->
+                              <!-- <td>{{ data.sellingPrice }}</td> -->
                               <td>{{ data.purchasePrice }}</td>
                               <td class="d-flex align-items-center">
                                 <div class="dropdown dropdown-action">

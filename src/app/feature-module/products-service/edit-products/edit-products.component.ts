@@ -15,6 +15,8 @@ export class EditProductsComponent implements OnInit {
   Discount='select discount'
   Tax='select tax'
   productToEdit: any = {};
+  categories: any = [];
+  units: any = [];
 
   constructor(private route: ActivatedRoute, private data: DataService) {}
 
@@ -51,6 +53,12 @@ export class EditProductsComponent implements OnInit {
       let id = params['id'];
       this.data.getProductById(id).subscribe((res: any) => {
         this.productToEdit = res;
+      });
+      this.data.getUnits().subscribe((res) => {
+        this.units = res.data;
+      });
+      this.data.getCategory().subscribe((res) => {
+        this.categories = res.data;
       });
     });
   }
