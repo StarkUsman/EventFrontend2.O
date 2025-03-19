@@ -5,25 +5,6 @@
     <div class="list-btn">
       <ul class="filter-list">
         <li>
-          <a
-            (click)="openContent()"  (keydown.enter)="openContent()" tabindex="0"
-            matTooltip="Filter"
-            href="javascript:void(0);"
-            class="btn btn-filters w-auto popup-toggle"
-            ><span class="me-2"
-            ><img src="assets/img/icons/filter-icon.svg" alt="filter" /></span
-            >Filter
-          </a>
-        </li>
-        <li>
-          <a
-            class="btn-filters"
-            matTooltip="Settings"
-            href="javascript:void(0);"
-            ><span><i class="feather icon-settings"></i></span>
-          </a>
-        </li>
-        <li>
           <a class="btn btn-primary" [routerLink]="routes.addexpenses"
             ><i class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add
             Expenses</a

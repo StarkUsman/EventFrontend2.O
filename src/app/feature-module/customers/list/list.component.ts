@@ -143,11 +143,33 @@ export class ListComponent implements OnInit {
   
     this.nameError = false;
 
-    this.data.addVendor(this.newVendor).subscribe((res) => {
+    this.data.addVendor(this.newVendor).subscribe((res: any) => {
       this.getTableData({ skip: 0, limit: this.pageSize });
+      
+      if(res && this.newVendor.balance && (parseFloat(this.newVendor.balance) != 0)) {
+        this.addLedger(0, res.id, this.newVendor.balance);
+      }      
       this.newVendor = {};
     });
   }  
+
+  addLedger(purch_id: any, vendor_id: any, amountCredit: any) {
+    let ledger = {
+      name: "OB",
+      purch_id: purch_id,
+      vendor_id: vendor_id,
+      amountCredit: 0,
+      amountDebit: 0,
+    };
+
+    if(parseFloat(amountCredit) > 0) {
+      ledger.amountCredit = parseFloat(amountCredit);
+    } else {
+      ledger.amountDebit = -parseFloat(amountCredit);
+    }
+
+    this.data.addLedger(ledger).subscribe((res) => { });
+  }
 
   setVendorToDelete(sNo: number) {
     this.vendorToDelete = sNo;

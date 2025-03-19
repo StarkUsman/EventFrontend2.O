@@ -57,6 +57,7 @@ export class DashboardComponent implements OnInit {
   pct_reservations_last_month: number = 0;
   total_due_balance: number = 0;
   pct_total_due_balance_last_month: number = 0;
+  upcominReservations: any = [];
 
   constructor(private sideBar: SideBarService, private data: DataService) {
     this.chartOptions = {
@@ -165,11 +166,6 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.data.getDashboardData().subscribe((res: any) => {
-
-      console.log("====================================");
-      console.log(res);
-      console.log("====================================");
-
       this.people_to_be_served = res.people_to_be_served;
       this.pct_people_to_be_served_last_month = res.pct_people_to_be_served_last_month
       this.total_people_served = res.total_people_served;
@@ -179,6 +175,10 @@ export class DashboardComponent implements OnInit {
       // this.reservations_last_month = res.reservations_last_month;
       this.total_due_balance = res.total_due_balance;
       // this.pct_total_due_balance_last_month = res.pct_total_due_balance_last_month
+    });
+
+    this.data.getUCReservations().subscribe((res: any) => {
+      this.upcominReservations = res.data;
     });
   }
 }

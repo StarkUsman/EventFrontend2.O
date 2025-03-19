@@ -214,7 +214,7 @@
                             </div>
                           </div>
                           <div class="text-end">
-                            <button type="reset" class="btn btn-primary cancel me-2">Cancel</button>
+                            <button [routerLink]="routes.purchase" type="reset" class="btn btn-primary me-2">Cancel</button>
                             <button [routerLink]="routes.purchase" type="submit" class="btn btn-primary" (click)="editPurchase()">Save</button>
                           </div>
 
@@ -292,7 +292,7 @@
                                 href="javascript:void(0);"
                                 data-bs-dismiss="modal"
                                 class="btn btn-back cancel-btn me-2"
-                                >Back</a
+                                >Cancel</a
                                 >
                                 <a
                                   href="javascript:void(0);"
@@ -313,7 +313,7 @@
                               <div class="modal-content">
                                 <div class="modal-body">
                                   <div class="form-header">
-                                    <h3>Delete Product / Services</h3>
+                                    <h3>Delete Product</h3>
                                     <p>Are you sure want to delete?</p>
                                   </div>
                                   <div class="modal-btn delete-action">
@@ -322,7 +322,7 @@
                                         <a data-bs-dismiss="modal" (click)="deleteProduct()" class="btn btn-primary paid-continue-btn">Delete</a>
                                       </div>
                                       <div class="col-6">
-                                        <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-cancel-btn">Cancel</a>
+                                        <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn">Cancel</a>
                                       </div>
                                     </div>
                                   </div>
