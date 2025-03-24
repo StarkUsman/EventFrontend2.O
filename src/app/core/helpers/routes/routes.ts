@@ -687,7 +687,10 @@ export class routes {
     return this.purchasepage + '/purchases';
   }
   public static get purchaseorders(): string {
-    return this.baseUrl + '/purchase-orders';
+    return this.baseUrl + '/purchase-return';
+  }
+  public static get addpurchasreturn(): string {
+    return this.baseUrl + '/add-purchase-return';
   }
   public static get debitnotes(): string {
     return this.baseUrl + '/debit-notes';

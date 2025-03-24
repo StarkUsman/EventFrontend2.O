@@ -71,7 +71,7 @@ export class AddPurchasesComponent implements OnInit {
     this.data.getProductlist().subscribe((res) => {
       this.allProducts = res.data;
     });
-    this.data.getpurchase().subscribe((res) => {
+    this.data.getpurchaseReturn().subscribe((res) => {
       // set newPurchase.purch_id to last purch_id + 1 and make it 6 digit
       let purch_id = res.data[0] ? res.data[0].purch_id : 100;
       purch_id = parseInt(purch_id) + 1;
@@ -237,13 +237,13 @@ export class AddPurchasesComponent implements OnInit {
   }
 
   // ledger function
-  addLedger(purch_id: any, vendor_id: any, amountDebit: any) {
+  addLedger(purch_id: any, vendor_id: any, amountCredit: any) {
     let ledger = {
-      name: "SRV",
+      name: "PRV",
       purch_id: purch_id,
       vendor_id: vendor_id,
-      amountDebit: amountDebit,
-      amountCredit: 0
+      amountDebit: 0,
+      amountCredit: amountCredit,
     };
 
     this.data.addLedger(ledger).subscribe((res) => { });
@@ -265,21 +265,21 @@ export class AddPurchasesComponent implements OnInit {
     this.newPurchase.paymentmode = "cash";
     // make api call for each product selectedProducts
     this.selectedProducts.forEach((p: any) => {
-      this.data.addPurchaseProduct(p).subscribe((res) => {
+      this.data.removePurchaseProduct(p).subscribe((res) => {
       });
     });
 
     // make api call for vendors
     // let vendor = this.allVendors.find((v: any) => v.id === this.newPurchase.vendor.id);
     // vendor.balance = vendor.balance.replace(/[^0-9.]/g, '');
-    // vendor.balance = parseFloat(vendor.balance) + this.newPurchase.total_amount;
+    // vendor.balance = parseFloat(vendor.balance) - this.newPurchase.total_amount;
 
     // this.data.updateVendor(vendor).subscribe((res) => {
     // });
 
     this.addLedger(this.newPurchase.purch_id, this.newPurchase.vendor.id, this.newPurchase.total_amount)
 
-    this.data.addPurchase(this.newPurchase).subscribe((res) => {
+    this.data.addPurchaseReturn(this.newPurchase).subscribe((res) => {
     });
   }
 }

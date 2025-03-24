@@ -695,6 +695,13 @@ export class DataService {
       })
     );
   }
+  public getpurchaseReturn() {
+    return this.http.get<apiResultFormat>('http://localhost:3000/purchaseReturn').pipe(
+      map((res: apiResultFormat) => {
+        return res;
+      })
+    );
+  }
   
   public addPurchaseProduct(product: any) {
     return this.http.post('http://localhost:3000/products/addQuantity', product);
@@ -707,6 +714,9 @@ export class DataService {
   public addPurchase(purchase: any) {
     return this.http.post('http://localhost:3000/purchase', purchase);
   }
+  public addPurchaseReturn(purchase: any) {
+    return this.http.post('http://localhost:3000/purchaseReturn', purchase);
+  }
 
   public editPurchase(purchase: any) {
     return this.http.put(`http://localhost:3000/purchase/${purchase.id}`, purchase);
@@ -718,6 +728,9 @@ export class DataService {
   
   public deletepurchase(sNo: number) {
     return this.http.delete(`http://localhost:3000/purchase/${sNo}`);
+  }
+  public deletepurchaseReturn(sNo: number) {
+    return this.http.delete(`http://localhost:3000/purchaseReturn/${sNo}`);
   }
   
   public getPurchaseById(id: number) {
@@ -776,11 +789,17 @@ export class DataService {
     );
   }
   public getTransaction() {
-    return this.http.get<apiResultFormat>('assets/JSON/transactions.json').pipe(
+    return this.http.get<apiResultFormat>('http://localhost:3000/transaction').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
     );
+  }
+  public addTransaction(transaction: any) {
+    return this.http.post('http://localhost:3000/transaction', transaction);
+  }
+  public getTransactionById(id: number) {
+    return this.http.get(`http://localhost:3000/transaction/${id}`);
   }
   public getrole() {
     return this.http.get<apiResultFormat>('assets/JSON/role.json').pipe(
@@ -1153,7 +1172,7 @@ public sideBar: any[] = [
         hasSubRoute: false,
         showSubRoute: false,
         icon: 'users',
-        base: 'accounts',
+        base: 'customer',
         subMenus: [],
       },
       // {
@@ -1399,15 +1418,15 @@ public sideBar: any[] = [
         base: 'purchasepage',
         subMenus: [],
       },
-      // {
-      //   menuValue: 'Purchase Orders',
-      //   route: routes.purchaseorders,
-      //   hasSubRoute: false,
-      //   showSubRoute: false,
-      //   icon: 'shopping-bag',
-      //   base: 'purchase-orders',
-      //   subMenus: [],
-      // },
+      {
+        menuValue: 'Purchase Returns',
+        route: routes.purchaseorders,
+        hasSubRoute: false,
+        showSubRoute: false,
+        icon: 'shopping-bag',
+        base: 'purchase-return',
+        subMenus: [],
+      },
       // {
       //   menuValue: 'Debit Notes',
       //   route: routes.debitnotes,

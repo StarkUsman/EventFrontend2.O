@@ -51,7 +51,6 @@
                     <th mat-sort-header="code">Code</th>
                     <th mat-sort-header="units">Units</th>
                     <th mat-sort-header="quantity">Quantity</th>
-                    <th mat-sort-header="sale">Selling Price</th>
                     <th mat-sort-header="purchase">Purchase Price</th>
                     <th mat-sort-header="action">Action</th>
                   </tr>
@@ -64,7 +63,6 @@
                       <td>{{ data.code }}</td>
                       <td>{{ data.units }}</td>
                       <td>{{ data.quantity }}</td>
-                      <td>{{ data.sales }}</td>
                       <td>{{ data.purchase }}</td>
                       <td class="d-flex align-items-center">
                         <a  [routerLink] = "routes.inventoryHistory" class="btn btn-greys bg-history-light me-2">

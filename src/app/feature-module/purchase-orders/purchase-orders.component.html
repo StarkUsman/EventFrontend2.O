@@ -1,7 +1,7 @@
 <!-- Page Header -->
 <div class="page-header">
   <div class="content-page-header">
-    <h5>Purchase Orders</h5>
+    <h5>Purchase Returns</h5>
     <div class="list-btn">
       <ul class="filter-list">
         <li>
@@ -24,9 +24,9 @@
           </a>
         </li>
         <li>
-          <a class="btn btn-primary" [routerLink]="routes.addpurchasesorder"
+          <a class="btn btn-primary" [routerLink]="routes.addpurchasreturn"
             ><i class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add
-            Purchases Order</a
+            Purchase Return</a
             >
           </li>
         </ul>
@@ -77,12 +77,12 @@
                 <thead class="thead-light">
                   <tr>
                     <th mat-sort-header="sNo">#</th>
-                    <th mat-sort-header="purchaseid">Purchase ID</th>
+                    <th mat-sort-header="id">Return Purchase ID</th>
                     <th mat-sort-header="person">Vendor</th>
-                    <th mat-sort-header="totalAmount">Amount</th>
-                    <th mat-sort-header="paymentmode">Payment Mode</th>
+                    <th mat-sort-header="totalamount">Amount</th>
+                    <!-- <th mat-sort-header="paymentmode">Payment Mode</th> -->
                     <th mat-sort-header="date">Date</th>
-                    <th mat-sort-header="status">Status</th>
+                    <!-- <th mat-sort-header="status">Status</th> -->
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -90,98 +90,108 @@
                   @for (data of purchase; track data; let i = $index) {
                     <tr>
                       <td>{{ data.sNo }}</td>
-                      <td>{{ data.purchaseId }}</td>
                       <td>
-                        <h2 class="table-avatar">
-                          <a
-                            [routerLink]="routes.profile"
-                            class="avatar avatar-sm me-2"
-                            ><img
-                            class="avatar-img rounded-circle"
-                            [src]="data.img"
-                            alt="User Image"
-                          /></a>
-                          <a [routerLink]="routes.profile"
-                            >{{ data.person }} <span>{{ data.phone }}</span></a
-                            >
-                          </h2>
+                        <a
+                          [routerLink]="routes.purchasesdetails"
+                          class="invoice-link"
+                          >#{{ data.purch_id }}</a
+                          >
                         </td>
-                        <td>{{ data.totalAmount }}</td>
-                        <td>{{ data.paymentmode }}</td>
-                        <td>{{ data.date }}</td>
                         <td>
-                          <span
-                            [ngClass]="{'bg-success-light text-success-light': data.status === 'Closed','bg-warning-light text-warning-light': data.status === 'Open',}"
-                            class="badge"
-                            >{{ data.status }}</span
-                            >
+                          <h2 class="table-avatar">
+                            <!-- <a
+                              [routerLink]="routes.profile"
+                              class="avatar avatar-sm me-2"
+                              ><img
+                              class="avatar-img rounded-circle"
+                              [src]="data.img"
+                              alt="User Image"
+                            /></a> -->
+                            <a [routerLink]="routes.vendorsList"
+                              >{{ data.vendor.name }} <span>{{ data.vendor.phone }}</span></a
+                              >
+                            </h2>
                           </td>
-                          <td class="d-flex align-items-center">
-                            <div class="dropdown dropdown-action">
-                              <a
-                                href="javascript:void(0);"
-                                class="btn-action-icon"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                                ><i class="fas fa-ellipsis-v"></i
-                              ></a>
-                              <div
-                                class="dropdown-menu dropdown-menu-right credit-note-dropdown"
-                                >
-                                <ul>
-                                  <li>
-                                    <a
-                                      class="dropdown-item"
-                                      [routerLink]="routes.editpurchases"
-                                      ><i class="far fa-edit me-2"></i>Edit</a
-                                      >
-                                    </li>
+                          <td>PKR{{ data.total_amount }}</td>
+                          <!-- <td>{{ data.paymentmode }}</td> -->
+                          <td>{{ data.purchase_date }}</td>
+                          <!-- <td>
+                            <span
+                      [ngClass]="{
+                        'bg-success-light text-success-light':
+                          data.status === 'Paid',
+                        'bg-warning-light text-warning-light':
+                          data.status === 'Pending',
+                        'bg-danger-light': data.status === 'Cancelled'
+                      }"
+                              class="badge badge-pill"
+                              >{{ data.status }}</span
+                              >
+                            </td> -->
+                            <td class="d-flex align-items-center">
+                              <div class="dropdown dropdown-action">
+                                <a
+                                  href="javascript:void(0);"
+                                  class="btn-action-icon"
+                                  data-bs-toggle="dropdown"
+                                  aria-expanded="false"
+                                  ><i class="fas fa-ellipsis-v"></i
+                                ></a>
+                                <div
+                                  class="dropdown-menu dropdown-menu-right credit-note-dropdown"
+                                  >
+                                  <ul>
                                     <li>
                                       <a
                                         class="dropdown-item"
-                                        href="javascript:void(0);"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#delete_modal"
-                                        ><i class="far fa-trash-alt me-2"></i>Delete</a
+                                        [routerLink]="routes.editpurchases"
+                                        [queryParams]="{ id: data.id }"
+                                        ><i class="far fa-edit me-2"></i>Edit</a
                                         >
                                       </li>
-                                      <li>
+                                      <!-- <li>
                                         <a
                                           class="dropdown-item"
-                                          [routerLink]="routes.purchasesdetails"
-                                          ><i class="far fa-eye me-2"></i>View</a
+                                          href="javascript:void(0);"
+                                          data-bs-toggle="modal"
+                                          data-bs-target="#delete_modal"
+                                          (click)="setItemToDelete(data)"
+                                          ><i class="far fa-trash-alt me-2"></i>Delete</a
                                           >
-                                        </li>
+                                        </li> -->
                                         <li>
                                           <a
                                             class="dropdown-item"
-                                            [routerLink]="routes.addpurchasereturn"
-                                            ><i class="feather icon-repeat me-2"></i>Convert
-                                            To Purchase</a
+                                            [routerLink]="routes.purchasesdetails"
+                                            [queryParams]="{ id: data.id }"
+                                            ><i class="far fa-eye me-2"></i>View</a
                                             >
                                           </li>
-                                          <li>
+                                          <!-- <li>
                                             <a
                                               class="dropdown-item"
-                                              [routerLink]="routes.purchaseorders"
-                                              ><i class="feather icon-send me-2"></i>Send</a
+                                              [routerLink]="routes.purchase"
+                                              ><i class="feather icon-download me-2"></i
+                                              >Download</a
                                               >
                                             </li>
                                             <li>
                                               <a
                                                 class="dropdown-item"
-                                                [routerLink]="routes.purchaseorders"
-                                                ><i class="feather icon-copy me-2"></i>Clone</a
+                                                [routerLink]="routes.purchase"
+                                                ><i class="feather icon-send me-2"></i>Send</a
                                                 >
                                               </li>
                                               <li>
                                                 <a
                                                   class="dropdown-item"
-                                                  [routerLink]="routes.purchaseorders"
-                                                  ><i class="feather icon-download me-2"></i
-                                                  >Download</a
+                                                  [routerLink]="routes.addpurchasereturn"
+                                                  ><i
+                                                  class="feather iconather icon-file-text me-2"
+                                                  ></i
+                                                  >Convert to Purchase Return</a
                                                   >
-                                                </li>
+                                                </li> -->
                                               </ul>
                                             </div>
                                           </div>
@@ -352,27 +362,27 @@
                                       <div class="selectBox-cont">
                                         <label class="custom_check w-100">
                                           <input type="checkbox" name="bystatus" />
-                                          <span class="checkmark"></span> PO-100405361
+                                          <span class="checkmark"></span> 4905681
                                         </label>
                                         <label class="custom_check w-100">
                                           <input type="checkbox" name="bystatus" />
-                                          <span class="checkmark"></span> PO-100405362
+                                          <span class="checkmark"></span> 4905682
                                         </label>
                                         <label class="custom_check w-100">
                                           <input type="checkbox" name="bystatus" />
-                                          <span class="checkmark"></span> PO-100405363
+                                          <span class="checkmark"></span> 4905683
                                         </label>
                                         <label class="custom_check w-100">
                                           <input type="checkbox" name="bystatus" />
-                                          <span class="checkmark"></span> PO-100405364
+                                          <span class="checkmark"></span> 4905684
                                         </label>
                                         <label class="custom_check w-100">
                                           <input type="checkbox" name="bystatus" />
-                                          <span class="checkmark"></span> PO-100405365
+                                          <span class="checkmark"></span> 4905685
                                         </label>
                                         <label class="custom_check w-100">
                                           <input type="checkbox" name="bystatus" />
-                                          <span class="checkmark"></span> PO-100405366
+                                          <span class="checkmark"></span> 4905686
                                         </label>
                                       </div>
                                     </div>
@@ -508,6 +518,7 @@
                                       type="reset"
                                       data-bs-dismiss="modal"
                                       class="w-100 btn btn-primary paid-continue-btn"
+                                      (click)="deleteItem()"
                                       >
                                       Delete
                                     </button>

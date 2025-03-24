@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./add-estimates.component.scss'],
 })
 export class AddEstimatesComponent implements OnInit {
+  public routes = routes;
   backendUrl: string = 'http://localhost:3000';
   days: string[] = [];
   days_cal: string[] = [];
@@ -34,6 +35,7 @@ export class AddEstimatesComponent implements OnInit {
     booker_type: 'Other',
     Discount: 0,
     Advance: 0,
+    status: null
   };
   availableMenus: any[] = []; 
   menuItems: any[] = []; 
@@ -59,6 +61,9 @@ export class AddEstimatesComponent implements OnInit {
     this.loadAdditionalServices();
     this.loadReservations();
     this.loadEvents();
+    this.initDays(this.reservation.date);
+    let selectedDate = this.reservation.date;
+    ({ dates: this.Date, days: this.Days } = this.getWeekDatesSeparated(selectedDate, 0));
   }
 
   getWeekDatesSeparated(dateSelected: Date, startDay: number = 0) {
@@ -104,6 +109,12 @@ export class AddEstimatesComponent implements OnInit {
     return this.slotSelected && this.slotSelected.hall === slotType && this.slotSelected.date === formattedDate && this.slotSelected.slot === slot;
   }
 
+  updateCalendar() {
+    this.initDays(this.reservation.date);
+    let selectedDate = this.reservation.date;
+    ({ dates: this.Date, days: this.Days } = this.getWeekDatesSeparated(selectedDate, 0));
+  }
+
   isSlotBooked(slotType: any, day: any, date: any, slot: any) {
 
     const year = day.split(" ")[1];
@@ -123,8 +134,23 @@ export class AddEstimatesComponent implements OnInit {
     return false;
   }
 
-  cancelReservation(){
-    this.router.navigate(['/reservationList']);
+  isSlotDrafted(slotType: any, day: any, date: any, slot: any) {
+
+    const year = day.split(" ")[1];
+    let formattedDate = date + '_' + this.monthSelected + '_' + year;
+
+    let slotToCompare = {hall: slotType, date: formattedDate, slot: slot};
+
+    if(this.bookings){
+      for (let i = 0; i < this.bookings.length; i++) {
+        const booking = this.bookings[i];
+
+        if(slotToCompare.hall === booking.SLOT.hall && slotToCompare.date === booking.SLOT.date && slotToCompare.slot === booking.SLOT.slot && booking.status === 'DRAFTED'){
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   initDays(date: any) {
@@ -209,16 +235,6 @@ export class AddEstimatesComponent implements OnInit {
 
   nextStage() {
     if (this.stage === 1 && this.isStage1Valid()) {
-      this.initDays(this.reservation.date);
-      let selectedDate = this.reservation.date;
-
-      ({ dates: this.Date, days: this.Days } = this.getWeekDatesSeparated(selectedDate, 0));
-      console.log("=========================================");
-      console.log("Dates:", this.Date);
-      console.log("Days:", this.Days);
-      console.log("Selected Date:", selectedDate);
-      console.log(this.reservation.date);
-      console.log("=========================================");
       this.stage++;
     } else if (this.stage === 2 && this.isStage2Valid()) {
       this.stage++;
@@ -259,11 +275,11 @@ export class AddEstimatesComponent implements OnInit {
   }
 
   isStage1Valid(): boolean {
-    return this.reservation.reservation_name && this.reservation.contact_number && this.reservation.booking_type && this.reservation.date;
+    return this.slotSelected !== null;
   }
 
   isStage2Valid(): boolean {
-    return this.slotSelected !== null;
+    return this.reservation.reservation_name && this.reservation.contact_number && this.reservation.booking_type
   }
 
   isStage3Valid(): boolean {
@@ -299,10 +315,6 @@ export class AddEstimatesComponent implements OnInit {
     let discount = this.reservation.Discount;
     let total_price = this.getGrandTotal();
     let SLOT = this.slotSelected;
-
-    console.log("======================================");
-    console.log("slot", SLOT);
-    console.log("======================================");
 
     let booking = {
       booking_name: booking_name,
@@ -460,5 +472,24 @@ export class AddEstimatesComponent implements OnInit {
 
   calculateAdditionalServicePrice(){
     this.reservation.additionalPrice = this.totalAdditionalPrice;
+  }
+
+  saveDraft(){
+    this.reservation.status = 'DRAFTED';
+    this.reservation.SLOT = this.slotSelected;
+    this.reservation.event_type = this.reservation.booking_type;
+    this.reservation.booking_name = this.reservation.reservation_name;
+    console.log("=========================================");
+    console.log(this.reservation);
+    console.log("=========================================");
+    try{
+      this.http.post(`${this.backendUrl}/bookings`, this.reservation).subscribe(() => {
+        alert('Reservation saved!');
+  
+        this.router.navigate(['/reservations/reservationList']);
+      });
+    } catch(error){
+      console.log(error);
+    }
   }
 }

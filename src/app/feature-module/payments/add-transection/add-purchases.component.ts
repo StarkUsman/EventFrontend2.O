@@ -50,6 +50,7 @@ export class AddPurchasesComponent implements OnInit {
   allVouchers: any = [];
   allAccounts: any = [];
   newTransaction: any = {};
+  trans_id: any = null;
 
   constructor(private data: DataService) {
     this.newTransaction.date = this.purchaseDateValue;
@@ -70,13 +71,14 @@ export class AddPurchasesComponent implements OnInit {
 
     this.data.getTransaction().subscribe((res) => {
       // set newTransaction.purch_id to last purch_id + 1 and make it 6 digit
-      let purch_id = res.data[0].id ? res.data[0].id : 100;
+      this.trans_id = res.data[0]? (res.data[0].id + 1) : 1;
+      let purch_id = res.data[0] ? res.data[0].trans_id : 100;
       purch_id = parseInt(purch_id) + 1;
       purch_id = purch_id.toString();
       while (purch_id.length < 6) {
         purch_id = "0" + purch_id;
       }
-      this.newTransaction.id = purch_id;
+      this.newTransaction.trans_id = purch_id;
     });
   }
 
@@ -102,15 +104,9 @@ export class AddPurchasesComponent implements OnInit {
     this.debitBalance = JSON.parse(JSON.stringify(account.balanceNumber));
   }
 
-  errorMessage: any = null;
   remainingAmount: any = 0;
   calculateRemainingAmount(){
     this.remainingAmount = this.debitBalance - this.newTransaction.amount;
-
-    this.errorMessage = null;
-    if(this.newTransaction.amount > this.debitBalance){
-      this.errorMessage = "Amount should be less than or equal to debitBalance";
-    }
   }
 
 
@@ -129,7 +125,8 @@ export class AddPurchasesComponent implements OnInit {
 
 
   addTransaction() {
-    this.newTransaction.id = parseInt(this.newTransaction.id);
-
+    this.data.addTransaction(this.newTransaction).subscribe((res) => {
+      this.newTransaction = {};
+    });
   }
 }

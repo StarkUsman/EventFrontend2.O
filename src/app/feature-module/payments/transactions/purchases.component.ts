@@ -17,7 +17,7 @@ import {
 })
 export class PurchasesComponent {
   public routes = routes;
-  public purchase: Array<purchase> = [];
+  public purchase: Array<any> = [];
 
   public Toggledata = false;
   // pagination variables
@@ -53,7 +53,7 @@ export class PurchasesComponent {
       second: '2-digit'
   };
 
-    this.data.getpurchase().subscribe((apiRes: apiResultFormat) => {
+    this.data.getTransaction().subscribe((apiRes: apiResultFormat) => {
       this.purchase = [];
       this.serialNumberArray = [];
       this.totalData = apiRes.totalData;
@@ -61,7 +61,7 @@ export class PurchasesComponent {
         const serialNumber = index + 1;
         if (index >= pageOption.skip && serialNumber <= pageOption.limit) {
           res.sNo = serialNumber;
-          res.purchase_date = new Date(res.purchase_date).toLocaleString('en-US', options);
+          res.date = new Date(res.date).toLocaleString('en-US', options);
           this.purchase.push(res);
           this.serialNumberArray.push(serialNumber);
         }

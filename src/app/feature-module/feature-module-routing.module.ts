@@ -179,10 +179,17 @@ const routes: Routes = [
       },
 
       {
-        path: 'purchase-orders',
+        path: 'purchase-return',
         loadChildren: () =>
           import('./purchase-orders/purchase-orders.module').then(
             (m) => m.PurchaseOrdersModule
+          ),
+      },
+      {
+        path: 'add-purchase-return',
+        loadChildren: () =>
+          import('./add-purchases/add-purchases.module').then(
+            (m) => m.AddPurchasesModule
           ),
       },
       {

@@ -53,26 +53,34 @@
         </li>
       </ul>
 
-  <div *ngIf="stage === 1" class="reservation-container">
-    <div class="heading">
-      <h3 class="mb-4 clr">Enter Reservation Details</h3>
+  <div *ngIf="stage === 2" class="reservation-container">
+    <div class="content-page-header mt-0 mb-0">
+      <h5>Add Reservation Details</h5>
+        <ul class="filter-list">
+          <li>
+            <button class="btn btn-primary mb-3 primary-btn" [disabled]="!isStage2Valid()" (click)="saveDraft()">
+              <i class="fa fa-plus"></i> Save as Draft
+          </button>
+            </li>
+          </ul>
     </div>
     <form>
-      <div class="mb-3">
-        <label for="reservationName" class="form-label">Reservation Name <span style="color: red;">*</span></label>
-        <input type="text" id="reservationName" class="form-control"
-          [(ngModel)]="reservation.reservation_name" name="reservation_name">
-      </div>
-      <div class="mb-3">
-        <label for=" contactNumber" class="form-label">Contact Number <span style="color: red;">*</span></label>
-        <input type="text" id="contactNumber" class="form-control"
-          [(ngModel)]="reservation.contact_number" name="contact_number">
-      </div>
-      <div class="mb-3">
-        <label for="alt_contact_number" class="form-label">Alternate Contact Number</label>
-        <input type="text" id="alt_contact_number" class="form-control"
+      <div class="row">
+        <div class="mb-3 col-md-4">
+          <label for="reservationName" class="form-label">Reservation Name <span style="color: red;">*</span></label>
+          <input type="text" id="reservationName" class="form-control"
+            [(ngModel)]="reservation.reservation_name" name="reservation_name">
+        </div>
+        <div class="mb-3 col-md-4">
+          <label for=" contactNumber" class="form-label">Contact Number <span style="color: red;">*</span></label>
+          <input type="text" id="contactNumber" class="form-control"
+            [(ngModel)]="reservation.contact_number" name="contact_number">
+        </div>
+        <div class="mb-3 col-md-4">
+          <label for="alt_contact_number" class="form-label">Alternate Contact Number</label>
+          <input type="text" id="alt_contact_number" class="form-control"
           [(ngModel)]="reservation.alt_contact_number" name="alt_contact_number">
-      </div>
+        </div>
       <div class="mb-3">
         <label for="bookerType" class="form-label">Booking Type</label>
         <select class="form-control" [(ngModel)]="reservation.booker_type" name="booker_type" id="booker_type">
@@ -91,43 +99,45 @@
       </div>
       <div class="mb-3">
         <label for="description" class="form-label">Description</label>
-        <input type="text" id="description" class="form-control"
-          [(ngModel)]="reservation.description" name="description">
+        <!-- <input type="text" id="description" class="form-control"
+          [(ngModel)]="reservation.description" name="description"> -->
+        <textarea name="description" class="form-control" placeholder="Enter Reservation Description" [(ngModel)]="reservation.description"></textarea>
       </div>
-      <div class="mb-3 position-relative">
-        <label for="date" class="form-label">Date <span style="color: red;">*</span></label>
-        <div class="input-group">
-          <span class="input-group-text bg-light border-0">
-            <i class="bi bi-calendar-event text-primary"></i>
-          </span>
-            <input
-              id="date"
-              type="text"
-              name="date"
-              class="datetimepicker form-control"
-              placeholder="Select Date"
-              [(ngModel)]="reservation.date"
-              bsDatepicker [bsConfig]="{ adaptivePosition: true }"
-              [(bsValue)]="reservation.date"
-              />
-        </div>
-      </div>
+    </div>
     </form>
-    <div class="btnAl">
-      
-      <button class="btn btn-primary btnAll" (click)="cancelReservation()">
-        <i class="fa fa-times" style="font-size:19px;"></i> Cancel
+        <div class="text-center mt-3 btnAl specialButton">
+      <button class="btn btn-secondary btnAll" (click)="prevStage()">
+        <i class="fa fa-arrow-left"></i> Back
       </button>
       <button class="btn btn-primary btnAll" (click)="nextStage()"
-      [disabled]="!isStage1Valid()">
-      Next <i class="fa fa-arrow-right"></i>
-    </button>
+        [disabled]="!isStage2Valid()">
+        Next <i class="fa fa-arrow-right"></i>
+      </button>
+    </div>
   </div>
-</div>
 
-<div *ngIf="stage === 2" class="calendar-container">
+<div *ngIf="stage === 1" class="calendar-container">
   
   <div class="p-3">
+    <div class="mb-3 position-relative">
+      <label for="date" class="form-label">Reservation Date <span style="color: red;">*</span></label>
+      <div class="input-group">
+        <span class="input-group-text bg-light border-0">
+          <i class="bi bi-calendar-event text-primary"></i>
+        </span>
+          <input
+            id="date"
+            type="text"
+            name="date"
+            class="datetimepicker form-control"
+            placeholder="Select Date"
+            [(ngModel)]="reservation.date"
+            (ngModelChange)="updateCalendar()"
+            bsDatepicker [bsConfig]="{ adaptivePosition: true }"
+            [(bsValue)]="reservation.date"
+            />
+      </div>
+    </div>
       <div class="table-responsive">
         <table class="table bookingTable">
           <thead>
@@ -148,101 +158,33 @@
                 <div class="btnRow">
                   <button class="btn specialBtnMRN" 
                   [ngClass]="{'btnSelected': isSlotSelected(slotType, day, Date[j], 'Morning'),
-                  'slotBooked': isSlotBooked(slotType, day, Date[j], 'Morning')}"
-                  [disabled]= "isSlotBooked(slotType, day, Date[j], 'Morning')"
+                    'slotDrafted': isSlotDrafted(slotType, day, Date[j], 'Morning'),
+                    'slotBooked': isSlotBooked(slotType, day, Date[j], 'Morning')}"
+                  [disabled]= "isSlotBooked(slotType, day, Date[j], 'Morning') && (!isSlotDrafted(slotType, day, Date[j], 'Morning'))"
                   (click)="markSlotSelected(slotType, day, Date[j], 'Morning')"
                   >Morning</button>
                   <button class="btn specialBtnEVN" 
                   [ngClass]="{'btnSelected': isSlotSelected(slotType, day, Date[j], 'Evening'),
+                    'slotDrafted': isSlotDrafted(slotType, day, Date[j], 'Evening'),
                     'slotBooked': isSlotBooked(slotType, day, Date[j], 'Evening')}"
-                  [disabled]= "isSlotBooked(slotType, day, Date[j], 'Evening')"
+                  [disabled]= "isSlotBooked(slotType, day, Date[j], 'Evening') && (!isSlotDrafted(slotType, day, Date[j], 'Evening'))"
                   (click)="markSlotSelected(slotType, day, Date[j], 'Evening')"
                   >Evening</button>
                 </div>
               </td>
-            <!-- <td>
-              <div class="btnRow">
-                    <button class="btn available"
-                    data-bs-trigger="focus"
-                              data-bs-toggle="popover"
-                              data-bs-placement="top"
-                              data-bs-custom-class="custom-popover"
-                              data-bs-title="Client Information"
-                              data-bs-content="This popover is themed via CSS variables.">
-                              Morning
-                      </button>
-                      <button class="btn booked">Evening</button>
-                    </div>
-              </td>
-              <td>
-                  <div class="btnRow">
-                      <button class="btn partiallyBooked">Slot 1</button>
-                      <button class="btn">Slot 2</button>
-                  </div>
-              </td> -->
             </tr>
           </tbody>
       </table>
     </div>
   </div>
-
-    <!-- <div class="heading">
-      <h5 *ngIf="month[0]===month[6]" class="mt-4 clr">{{month[0]}} {{year}}</h5>
-        <h5 *ngIf="!(month[0]===month[6])" class="mt-4 clr">{{month[0]}} - {{month[6]}} {{year}}</h5>
-      </div> -->
-
-    <!-- <div class="calendar">
-      <div class="timeline"
-        style="display: flex; flex-direction: column; justify-content: space-between; font-weight: bold; margin-bottom: 10px; margin-top: 100px;">
-          <div *ngFor="let slotType of slotTypes" class="time-marker" style="flex: 1; text-align: center;">{{ slotType }}</div>
-      </div>
-      <div class="days">
-        <div *ngFor="let day of days; let i = index" class="day"
-          style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
-          <div *ngIf="!(i==3)" class="date-circle">
-            <p class="date-day">{{ days_cal[i] }}</p>
-          </div>          
-          <div *ngIf="(i==3)" class="date-circle-selected">
-            <p class="date-day">{{ days_cal[i] }}</p>
-          </div>          
-          <div class="events"
-            style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
-            <div class="event"
-              *ngFor="let slotType of slotTypes"
-              style="border-bottom: 2px solid #ccc; padding-bottom: 10px;">
-              <div class="slot-card"
-                style="display: flex; flex-direction: column; align-items: center;">
-                <div class="radio-container" style="display: flex; gap: 15px;">
-                  <input type="radio" name="selected_slot"
-                    id="event-{{ slotType.toLowerCase() }}-{{ i }}-1"
-                    (change)="selectSlot({ day: day, type: slotType, slot: 1 })"
-                    [disabled]="isSlotDisabled({ day: day, type: slotType, slot: 1 })">
-                  <label for="event-{{ slotType.toLowerCase() }}-{{ i }}-1"
-                    class="slot">Slot
-                    1</label>
-
-                  <input type="radio" name="selected_slot"
-                    id="event-{{ slotType.toLowerCase() }}-{{ i }}-2"
-                    (change)="selectSlot({ day: day, type: slotType, slot: 2 })"
-                    [disabled]="isSlotDisabled({ day: day, type: slotType, slot: 2 })"
-                    class="slot">
-                  <label for="event-{{ slotType.toLowerCase() }}-{{ i }}-2"
-                    class="slot">Slot
-                    2</label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
     
-    <div class="text-center mt-3 btnAl specialButton">
-      <button class="btn btn-secondary btnAll" (click)="prevStage()">
-        <i class="fa fa-arrow-left"></i> Back
-      </button>
-      <button class="btn btn-primary btnAll" (click)="nextStage()"
-        [disabled]="!isStage2Valid()">
+    <div class="btnAl">
+        
+        <button [routerLink]="routes.reservationList" class="btn btn-primary btnAll">
+          <i class="fa fa-times" style="font-size:19px;"></i> Cancel
+        </button>
+        <button class="btn btn-primary btnAll" (click)="nextStage()"
+        [disabled]="!isStage1Valid()">
         Next <i class="fa fa-arrow-right"></i>
       </button>
     </div>

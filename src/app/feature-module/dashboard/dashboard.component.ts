@@ -55,7 +55,7 @@ export class DashboardComponent implements OnInit {
   pct_total_people_served_last_month: number = 0;
   reservations_this_month: number = 0;
   pct_reservations_last_month: number = 0;
-  total_due_balance: number = 0;
+  total_reservations_completed: number = 0;
   pct_total_due_balance_last_month: number = 0;
   upcominReservations: any = [];
 
@@ -173,7 +173,7 @@ export class DashboardComponent implements OnInit {
       this.reservations_this_month = res.reservations_this_month;
       this.pct_reservations_last_month = res.pct_reservations_last_month
       // this.reservations_last_month = res.reservations_last_month;
-      this.total_due_balance = res.total_due_balance;
+      this.total_reservations_completed = res.total_reservations_completed;
       // this.pct_total_due_balance_last_month = res.pct_total_due_balance_last_month
     });
 

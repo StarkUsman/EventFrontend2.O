@@ -10,18 +10,18 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class PurchasesDetailsComponent implements OnInit {
   public routes = routes;
-  purchaseToView: any;
-  payment: any = {
-    purchaseId: null,
-    method: "cash",
+  // purchaseToView: any;
+  transactionToView: any = {
+    trans_id: null,
+    date: null,
     amount: null,
     chequeNumber: null,
-    cardNumber: null,
-    expiryDate: null,
-    cvv: null,
-    paymentCode: null,
+    creditAccount: null,
+    debitAccount: null,
+    notes: null,
+    voucher: null,
+    img: null,
   };
-  paymentStatus: any = null
 
   constructor(private route: ActivatedRoute, private data: DataService) { }
 
@@ -34,54 +34,15 @@ export class PurchasesDetailsComponent implements OnInit {
     };
     this.route.queryParams.subscribe(params => {
       let id = params['id'];
-      this.data.getPurchaseById(id).subscribe((res: any) => {
-        res.purchase_date = new Date(res.purchase_date).toLocaleString('en-US', options);
-        res.due_date = new Date(res.due_date).toLocaleString('en-US', options);
-        this.purchaseToView = res;
-        this.purchaseToView.remainingDays = Math.floor((new Date(this.purchaseToView.due_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
-        this.purchaseToView.totalTerm = Math.floor((new Date(this.purchaseToView.due_date).getTime() - new Date(this.purchaseToView.purchase_date).getTime()) / (1000 * 60 * 60 * 24));
+      this.data.getTransactionById(id).subscribe((res: any) => {
+        res.date = new Date(res.date).toLocaleString('en-US', options);
+        this.transactionToView = res;
         console.log(res);
-        this.payment.purchaseId = this.purchaseToView.id;
-        this.payment.amount = this.purchaseToView.total_amount;
-        this.paymentStatus = this.purchaseToView.status==="Pending" ? "Unpaid" : "Paid";
+        // this.payment.purchaseId = this.purchaseToView.id;
+        // this.payment.amount = this.purchaseToView.total_amount;
+        // this.paymentStatus = this.purchaseToView.status==="Pending" ? "Unpaid" : "Paid";
       });
     });
-  }
-
-
-  setPaymentMethod(method: string) {
-    this.payment.method = method;
-  }
-
-  processPayment() {
-    // cash method
-    if (this.payment.method === "cash") {
-      this.payment.chequeNumber = null;
-      this.payment.cardNumber = null;
-      this.payment.expiryDate = null;
-      this.payment.cvv = null;
-      this.payment.paymentCode = "CPV";
-    } else if (this.payment.method === "cheque") {
-      this.payment.cardNumber = null;
-      this.payment.expiryDate = null;
-      this.payment.cvv = null;
-      this.payment.paymentCode = "BPV";
-    } else if (this.payment.method === "card") {
-      this.payment.chequeNumber = null;
-      this.payment.paymentCode = "BPV";
-    }
-
-    const ledger = {
-      name: this.payment.paymentCode,
-      purch_id: this.purchaseToView.id,
-      vendor_id: this.purchaseToView.vendor.id,
-      amountCredit: this.purchaseToView.total_amount
-    }
-
-    this.data.addLedger(ledger).subscribe((res) => { });
-    this.data.updatePurchaseStatus(this.purchaseToView.id, "Paid").subscribe((res) => {});
-    //reload page
-    window.location.reload();
   }
 
 }
