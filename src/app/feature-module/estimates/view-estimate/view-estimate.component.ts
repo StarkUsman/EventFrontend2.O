@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { routes, ToasterService } from 'src/app/core/core.index';
 
 @Component({
   selector: 'app-view-estimate',
@@ -8,6 +9,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./view-estimate.component.scss'],
 })
 export class ViewEstimateComponent  implements OnInit {
+  public routes = routes;
   backendUrl = 'http://localhost:3000';
   reservations: any[] = [];
   menus: any[] = [];

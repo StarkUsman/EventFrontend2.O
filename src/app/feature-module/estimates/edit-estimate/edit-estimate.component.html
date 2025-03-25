@@ -1,216 +1,390 @@
-<!-- Page Header -->
-<div class="page-header">
-  <div class="row">
-    <div class="col-sm-12">
-      <h3 class="page-title">Estimate</h3>
-      <ul class="breadcrumb">
-        <li class="breadcrumb-item"><a [routerLink]="routes.dashboard">Dashboard</a></li>
-        <li class="breadcrumb-item">
+<div class="col-xl-12">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="header-title mb-4">Add Reservation</h4>
+
+      <ul class="nav nav-pills navtab-bg nav-justified">
+        <li class="nav-item">
+          <button
+            (click)="goToStage(1)"
+            data-bs-toggle="tab"
+            aria-expanded="false"
+            class="nav-link"
+            [class.active]="stage === 1"
+          >
+            Stage 1
+        </button>
         </li>
-        <li class="breadcrumb-item active">Edit Estimate</li>
+        <li class="nav-item">
+          <button
+            (click)="goToStage(2)"
+            data-bs-toggle="tab"
+            aria-expanded="true"
+            class="nav-link"
+            [class.active]="stage === 2"
+            [disabled]="isStageDisabled(2)"
+          >
+            Stage 2
+        </button>
+        </li>
+        <li class="nav-item">
+          <button
+            (click)="goToStage(3)"
+            data-bs-toggle="tab"
+            aria-expanded="false"
+            class="nav-link"
+            [class.active]="stage === 3"
+            [disabled]="isStageDisabled(3)"
+          >
+            Stage 3
+        </button>
+        </li>
+        <li class="nav-item">
+          <button
+            (click)="goToStage(4)"
+            data-bs-toggle="tab"
+            aria-expanded="false"
+            class="nav-link"
+            [class.active]="stage === 4"
+            [disabled]="isStageDisabled(4)"
+          >
+            Stage 4
+          </button>
+        </li>
       </ul>
+
+  <div *ngIf="stage === 2" class="reservation-container">
+    <div class="content-page-header mt-0 mb-0">
+      <h5>Add Reservation Details</h5>
+        <ul class="filter-list">
+          <li>
+            <button class="btn btn-primary mb-3 primary-btn" [disabled]="!isStage2Valid()" (click)="saveDraft()">
+              <i class="fa fa-plus"></i> Save as Draft
+          </button>
+            </li>
+          </ul>
+    </div>
+    <form>
+      <div class="row">
+        <div class="mb-3 col-md-4">
+          <label for="reservationName" class="form-label">Reservation Name <span style="color: red;">*</span></label>
+          <input type="text" id="reservationName" class="form-control"
+            [(ngModel)]="reservationToEdit.booking_name" name="reservation_name">
+        </div>
+        <div class="mb-3 col-md-4">
+          <label for=" contactNumber" class="form-label">Contact Number <span style="color: red;">*</span></label>
+          <input type="text" id="contactNumber" class="form-control"
+            [(ngModel)]="reservationToEdit.contact_number" name="contact_number">
+        </div>
+        <div class="mb-3 col-md-4">
+          <label for="alt_contact_number" class="form-label">Alternate Contact Number</label>
+          <input type="text" id="alt_contact_number" class="form-control"
+          [(ngModel)]="reservationToEdit.alt_contact_number" name="alt_contact_number">
+        </div>
+      <div class="mb-3">
+        <label for="bookerType" class="form-label">Booking Type</label>
+        <select class="form-control" [(ngModel)]="reservationToEdit.booking_type" name="booker_type" id="booker_type">
+          <option value="Bride">Bride</option>
+          <option value="Groom">Groom</option>
+          <option value="Other" selected>Other</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="reserverName" class="form-label">Event Type <span style="color: red;">*</span></label>
+        <select class="form-control" *ngIf="events" [(ngModel)]="reservationToEdit.event_type" name="booking_type" id="booking_type">
+          <option *ngFor="let event of events" [value]="event.event_name">
+            {{ event.event_name }}
+          </option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <!-- <input type="text" id="description" class="form-control"
+          [(ngModel)]="reservationToEdit.description" name="description"> -->
+        <textarea name="description" class="form-control" placeholder="Enter Reservation Description" [(ngModel)]="reservationToEdit.description"></textarea>
+      </div>
+    </div>
+    </form>
+        <div class="text-center mt-3 btnAl specialButton">
+      <button class="btn btn-secondary btnAll" (click)="prevStage()">
+        <i class="fa fa-arrow-left"></i> Back
+      </button>
+      <button class="btn btn-primary btnAll" (click)="nextStage()"
+        [disabled]="!isStage2Valid()">
+        Next <i class="fa fa-arrow-right"></i>
+      </button>
     </div>
   </div>
-</div>
-<!-- /Page Header -->
 
-<div class="row">
-  <div class="col-md-12">
-    <div class="card">
-      <div class="card-body">
-        <form (ngSubmit)="editEstimate()" [formGroup]="editEstimateForm">
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label htmlFor="label">Customer:</label>
-                <select class="form-select" formControlName="customerName">
-                  <option>Select Customer</option>
-                  <option>Brian Johnson</option>
-                  <option>Marie Canales</option>
-                  <option>Barbara Moore</option>
-                  <option>Greg Lynch</option>
-                  <option>Karlene Chaidez</option>
-                </select>
-                @if (
-                  editEstimateForm.get('customerName')?.invalid &&
-                  editEstimateForm.get('customerName')?.touched
-                  ) {
-                  <div
-                    >
-                    <small class="text-danger">*Name required</small>
-                  </div>
-                }
-              </div>
+<div *ngIf="stage === 1" class="calendar-container">
+  
+  <div class="p-3">
+    <div class="mb-3 position-relative">
+      <label for="date" class="form-label">Reservation Date <span style="color: red;">*</span></label>
+      <div class="input-group">
+        <span class="input-group-text bg-light border-0">
+          <i class="bi bi-calendar-event text-primary"></i>
+        </span>
+          <input
+            id="date"
+            type="text"
+            name="date"
+            class="datetimepicker form-control"
+            placeholder="Select Date"
+            [(ngModel)]="reservationToEdit.date"
+            (ngModelChange)="updateCalendar()"
+            bsDatepicker [bsConfig]="{ adaptivePosition: true }"
+            [(bsValue)]="reservationToEdit.date"
+            />
+      </div>
+    </div>
+      <div class="table-responsive">
+        <table class="table bookingTable">
+          <thead>
+          <tr>
+            <th class="border-0"></th>
+            
+            <th *ngFor="let day of Days; let i = index">
+              <div class="day" [ngClass]="{'current': Date[i] === dateSelected}" 
+              >{{Date[i]}}</div>
+              <span>{{day}}</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let slotType of slotTypes; let i = index">
+            <th>{{slotType}}</th>
+            <td *ngFor="let day of Days; let j = index">
+                <div class="btnRow">
+                  <button class="btn specialBtnMRN" 
+                  [ngClass]="{'btnSelected': isSlotSelected(slotType, day, Date[j], 'Morning'),
+                    'slotDrafted': !isSlotSelected(slotType, day, Date[j], 'Morning') && isSlotDrafted(slotType, day, Date[j], 'Morning'),
+                    'slotBooked': !isSlotSelected(slotType, day, Date[j], 'Morning') && isSlotBooked(slotType, day, Date[j], 'Morning')}"
+                  [disabled]= "isSlotBooked(slotType, day, Date[j], 'Morning') && (!isSlotDrafted(slotType, day, Date[j], 'Morning'))"
+                  (click)="markSlotSelected(slotType, day, Date[j], 'Morning')"
+                  >Morning</button>
+                  <button class="btn specialBtnEVN" 
+                  [ngClass]="{'btnSelected': isSlotSelected(slotType, day, Date[j], 'Evening'),
+                    'slotDrafted': !isSlotSelected(slotType, day, Date[j], 'Evening') && isSlotDrafted(slotType, day, Date[j], 'Evening'),
+                    'slotBooked': !isSlotSelected(slotType, day, Date[j], 'Evening') && isSlotBooked(slotType, day, Date[j], 'Evening')}"
+                  [disabled]= "isSlotBooked(slotType, day, Date[j], 'Evening') && (!isSlotDrafted(slotType, day, Date[j], 'Evening'))"
+                  (click)="markSlotSelected(slotType, day, Date[j], 'Evening')"
+                  >Evening</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+      </table>
+    </div>
+  </div>
+    
+    <div class="btnAl">
+        
+        <button [routerLink]="routes.reservationList" class="btn btn-primary btnAll">
+          <i class="fa fa-times" style="font-size:19px;"></i> Cancel
+        </button>
+        <button class="btn btn-primary btnAll" (click)="nextStage()"
+        [disabled]="!isStage1Valid()">
+        Next <i class="fa fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <!-- Stage 3: Select Menus -->
+    <div *ngIf="stage === 3">
+      <div class="page-header">
+        <div class="content-page-header">
+          <h5>Menu Selection</h5>
+          </div>
+        </div>
+      <div class="row">
+        <div class="col-md-4" *ngFor="let menu of availableMenus">
+          <div class="card menu-card"
+            (click)="selectMenu(menu)"
+            [ngClass]="{'selected-menu': reservationToEdit?.menu_id === menu.menu_id}"
+            style="cursor: pointer; transition: 0.3s; border: 2px solid transparent; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+
+            <div class="card-body">
+              <!-- Hidden Radio Button -->
+              <input type="radio"
+                id="menu-{{ menu.menu_id }}"
+                name="selectedMenu"
+                [value]="menu"
+                [(ngModel)]="reservationToEdit.menu_id"
+                (change)="selectMenu(menu)"
+                style="display: none;">
+
+              <h5 class="card-title">{{ menu.menu_name }}</h5>
+              <p class="card-text"><strong>Description:</strong> {{
+                menu.description }}</p>
+              <p class="card-text"><strong>Price:</strong> {{ menu.menu_price |
+                currency }}</p>
+
+              <ul style="padding-left: 15px;">
+                <li *ngFor="let item of menu.menu_items"
+                  style="font-size: 14px;">
+                  <span>{{ item.item_name }} - {{ item.price | currency
+                    }}</span>
+                </li>
+              </ul>
             </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label htmlFor="label">From</label>
-                <div class="cal-icon">
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="dp"
-                    formControlName="estimateFrom"
-                    />
-                    @if (
-                      editEstimateForm.get('estimateFrom')?.invalid &&
-                      editEstimateForm.get('estimateFrom')?.touched
-                      ) {
-                      <div
-                        >
-                        <small class="text-danger">*From Date required</small>
-                      </div>
-                    }
-                  </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3 mt-4" style="display: flex;justify-content: right;">
+        <label for="numPersons" class="form-label"
+          style="width: 200px; color: black;">Number of Persons</label>
+        <input type="number" id="numPersons" class="form-control"
+          [(ngModel)]="reservationToEdit.number_of_persons" name="num_of_persons"
+          min="1" style="border: 2px solid #007bff; width:auto;">
+      </div>
+
+      <div class="text-center mt-3 btnAl">
+        <button class="btn btn-secondary btnAll" (click)="prevStage()"
+          style="margin-right: 10px;">
+          <i class="fa fa-arrow-left"></i> Back
+        </button>
+        <button class="btn btn-primary btnAll" (click)="nextStage()"
+          [disabled]="!isStage3Valid()">
+          Next <i class="fa fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage 4: Final Review -->
+  <div *ngIf="stage === 4">
+    <div class="page-header">
+      <div class="content-page-header">
+        <h5>Additional Services</h5>
+        </div>
+      </div>
+
+    <!-- Display Selected Menu -->
+    <div *ngIf="reservationToEdit.selectedMenu">
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="menu-head">
+            <div>
+              <h5 class="card-title">{{ reservationToEdit.selectedMenu.menu_name }}</h5>
+              <!-- <p><strong>Price:</strong> {{ reservationToEdit.selectedMenu.price |
+                currency }}</p> -->
+                <div class="service-row mt-1">
+                  <input type="number" [(ngModel)]="reservationToEdit.selectedMenu.menu_price" name="menuPrice" class="quantity" (input)="updateMenuPriceTotal(reservationToEdit.selectedMenu.menu_price)">
                 </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label htmlFor="label">To</label>
-                  <div class="cal-icon">
-                    <input
-                      type="text"
-                      class="form-control"
-                      name="dp"
-                      formControlName="estimateTo"
-                      />
-                      @if (
-                        editEstimateForm.get('estimateTo')?.invalid &&
-                        editEstimateForm.get('estimateTo')?.touched
-                        ) {
-                        <div
-                          >
-                          <small class="text-danger">*To Date required</small>
-                        </div>
-                      }
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4 mt-3">
-                  <div class="form-group">
-                    <label htmlFor="label">Estimate Number</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      formControlName="estimateNumber"
-                      />
-                      @if (
-                        editEstimateForm.get('estimateNumber')?.invalid &&
-                        editEstimateForm.get('estimateNumber')?.touched
-                        ) {
-                        <div
-                          >
-                          <small class="text-danger">*Estimate Number required</small>
-                        </div>
-                      }
-                    </div>
-                  </div>
-                  <div class="col-md-4 mt-3">
-                    <div class="form-group">
-                      <label htmlFor="label">Ref Number</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        formControlName="customerRef"
-                        />
-                        <input type="hidden" formControlName="status" />
-                        <input type="hidden" formControlName="amount" />
-                        @if (
-                          editEstimateForm.get('customerRef')?.invalid &&
-                          editEstimateForm.get('customerRef')?.touched
-                          ) {
-                          <div
-                            >
-                            <small class="text-danger">*Ref Number required</small>
-                          </div>
-                        }
-                      </div>
-                    </div>
-                  </div>
-                  <div class="table-responsive mt-4">
-                    <table class="table table-hover">
-                      <thead>
-                        <tr>
-                          <th>Items</th>
-                          <th>Quantity</th>
-                          <th>Price</th>
-                          <th>Amount</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>
-                            <input type="text" class="form-control" />
-                          </td>
-                          <td>
-                            <input type="text" class="form-control" />
-                          </td>
-                          <td>
-                            <input type="text" class="form-control" />
-                          </td>
-                          <td>
-                            <input type="text" class="form-control" disabled />
-                          </td>
-                          <td class="add-remove text-end">
-                            <i class="fas fa-plus-circle me-1"></i>
-                            <i class="fas fa-minus-circle"></i>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <input type="text" class="form-control" />
-                          </td>
-                          <td>
-                            <input type="text" class="form-control" />
-                          </td>
-                          <td>
-                            <input type="text" class="form-control" />
-                          </td>
-                          <td>
-                            <input type="text" class="form-control" disabled />
-                          </td>
-                          <td class="add-remove text-end">
-                            <i class="fas fa-plus-circle me-1"></i>
-                            <i class="fas fa-minus-circle"></i>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div class="table-responsive mt-4">
-                    <table class="table table-stripped table-center table-hover">
-                      <thead></thead>
-                      <tbody>
-                        <tr>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td class="text-end">Sub Total</td>
-                          <td class="text-end">0</td>
-                        </tr>
-                        <tr>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td class="text-end">Discount</td>
-                          <td class="text-end">0</td>
-                        </tr>
-                        <tr>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td class="text-end">Total</td>
-                          <td class="text-end">0</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div class="text-end mt-4">
-                    <button type="submit" class="btn btn-primary">Edit Estimate</button>
-                  </div>
-                </form>
+            </div>
+            <div>
+              <h5 class="card-title">Total Menu Price: {{reservationToEdit.selectedMenu.finalPrice}}</h5>
+            </div>
+          </div>
+            
+            <!-- Display selected menu items in a grid -->
+          <div class="menu-items-gallery">
+            <div *ngFor="let item of menuItems" class="menu-item-card">
+              <div class="menu-item-details">
+                <label class="menuItemLabel">{{ item.item_name }}</label>
+                <label class="menuItemLabel">{{ item.price | currency }}</label>
+                <button *ngIf="item.selected"
+                  class="btn btn-danger"
+                  (click)="removeMenuItem(item)">
+                  <i class="fa fa-trash-alt"></i> Remove
+                </button>
+                <button *ngIf="!item.selected"
+                  class="btn btn-primary"
+                  (click)="addMenuItem(item)">
+                  <i class="fa fa-plus"></i> Add Item
+                </button>
               </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Display Additional Services -->
+    <div class="mb-3 bdr">
+      <h5 class="card-title">Select Additional Services</h5>
+      <div class="menu-items-gallery">
+        <div *ngFor="let service of additionalServices"
+          class="menu-item-card"
+          (click)="toggleAdditionalService(service)"
+          [ngClass]="{ 'selected-service': service.selected }">
+          <input type="checkbox" style="display: none;"
+            id="service-{{ service.additional_service_id }}"
+            [(ngModel)]="service.selected">
+          <label class="menuItemLabel">
+            {{ service.additional_service_name }} - {{ service.price | currency
+            }}
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- additional services -->
+    <div *ngIf="checkService()" class="mb-3 bdr">
+      <form>
+        <div class="mb-3">
+          <h5>Additional Services</h5>
+        </div>
+        <div class="labels-row">
+          <span class="label">Item</span>
+          <span class="label">Price</span>
+          <span class="label">Quantity</span>
+          <span class="label">Total Price</span>
+          <button type="button" class="remove-btn"></button>
+        </div>
+        <div class="service-row" *ngFor="let service of additionalServicesSelected; let i = index" [attr.id]="'row-' + i">
+          <input class="itemName" type="text" [(ngModel)]="service.additional_service_name" name="itemName-{{ i }}" readonly>
+          <input type="number" [(ngModel)]="service.price" name="price-{{ i }}" class="price" (input)="updateTotal(service)">
+          <input type="number" [(ngModel)]="service.quantity" name="quantity-{{ i }}" class="quantity" (input)="updateTotal(service)">
+          <input type="number" [(ngModel)]="service.totalPrice" name="totalPrice-{{ i }}" class="total-price" readonly>
+          <button type="button" class="remove-btn fa fa-trash-alt" (click)="toggleAdditionalService(service)"></button>
+        </div>
+      </form>
+    </div>    
+    <!-- Calculate and Display Total Price -->
+    <div class="mb-3 bdr">
+      <h5>Pre-Bookings</h5>
+      <form>
+        <div class="service-row mlr mt-1">
+          <input type="text" class="itemName" [(ngModel)]="preBookingDiscount" name="preBookingDiscount" readonly>
+          <input type="number" class="total-price" [(ngModel)]="reservationToEdit.discount" name="Discount">
+        </div>
+        <div class="service-row mlr mt-1">
+          <input type="text" class="itemName" [(ngModel)]="preBookingAdvance" name="preBookingAdvance" readonly>
+          <input type="number" class="total-price" [(ngModel)]="reservationToEdit.advance" name="Advance">
+        </div>
+
+      </form>
+    </div>
+
+    <div class="mb-3 bdr labels-row">
+      <h5>Total Payable Amount </h5>
+      <h5>PKR:{{ getGrandTotal() }}</h5>
+    </div>
+
+    <div class="col-xl-12 col-lg-6 col-md-6 col-12 description-box">
+      <div class="input-block mb-3" id="summernote_container">
+        <label for="Descriptions" class="form-control-label">Additional Note</label>
+        <textarea type="text" class="form-control" [(ngModel)]="reservationToEdit.notes"></textarea>
+      </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+
+    <div class="text-center mt-3 btnAl">
+      <button class="btn btn-secondary btnAll" (click)="prevStage()">
+        <i class="fa fa-arrow-left"></i> Back
+      </button>
+      <button class="btn btn-primary btnAll" (click)="saveReservation()"
+        style="width: 100px;">
+        Finish <i class="fa fa-check"></i>
+      </button>
+    </div>
+  </div>
+
+</div>
+</div>
+</div>

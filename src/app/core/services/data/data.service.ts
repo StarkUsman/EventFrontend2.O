@@ -291,6 +291,18 @@ export class DataService {
     return this.http.delete(`http://localhost:3000/menu-items/${menuItem.menu_item_id}`);
   }
 
+  public getReservations() {
+    return this.http.get<apiResultFormat>('http://localhost:3000/bookings/formatted').pipe(
+      map((res: apiResultFormat) => {
+        return res;
+      })
+    );
+  }
+
+  public getReservationById(id: number) {
+    return this.http.get(`http://localhost:3000/bookings/${id}`);
+  }
+
   public getVendors() {
     return this.http.get<apiResultFormat>('http://localhost:3000/vendors').pipe(
       map((res: apiResultFormat) => {

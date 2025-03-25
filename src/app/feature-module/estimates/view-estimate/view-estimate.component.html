@@ -38,7 +38,7 @@
                               <td>{{ reservation.booking_name }}</td>
                               <td>{{ reservation.contact_number }}</td>
                               <td>{{ reservation.booking_type }}</td>
-                              <td>{{ reservation.date }}</td>
+                              <td>{{ reservation.dashboardDate }}</td>
                               <td>{{ reservation.SLOT.hall }}</td>
                               <td>{{ getMenuName(reservation.menu_id) }}</td>
                               <td class="d-flex align-items-center">
@@ -52,14 +52,14 @@
                                   ></a>
                                   <div class="dropdown-menu dropdown-menu-right">
                                     <ul>
-                                      <!-- <li>
+                                      <li>
                                         <a
                                           class="dropdown-item"
-                                          [routerLink]="routes.editproducts"
-                                          [queryParams]="{ id: data.id }"
+                                          [routerLink]="routes.editReservation"
+                                          [queryParams]="{ id: reservation.booking_id }"
                                           ><i class="far fa-edit me-2"></i>Edit</a
                                           >
-                                        </li> -->
+                                        </li>
                                         <li>
                                           <a
                                             class="dropdown-item"
