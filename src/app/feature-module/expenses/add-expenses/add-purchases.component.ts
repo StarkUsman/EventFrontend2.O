@@ -7,6 +7,9 @@ import {
   editcreditnotes,
   pageSelection,
 } from 'src/app/core/models/models';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 
 interface Food {
   value: string;
@@ -19,6 +22,7 @@ interface Food {
   styleUrls: ['./add-purchases.component.scss'],
 })
 export class AddPurchasesComponent implements OnInit {
+  control = new FormControl();
   myDateValue!: Date;
   purchaseDateValue: Date = new Date();
   dueDateValue: Date = new Date();
@@ -26,7 +30,6 @@ export class AddPurchasesComponent implements OnInit {
   public maxDate!: Date;
   public routes = routes;
   country = 'India';
-  products = 'products';
   selectbank = 'Bank1';
   discount = 'discount1';
   tax = 'Tax';
@@ -54,6 +57,8 @@ export class AddPurchasesComponent implements OnInit {
   selectedProductEdit: any = {};
   total_purch_amount: any = 0;
   product_to_remove: any = {};
+  filteredOptions!: Observable<string[]>;
+  products: any = [];
 
   constructor(private data: DataService) {
     this.newPurchase.purchase_date = this.purchaseDateValue;
@@ -64,12 +69,27 @@ export class AddPurchasesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTableData();
+
     this.data.getProductlist().subscribe((res) => {
       this.allProducts = res.data;
       if (this.allProducts.length > 0) {
-        this.allProducts = this.allProducts.filter((p: any) => p.quantity > 0);
+        for (let i = 0; i < this.allProducts.length; i++) {
+          if(this.allProducts[i].quantity<=0){
+            this.allProducts.splice(i, 1);
+          }
+        }
       }
+
+      for (let i = 0; i < this.allProducts.length; i++) {
+        this.products.push(res.data[i].item);
+      }
+
+      this.filteredOptions = this.control.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value || '')),
+      );
     });
+
     this.data.getExpenses().subscribe((res) => {
       // set newPurchase.purch_id to last purch_id + 1 and make it 6 digit
       let purch_id = res.data[0] ? res.data[0].purch_id : 100;
@@ -81,6 +101,13 @@ export class AddPurchasesComponent implements OnInit {
       this.newPurchase.purch_id = purch_id;
     });
   }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.products.filter((option: any) => option.toLowerCase().includes(filterValue));
+  }
+
   private getTableData(): void {
     this.editcreditnotes = [];
     this.serialNumberArray = [];
@@ -185,7 +212,8 @@ export class AddPurchasesComponent implements OnInit {
     this.files.splice(this.files.indexOf(event), 1);
   }
 
-  onProductSelect(product: any) {
+  onProductSelect(productName: any) {
+    const product = this.allProducts.find((p: any) => p.item === productName);
     if (product) {
       product.quantity = 1;
       let price = product.purchasePrice.replace(/[^0-9.]/g, '');
@@ -194,8 +222,12 @@ export class AddPurchasesComponent implements OnInit {
       this.selectedProducts.push(product);
 
       this.allProducts = this.allProducts.filter((p: any) => p.id !== product.id);
+      this.products = this.products.filter((p: any) => p !== productName);
 
       this.selectedProduct = null;
+      setTimeout(() => {
+        this.control.setValue('');
+      });
     }
   }
 

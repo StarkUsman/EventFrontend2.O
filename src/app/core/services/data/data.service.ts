@@ -303,6 +303,10 @@ export class DataService {
     return this.http.get(`http://localhost:3000/bookings/${id}`);
   }
 
+  public addReservationPayment(body: any) {
+    return this.http.put(`http://localhost:3000/bookings/payment/${body.id}`, body);
+  }
+
   public getVendors() {
     return this.http.get<apiResultFormat>('http://localhost:3000/vendors').pipe(
       map((res: apiResultFormat) => {
@@ -313,6 +317,14 @@ export class DataService {
 
   public getVendorsOnly() {
     return this.http.get<apiResultFormat>('http://localhost:3000/vendors/category').pipe(
+      map((res: apiResultFormat) => {
+        return res;
+      })
+    );
+  }
+
+  public getAssetAccounts() {
+    return this.http.get<apiResultFormat>('http://localhost:3000/vendors/assets').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
