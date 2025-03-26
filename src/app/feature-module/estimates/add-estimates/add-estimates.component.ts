@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { routes, ToasterService } from 'src/app/core/core.index';
+import { DataService, routes, ToasterService } from 'src/app/core/core.index';
 import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-add-estimates',
@@ -26,15 +26,10 @@ export class AddEstimatesComponent implements OnInit {
     booking_type: '',
     description: '',
     date: new Date(),
-    selected_slot: null,
-    menus: [],  
     num_of_persons: 1,
     additional_services: [],
     selectedMenu: null, 
-    selected_items: [],
     booker_type: 'Other',
-    Discount: 0,
-    Advance: 0,
     status: null
   };
   availableMenus: any[] = []; 
@@ -46,14 +41,14 @@ export class AddEstimatesComponent implements OnInit {
   totalAdditionalPrice: number = 0;
   events: any[] = [];
   preBookingDiscount: any = "Dicount";
-  preBookingAdvance: any = "Advance Received";
+  // preBookingAdvance: any = "Advance Received";
   dateSelected: any = '';
   monthSelected: any = '';
   Date: any = [];
   Days: any = [];
 
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private data: DataService, private http: HttpClient, private router: Router) { }
 
   ngOnInit() {
     this.loadHalls();
@@ -244,7 +239,8 @@ export class AddEstimatesComponent implements OnInit {
       this.loadMenuItems(this.reservation.selectedMenu.menu_item_ids);
       this.reservation.selectedMenu.finalPrice = this.reservation.selectedMenu.price * this.reservation.num_of_persons;
       this.reservation.additionalPrice = 0;
-      this.reservation.additionalDiscount = 0;
+      this.reservation.discount = 0
+      // this.reservation.advance = 0;
     }
   }
 
@@ -288,65 +284,17 @@ export class AddEstimatesComponent implements OnInit {
   }
 
   saveReservation() {
-    let booking_name = this.reservation.reservation_name;
-    let contact_number = this.reservation.contact_number;
-    let alt_contact_number = this.reservation.alt_contact_number;
-    let booking_type = this.reservation.booking_type;
-    let description = this.reservation.description;
-
-    let number_of_persons = this.reservation.num_of_persons;
-    let add_service_ids = '';
-    for (let i = 0; i < this.additionalServicesSelected.length; i++) {
-      add_service_ids += this.additionalServicesSelected[i].additional_service_id + ',';
-    }
-    let menuId = this.reservation.selectedMenu.menu_id;
-
-    let selected_menu_items_ids = '';
-    for (let i = 0; i < this.menuItems.length; i++) {
-      const item = this.menuItems[i];
-      if (item.selected) {
-        selected_menu_items_ids += item.menu_item_id + ',';
-      }
-    }
-
-    let booker_type = this.reservation.booker_type;
-    let booking_notes = this.reservation.notes;
-    let advance = this.reservation.Advance;
-    let discount = this.reservation.Discount;
-    let total_price = this.getGrandTotal();
-    let SLOT = this.slotSelected;
-
-    let booking = {
-      booking_name: booking_name,
-      contact_number: contact_number,
-      alt_contact_number: alt_contact_number,
-      booking_type: booker_type,
-      event_type: booking_type,
-      description: description,
-      number_of_persons: number_of_persons,
-      menu_id: menuId,
-      menu_items_ids: selected_menu_items_ids,
-      add_service_ids: add_service_ids,
-      discount: discount,
-      advance: advance,
-      total_remaining: total_price,
-      notes: booking_notes,
-      SLOT: SLOT
-    };
-
-    try{
-      this.http.post(`${this.backendUrl}/bookings`, booking).subscribe(() => {
-        alert('Reservation saved!');
-  
-        this.router.navigate(['/reservations/reservationList']);
-      });
-    } catch(error){
-      console.log(error);
-    }
-  }
-
-  selectSlot(slot: any) {
-    this.reservation.selected_slot = slot;
+    this.reservation.add_service_ids = this.additionalServicesSelected.map(service => service.additional_service_id);
+    this.reservation.menu_items_ids = this.menuItems.filter(item => item.selected).map(item => item.menu_item_id);
+    this.reservation.total_menu_price = this.reservation.selectedMenu.finalPrice;
+    this.reservation.grandTotal = this.reservation.selectedMenu.finalPrice + this.reservation.additionalPrice;
+    this.reservation.total_price = this.getGrandTotal();
+    this.reservation.SLOT = this.slotSelected;
+    
+    this.data.addReservation(this.reservation).subscribe((res: any) => {
+      console.log('Reservation saved:', res);
+      this.router.navigate(['/reservations/reservationList']);
+    });
   }
 
   isSlotDisabled(slot: any): boolean {
@@ -370,17 +318,6 @@ export class AddEstimatesComponent implements OnInit {
     this.reservation.selectedMenu = menu; // Store selected menu
     // Trigger menu item load based on selected menu
     this.loadMenuItems(menu.menu_item_ids);
-  }
-
-  updateMenuSelection(item: any) {
-    if (item.selected) {
-      this.reservation.selected_items.push(item); // Add item to selected items if checked
-    } else {
-      const index = this.reservation.selected_items.indexOf(item);
-      if (index !== -1) {
-        this.reservation.selected_items.splice(index, 1); // Remove item from selected items if unchecked
-      }
-    }
   }
 
   removeMenuItem(item: any) {
@@ -421,12 +358,12 @@ export class AddEstimatesComponent implements OnInit {
 
   getGrandTotal(): number {
     let total = this.reservation.selectedMenu.finalPrice + this.reservation.additionalPrice;
-    if (this.reservation.Discount > 0) {
-      total -= this.reservation.Discount;
+    if (this.reservation.discount > 0) {
+      total -= this.reservation.discount;
     }
-    if (this.reservation.Advance > 0) {
-      total -= this.reservation.Advance;
-    }
+    // if (this.reservation.advance > 0) {
+    //   total -= this.reservation.advance;
+    // }
 
     return total;
   }
@@ -477,8 +414,6 @@ export class AddEstimatesComponent implements OnInit {
   saveDraft(){
     this.reservation.status = 'DRAFTED';
     this.reservation.SLOT = this.slotSelected;
-    this.reservation.event_type = this.reservation.booking_type;
-    this.reservation.booking_name = this.reservation.reservation_name;
     console.log("=========================================");
     console.log(this.reservation);
     console.log("=========================================");

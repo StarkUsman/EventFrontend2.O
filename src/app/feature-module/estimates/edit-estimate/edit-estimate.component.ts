@@ -28,7 +28,7 @@ export class EditEstimateComponent implements OnInit {
   month: string[] = [];
   year: string = "";
   startDate: number = 15;
-  stage: number = 3;
+  stage: number = 1;
   halls: any[] = [];
   slotTypes: string[] = [];
   reservationToEdit: any = {};
@@ -41,7 +41,6 @@ export class EditEstimateComponent implements OnInit {
   totalAdditionalPrice: number = 0;
   events: any[] = [];
   preBookingDiscount: any = "Dicount";
-  preBookingAdvance: any = "Advance Received";
   dateSelected: any = '';
   monthSelected: any = '';
   Date: any = [];
@@ -49,7 +48,6 @@ export class EditEstimateComponent implements OnInit {
   slotSelected: any = null;
 
   async ngOnInit() {
-    this.additionalServicesSelected = [];
     this.loadHalls();
     this.loadAdditionalServices();
     this.loadReservations();
@@ -67,9 +65,12 @@ export class EditEstimateComponent implements OnInit {
         let selectedDate = this.reservationToEdit.date;
         ({ dates: this.Date, days: this.Days } = this.getWeekDatesSeparated(selectedDate, 0));
 
+        if (typeof this.reservationToEdit.selectedMenu === "string") {
+          this.reservationToEdit.selectedMenu = JSON.parse(this.reservationToEdit.selectedMenu);
+        }
+
         this.data.getMenus().subscribe((res: any) => {
           this.availableMenus = res.data;
-          this.reservationToEdit.selectedMenu = this.availableMenus.find(menu => menu.menu_id === this.reservationToEdit.menu_id);
         })
       });
     });
@@ -272,7 +273,7 @@ export class EditEstimateComponent implements OnInit {
   }
 
   isStage2Valid(): boolean {
-    return this.reservationToEdit.booking_name && this.reservationToEdit.contact_number && this.reservationToEdit.booking_type;
+    return this.reservationToEdit.reservation_name && this.reservationToEdit.contact_number && this.reservationToEdit.booking_type;
   }
 
   isStage3Valid(): boolean {
@@ -280,26 +281,19 @@ export class EditEstimateComponent implements OnInit {
   }
 
   saveReservation() {
-    let booking = this.reservationToEdit;
-    let total_price = this.getGrandTotal();
-    let SLOT = this.slotSelected;
-
-    console.log("=========================================");
-    console.log(booking);
-    console.log("=========================================");
-    console.log(total_price);
-    console.log("=========================================");
-    console.log(SLOT);
-    console.log("=========================================");
-    // try {
-    //   this.http.post(`${this.backendUrl}/bookings`, booking).subscribe(() => {
-    //     alert('Reservation saved!');
-
-    //     this.router.navigate(['/reservations/reservationList']);
-    //   });
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    if (this.reservationToEdit.status === "DRAFTED"){
+      this.reservationToEdit.status = "PENDING";
+    }
+    this.reservationToEdit.add_service_ids = this.additionalServicesSelected.map(service => service.additional_service_id);
+    this.reservationToEdit.menu_items_ids = this.menuItems.filter(item => item.selected).map(item => item.menu_item_id);
+    this.reservationToEdit.total_menu_price = this.reservationToEdit.selectedMenu.finalPrice;
+    this.reservationToEdit.grandTotal = this.reservationToEdit.selectedMenu.finalPrice + this.reservationToEdit.additionalPrice;
+    this.reservationToEdit.total_price = this.getGrandTotal();
+    this.reservationToEdit.SLOT = this.slotSelected;
+    
+    this.data.updateReservation(this.reservationToEdit).subscribe((res: any) => {
+      this.router.navigate([routes.reservationList]);
+    });
   }
 
   selectSlot(slot: any) {
@@ -367,9 +361,6 @@ export class EditEstimateComponent implements OnInit {
     if (this.reservationToEdit.discount > 0) {
       total -= this.reservationToEdit.discount;
     }
-    if (this.reservationToEdit.advance > 0) {
-      total -= this.reservationToEdit.advance;
-    }
 
     return total;
   }
@@ -415,16 +406,5 @@ export class EditEstimateComponent implements OnInit {
 
   calculateAdditionalServicePrice() {
     this.reservationToEdit.additionalPrice = this.totalAdditionalPrice;
-  }
-
-  saveDraft() {
-    this.reservationToEdit.status = 'DRAFTED';
-    this.reservationToEdit.SLOT = this.slotSelected;
-    this.reservationToEdit.event_type = this.reservationToEdit.booking_type;
-    this.reservationToEdit.booking_name = this.reservationToEdit.reservation_name;
-    console.log("=========================================");
-    console.log(this.reservationToEdit);
-    console.log("=========================================");
-
   }
 }

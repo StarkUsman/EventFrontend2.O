@@ -67,14 +67,6 @@ export class ViewEstimateComponent  implements OnInit {
     );
   }
 
-  getMenuName(menuId: number) {
-    for(let i = 0; i < this.menus.length; i++) {
-      if(this.menus[i].menu_id === menuId) {
-        return this.menus[i].menu_name;
-      }
-    }
-  }
-
   selectAccount(account: any) {
     this.reservationToAddPayment.account = this.allAccounts.find((acc: any) => acc.name === account);
   }

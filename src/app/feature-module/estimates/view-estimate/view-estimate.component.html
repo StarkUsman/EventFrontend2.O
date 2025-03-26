@@ -35,12 +35,12 @@
                       <tbody>
                           <tr *ngFor="let reservation of reservations let i = index">
                               <td>{{ i+1 }}</td>
-                              <td>{{ reservation.booking_name }}</td>
+                              <td>{{ reservation.reservation_name }}</td>
                               <td>{{ reservation.contact_number }}</td>
                               <td>{{ reservation.booking_type }}</td>
                               <td>{{ reservation.dashboardDate }}</td>
                               <td>{{ reservation.SLOT.hall }}</td>
-                              <td>{{ getMenuName(reservation.menu_id) }}</td>
+                              <td>{{ reservation.selectedMenu.menu_name }}</td>
                               <td class="d-flex align-items-center">
                                 <div class="dropdown dropdown-action">
                                   <a
@@ -114,7 +114,7 @@
                   <div class="col-lg-8 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
                       <label for="Country">Reservation Name</label>
-                      <input [disabled]="true" type="text" class="form-control" placeholder="Enter Menu Name" [(ngModel)]="reservationToAddPayment.booking_name">
+                      <input [disabled]="true" type="text" class="form-control" placeholder="Enter Menu Name" [(ngModel)]="reservationToAddPayment.reservation_name">
                     </div>
                   </div>
                   <div class="col-lg-4 col-md-6 col-sm-12">

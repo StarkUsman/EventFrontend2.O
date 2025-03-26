@@ -1,7 +1,7 @@
 <div class="col-xl-12">
   <div class="card">
     <div class="card-body">
-      <h4 class="header-title mb-4">Add Reservation</h4>
+      <h4 class="header-title mb-4">Edit Reservation</h4>
 
       <ul class="nav nav-pills navtab-bg nav-justified">
         <li class="nav-item">
@@ -56,20 +56,13 @@
   <div *ngIf="stage === 2" class="reservation-container">
     <div class="content-page-header mt-0 mb-0">
       <h5>Add Reservation Details</h5>
-        <ul class="filter-list">
-          <li>
-            <button class="btn btn-primary mb-3 primary-btn" [disabled]="!isStage2Valid()" (click)="saveDraft()">
-              <i class="fa fa-plus"></i> Save as Draft
-          </button>
-            </li>
-          </ul>
     </div>
     <form>
       <div class="row">
         <div class="mb-3 col-md-4">
           <label for="reservationName" class="form-label">Reservation Name <span style="color: red;">*</span></label>
           <input type="text" id="reservationName" class="form-control"
-            [(ngModel)]="reservationToEdit.booking_name" name="reservation_name">
+            [(ngModel)]="reservationToEdit.reservation_name" name="reservation_name">
         </div>
         <div class="mb-3 col-md-4">
           <label for=" contactNumber" class="form-label">Contact Number <span style="color: red;">*</span></label>
@@ -83,7 +76,7 @@
         </div>
       <div class="mb-3">
         <label for="bookerType" class="form-label">Booking Type</label>
-        <select class="form-control" [(ngModel)]="reservationToEdit.booking_type" name="booker_type" id="booker_type">
+        <select class="form-control" [(ngModel)]="reservationToEdit.booker_type" name="booker_type" id="booker_type">
           <option value="Bride">Bride</option>
           <option value="Groom">Groom</option>
           <option value="Other" selected>Other</option>
@@ -91,7 +84,7 @@
       </div>
       <div class="mb-3">
         <label for="reserverName" class="form-label">Event Type <span style="color: red;">*</span></label>
-        <select class="form-control" *ngIf="events" [(ngModel)]="reservationToEdit.event_type" name="booking_type" id="booking_type">
+        <select class="form-control" *ngIf="events" [(ngModel)]="reservationToEdit.booking_type" name="booking_type" id="booking_type">
           <option *ngFor="let event of events" [value]="event.event_name">
             {{ event.event_name }}
           </option>
@@ -202,7 +195,7 @@
         <div class="col-md-4" *ngFor="let menu of availableMenus">
           <div class="card menu-card"
             (click)="selectMenu(menu)"
-            [ngClass]="{'selected-menu': reservationToEdit?.menu_id === menu.menu_id}"
+            [ngClass]="{'selected-menu': reservationToEdit?.selectedMenu.menu_id == menu.menu_id}"
             style="cursor: pointer; transition: 0.3s; border: 2px solid transparent; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
 
             <div class="card-body">
@@ -352,10 +345,10 @@
           <input type="text" class="itemName" [(ngModel)]="preBookingDiscount" name="preBookingDiscount" readonly>
           <input type="number" class="total-price" [(ngModel)]="reservationToEdit.discount" name="Discount">
         </div>
-        <div class="service-row mlr mt-1">
+        <!-- <div class="service-row mlr mt-1">
           <input type="text" class="itemName" [(ngModel)]="preBookingAdvance" name="preBookingAdvance" readonly>
           <input type="number" class="total-price" [(ngModel)]="reservationToEdit.advance" name="Advance">
-        </div>
+        </div> -->
 
       </form>
     </div>
