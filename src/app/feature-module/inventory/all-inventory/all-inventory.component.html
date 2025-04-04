@@ -65,7 +65,7 @@
                       <td>{{ data.quantity }}</td>
                       <td>{{ data.purchase }}</td>
                       <td class="d-flex align-items-center">
-                        <a  [routerLink] = "routes.inventoryHistory" class="btn btn-greys bg-history-light me-2">
+                        <a  [routerLink] = "routes.inventoryHistory" [queryParams]="{ id: data.id }" class="btn btn-greys bg-history-light me-2">
                           <i class="far fa-eye me-1"></i> History
                         </a>
                         <!-- <a href="javascript:void(0);" class="btn btn-greys bg-success-light me-2" data-bs-toggle="modal"

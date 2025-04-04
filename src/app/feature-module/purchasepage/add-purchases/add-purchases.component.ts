@@ -276,6 +276,19 @@ export class AddPurchasesComponent implements OnInit {
     this.data.addLedger(ledger).subscribe((res) => { });
   }
 
+  addInventoryLedger(newPurchase: any, product: any) {
+
+    let inventoryLedger = {
+      name: "PSV",
+      purchasePrice: parseFloat(product.purchasePrice.replace(/[^0-9.]/g, '')),
+      voucher: newPurchase.purch_id,
+      product_id: product.id,
+      stockOut: 0,
+      stockIn: product.quantity
+    }
+    this.data.addInventoryLedger(inventoryLedger).subscribe((res) => { });
+  }
+
 
   addPurchase() {
     this.newPurchase.purch_id = parseInt(this.newPurchase.purch_id);
@@ -296,7 +309,11 @@ export class AddPurchasesComponent implements OnInit {
       });
     });
 
-    this.addLedger(this.newPurchase.purch_id, this.newPurchase.vendor.id, this.newPurchase.total_amount)
+    this.addLedger(this.newPurchase.purch_id, this.newPurchase.vendor.id, this.newPurchase.total_amount);
+    
+    this.newPurchase.products.forEach((p: any) => {
+      this.addInventoryLedger(this.newPurchase, p);
+    });
 
     this.data.addPurchase(this.newPurchase).subscribe((res) => {
     });

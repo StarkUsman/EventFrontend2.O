@@ -1,5 +1,4 @@
-<!-- Page Header -->
-<div class="page-header">
+<!-- <div class="page-header">
   <div class="content-page-header ">
     <h5>Inventory History</h5>
     <div class="list-btn">
@@ -35,9 +34,7 @@
     </div>
   </div>
 </div>
-<!-- /Page Header -->
 
-<!-- Table -->
 <div class="row">
   <div class="col-sm-12">
     <div class=" card-table">
@@ -49,12 +46,11 @@
                 <thead class="thead-light">
                   <tr>
                     <th mat-sort-header="id">#</th>
-                    <th mat-sort-header="item">Item</th>
-                    <th mat-sort-header="code">Code</th>
-                    <th mat-sort-header="units">Units</th>
-                    <th mat-sort-header="quantity">Quantity</th>
-                    <th mat-sort-header="sellingPrice">Selling Price</th>
+                    <th mat-sort-header="item">Name</th>
+                    <th mat-sort-header="code">Voucher#</th>
                     <th mat-sort-header="purchasePrice">Purchase Price</th>
+                    <th mat-sort-header="units">StockIn</th>
+                    <th mat-sort-header="quantity">StockIn</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -106,8 +102,6 @@
         </div>
       </div>
     </div>
-    <!-- /Table -->
-    <!-- Add Asset -->
     <div class="toggle-sidebar" [ngClass]="{'open-filter' : toggleData === true}">
       <div class="sidebar-layout-filter">
         <div class="sidebar-header">
@@ -117,7 +111,6 @@
         </div>
         <div class="sidebar-body">
           <form action="#" autocomplete="off">
-            <!-- Product -->
             <div class="accordion" id="accordionMain1">
               <div class="card-header-new" id="headingOne">
                 <h6 class="filter-title">
@@ -155,7 +148,6 @@
                             <input type="checkbox" name="username">
                             <span class="checkmark"></span> Amazon Echo Dot
                           </label>
-                          <!-- View All -->
                           <div class="view-content">
                             <div class="viewall-One">
                               @for (user of users; track user) {
@@ -172,7 +164,6 @@
                             class="fa fa-circle-chevron-down"></i></span></a>
                           </div>
                         </div>
-                        <!-- /View All -->
                       </div>
                     </div>
                   </div>
@@ -180,9 +171,6 @@
               </div>
             </div>
           </div>
-          <!-- /Product -->
-
-          <!-- Product Code -->
           <div class="accordion" id="accordionMain4">
             <div class="card-header-new" id="headingFour">
               <h6 class="filter-title">
@@ -218,7 +206,6 @@
                       <input type="checkbox" name="category">
                       <span class="checkmark"></span> P125392
                     </label>
-                    <!-- View All -->
                     <div class="view-content">
                       <div class="viewall-One">
                         @for (user of usersTwo; track user) {
@@ -235,15 +222,11 @@
                       class="fa fa-circle-chevron-down"></i></span></a>
                     </div>
                   </div>
-                  <!-- /View All -->
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <!-- /Product Code -->
-
-        <!-- Unts -->
         <div class="accordion accordion-last" id="accordionMain3">
           <div class="card-header-new" id="headingThree">
             <h6 class="filter-title">
@@ -288,7 +271,6 @@
             </div>
           </div>
         </div>
-        <!-- /Units -->
 
         <div class="filter-buttons">
           <button type="submit" class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary">
@@ -303,9 +285,6 @@
     </div>
   </div>
 </div>
-<!-- /Add Asset -->
-
-<!-- Add Stock in Modal -->
 <div class="modal custom-modal fade" id="stock_in" role="dialog">
   <div class="modal-dialog modal-dialog-centered modal-md">
     <div class="modal-content">
@@ -358,9 +337,6 @@
     </div>
   </div>
 </div>
-<!-- /Add Stock in Modal -->
-
-<!-- Remove Stock Modal -->
 <div class="modal custom-modal fade" id="stock_out" role="dialog">
   <div class="modal-dialog modal-dialog-centered modal-md">
     <div class="modal-content">
@@ -414,9 +390,6 @@
     </div>
   </div>
 </div>
-<!-- /Remove Stock Modal -->
-
-<!-- Edit Stock in Modal -->
 <div class="modal custom-modal fade" id="edit_inventory" role="dialog">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
@@ -481,9 +454,6 @@
     </div>
   </div>
 </div>
-<!-- /Edit Stock in Modal -->
-
-<!-- Delete Stock Modal -->
 <div class="modal custom-modal fade" id="delete_stock" role="dialog">
   <div class="modal-dialog modal-dialog-centered modal-md">
     <div class="modal-content">
@@ -505,5 +475,596 @@
       </div>
     </div>
   </div>
+</div> -->
+
+
+
+
+<!-- Page Header -->
+<div class="page-header">
+  <div class="content-page-header">
+      <h5>Inventory History</h5>
+  </div>
 </div>
-<!-- /Delete Stock Modal -->
+<!-- /Page Header -->
+
+<div class="card p-4 ledger-list">
+  <div class="d-flex align-items-center justify-content-between">
+      <div class="ledger-info mb-4">
+          <div class="d-flex align-items-center">
+              <a [routerLink] = "routes.profile" class="avatar me-2"><img class="avatar-img rounded-circle"
+                      src="assets/img/profiles/avatar-14.jpg" alt="User Image"></a>
+              <h2><a>{{inventoryToView.item}}<a class="d-block mail-to">{{inventoryToView.quantity}}</a></a></h2>
+          </div>
+      </div>
+      <div class="list-btn">
+          <ul class="filter-list">
+              <li>
+                  <div *ngIf="isQuantityNegative" class="closing-balance">
+                      <span class="d-flex align-items-center text-danger-light"><i
+                              class="fa fa-refresh me-2 text-danger-light"></i>Closing Quantity: -{{closingQuantity}}</span>
+                  </div>
+                  <div *ngIf="!(isQuantityNegative)" class="closing-balance">
+                      <span class="d-flex align-items-center bg-success-light"><i
+                              class="fa fa-refresh me-2 text-success-light"></i>Closing Quantity: {{closingQuantity}}</span>
+                  </div>
+              </li>
+              <li>
+                  <div class="dropdown dropdown-action" matTooltip="Download">
+                      <a href="javascript:void(0);" class="btn-filters" data-bs-toggle="dropdown" aria-expanded="false"><span><i
+                                  class="feather icon-download"></i></span></a>
+                      <div class="dropdown-menu dropdown-menu-end">
+                          <ul class="d-block">
+                              <li>
+                                  <a class="d-flex align-items-center download-item" href="javascript:void(0);"
+                                      download><i class="far fa-file-pdf me-2"></i>PDF</a>
+                              </li>
+                              <li>
+                                  <a class="d-flex align-items-center download-item" href="javascript:void(0);"
+                                      download><i class="far fa-file-text me-2"></i>CVS</a>
+                              </li>
+                          </ul>
+                      </div>
+                  </div>
+              </li>
+              <li>
+                  <a class="btn-filters" href="javascript:void(0);" matTooltip="Print"><span><i
+                              class="feather icon-printer"></i></span> </a>
+              </li>
+              <li>
+                  <a
+                    (click)="openContent()"  (keydown.enter)="openContent()" tabindex="0"
+                    matTooltip="Filter"
+                    href="javascript:void(0);"
+                    class="btn btn-filters w-auto popup-toggle"
+                    >
+                    <span class="me-2"
+                      ><img src="assets/img/icons/filter-icon.svg" alt="filter" /></span
+                      >Filter
+                  </a>
+              </li>
+          </ul>
+      </div>
+  </div>
+  <!-- Table -->
+  <div class="row">
+      <div class="col-sm-12">
+          <div class="card-table">
+              <div class="card-body">
+                  <div class="table-responsive">
+                      <table class="table table-stripped table-hover">
+                          <thead class="thead-light">
+                              <tr>
+                                  <th>Name</th>
+                                  <th>Voucher #</th>
+                                  <th>User</th>
+                                  <th>Created</th>
+                                  <th>Purchase Price</th>
+                                  <th>StockIn</th>
+                                  <th>StockOut</th>
+                                  <!-- <th>Closing Balance</th> -->
+                              </tr>
+                          </thead>
+                          <tbody>
+                              @for (data of inventoryLedgerToView; track data; let i = $index) {
+                                  <tr>
+                                      <td>
+                                          <h2 class="ledger">{{ data.name }}</h2>
+                                      </td>
+                                      <td> #{{data.voucher}} </td>
+                                      <td>{{data.user}} </td>
+                                      <td>{{data.createdAt}} </td>
+                                      <td>PKR: {{data.purchasePrice}} </td>
+                                      <td><span class="badge bg-success-light">{{data.stockIn > 0 ? data.stockIn : ''}}</span></td>
+                                      <td><span class="badge bg-danger-light">{{data.stockOut > 0 ? data.stockOut : ''}}</span></td>
+                                      <!-- <td>{{data.balance}}</td> -->
+                                  </tr>
+                                  }
+                              <tr>
+                                  <td colspan="5">
+                                      <p>Closing Quantity as on {{closingQuantityDate}}</p>
+                                  </td>
+                                  <td><span class="text-success fw-600">{{totalStockIn()}}</span></td>
+                                  <td colspan="2"><span class="text-primary fw-600">{{totalStockOut()}}</span></td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <!-- /Table -->
+
+</div>
+
+
+<!-- Add Asset -->
+<div class="toggle-sidebar">
+  <div class="sidebar-layout-filter">
+      <div class="sidebar-header">
+          <h5>Filter</h5>
+          <a href="javascript:void(0);" class="sidebar-closes"><i class="fa-regular fa-circle-xmark"></i></a>
+      </div>
+      <div class="sidebar-body">
+          <form action="#" autocomplete="off">
+              <!-- Customer -->
+              <div class="accordion" id="accordionMain1">
+                  <div class="card-header-new" id="headingOne">
+                      <h6 class="filter-title">
+                          <a href="javascript:void(0);" class="w-100" data-bs-toggle="collapse"
+                              data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                              Name
+                              <span class="float-end"><i class="fa-solid fa-chevron-down"></i></span>
+                          </a>
+                      </h6>
+                  </div>
+
+                  <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
+                      data-bs-parent="#accordionExample1">
+                      <div class="card-body-chat">
+                          <div class="row">
+                              <div class="col-md-12">
+                                  <div id="checkBoxes1">
+                                      <div class="form-custom">
+                                          <input type="text" class="form-control" id="member_search1"
+                                              placeholder="Search here">
+                                          <span><img src="assets/img/icons/search.svg" alt="img"></span>
+                                      </div>
+                                      <div class="selectBox-cont">
+                                          <label class="custom_check w-100">
+                                              <input type="checkbox" name="username">
+                                              <span class="checkmark"></span> John Smith
+                                          </label>
+                                          <label class="custom_check w-100">
+                                              <input type="checkbox" name="username">
+                                              <span class="checkmark"></span> Johnny charles
+                                          </label>
+                                          <label class="custom_check w-100">
+                                              <input type="checkbox" name="username">
+                                              <span class="checkmark"></span> Pricilla Maureen
+                                          </label>
+                                          <label class="custom_check w-100">
+                                              <input type="checkbox" name="username">
+                                              <span class="checkmark"></span> Randall Hollis
+                                          </label>
+                                          <!-- View All -->
+                                          <div class="view-content">
+                                              <div class="viewall-One">
+                                                  <label class="custom_check w-100">
+                                                      <input type="checkbox" name="username">
+                                                      <span class="checkmark"></span> Robert George
+                                                  </label>
+                                                  <label class="custom_check w-100">
+                                                      <input type="checkbox" name="username">
+                                                      <span class="checkmark"></span> Sharonda Letha
+                                                  </label>
+                                              </div>
+                                              <div class="view-all">
+                                                  <a href="javascript:void(0);" class="viewall-button-One"><span
+                                                          class="me-2">View All</span><span><i
+                                                              class="fa fa-circle-chevron-down"></i></span></a>
+                                              </div>
+                                          </div>
+                                          <!-- /View All -->
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <!-- /Customer -->
+
+              <!-- Reference -->
+              <div class="accordion" id="accordionMain4">
+                  <div class="card-header-new" id="headingFour">
+                      <h6 class="filter-title">
+                          <a href="javascript:void(0);" class="w-100 collapsed" data-bs-toggle="collapse"
+                              data-bs-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                              Reference
+                              <span class="float-end"><i class="fa-solid fa-chevron-down"></i></span>
+                          </a>
+                      </h6>
+                  </div>
+
+                  <div id="collapseFour" class="collapse" aria-labelledby="headingFour"
+                      data-bs-parent="#accordionExample4">
+                      <div class="card-body-chat">
+                          <div id="checkBoxes3">
+                              <div class="selectBox-cont">
+                                  <label class="custom_check w-100">
+                                      <input type="checkbox" name="category">
+                                      <span class="checkmark"></span> 25689825
+                                  </label>
+                                  <label class="custom_check w-100">
+                                      <input type="checkbox" name="category">
+                                      <span class="checkmark"></span> 25689826
+                                  </label>
+                                  <label class="custom_check w-100">
+                                      <input type="checkbox" name="category">
+                                      <span class="checkmark"></span> 25689829
+                                  </label>
+                                  <label class="custom_check w-100">
+                                      <input type="checkbox" name="category">
+                                      <span class="checkmark"></span> 25689830
+                                  </label>
+                                  <label class="custom_check w-100">
+                                      <input type="checkbox" name="category">
+                                      <span class="checkmark"></span> 25689827
+                                  </label>
+                                  <label class="custom_check w-100">
+                                      <input type="checkbox" name="category">
+                                      <span class="checkmark"></span> 25689828
+                                  </label>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <!-- /Reference-->
+
+              <!-- By Status -->
+              <div class="accordion accordion-last" id="accordionMain3">
+                  <div class="card-header-new" id="headingThree">
+                      <h6 class="filter-title">
+                          <a href="javascript:void(0);" class="w-100 collapsed" data-bs-toggle="collapse"
+                              data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                              Mode
+                              <span class="float-end"><i class="fa-solid fa-chevron-down"></i></span>
+                          </a>
+                      </h6>
+                  </div>
+
+                  <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
+                      data-bs-parent="#accordionExample3">
+                      <div class="card-body-chat">
+                          <div id="checkBoxes2">
+                              <div class="selectBox-cont">
+                                  <label class="custom_check w-100">
+                                      <input type="checkbox" name="payment-mode">
+                                      <span class="checkmark"></span> Credit
+                                  </label>
+                                  <label class="custom_check w-100">
+                                      <input type="checkbox" name="payment-mode">
+                                      <span class="checkmark"></span> Debit
+                                  </label>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <!-- /By Status -->
+
+              <div class="filter-buttons">
+                  <button type="submit"
+                      class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary">
+                      Apply
+                  </button>
+                  <button type="submit"
+                      class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary">
+                      Reset
+                  </button>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>
+<!--/Add Asset -->
+
+<!-- Add Ledger Modal -->
+<div class="modal custom-modal fade" id="add_ledger" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+      <div class="modal-content">
+          <div class="modal-header border-0 pb-0">
+              <div class="form-header modal-header-title text-start mb-0">
+                  <h4 class="mb-0">Add Ledger</h4>
+              </div>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+
+              </button>
+          </div>
+          <div class="modal-body">
+              <div class="row">
+                  <div class="col-lg-12 col-md-12">
+                      <div class="input-block mb-3">
+                          <label for="amount">Amount</label>
+                          <input type="text" class="form-control" placeholder="Enter Amount">
+                      </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12">
+                      <div class="input-block mb-3">
+                          <label for="date">Date</label>
+                          <div class="cal-icon cal-icon-info">
+                              <input type="text" class="datetimepicker form-control" bsDatepicker [bsConfig]="{ adaptivePosition: true }"
+                                  placeholder="Select Date">
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12">
+                      <div class="input-block mb-3">
+                          <label for="reference">Reference</label>
+                          <input type="text" class="form-control" placeholder="Enter Reference Number">
+                      </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12">
+                      <div class="input-block d-inline-flex align-center mb-0">
+                          <label for="mode" class="me-5 mb-0">Mode</label>
+                          <div>
+                              <label class="custom_radio me-3 mb-0">
+                                  <input type="radio" name="payment" checked>
+                                  <span class="checkmark"></span> Credit
+                              </label>
+                              <label class="custom_radio mb-0">
+                                  <input type="radio" name="payment">
+                                  <span class="checkmark"></span> Debit
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</a>
+              <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn">Submit</a>
+          </div>
+      </div>
+  </div>
+</div>
+<!-- /Add Ledger Modal -->
+
+<!-- Edit Ledger Modal -->
+<div class="modal custom-modal fade" id="edit_ledger" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+      <div class="modal-content">
+          <div class="modal-header border-0 pb-0">
+              <div class="form-header modal-header-title text-start mb-0">
+                  <h4 class="mb-0">Edit Ledger</h4>
+              </div>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+
+              </button>
+          </div>
+          <div class="modal-body">
+              <div class="row">
+                  <div class="col-lg-12 col-md-12">
+                      <div class="input-block mb-3">
+                          <label for="amount">Amount</label>
+                          <input type="text" class="form-control" placeholder="$400">
+                      </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12">
+                      <div class="input-block mb-3">
+                          <label for="date">Date</label>
+                          <div class="cal-icon cal-icon-info">
+                              <input type="text" class="datetimepicker form-control" bsDatepicker [bsConfig]="{ adaptivePosition: true }"
+                                  placeholder="16 Aug 2023, 06:12 PM">
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12">
+                      <div class="input-block mb-3">
+                          <label for="reference">Reference</label>
+                          <input type="text" class="form-control" placeholder="#25689825">
+                      </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12">
+                      <div class="input-block d-inline-flex align-center mb-0">
+                          <label for="mode" class="me-5 mb-0">Mode</label>
+                          <div>
+                              <label class="custom_radio me-3 mb-0">
+                                  <input type="radio" name="payment" checked>
+                                  <span class="checkmark"></span> Credit
+                              </label>
+                              <label class="custom_radio mb-0">
+                                  <input type="radio" name="payment">
+                                  <span class="checkmark"></span> Debit
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</a>
+              <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn">Submit</a>
+          </div>
+      </div>
+  </div>
+</div>
+<!-- /Edit Ledger Modal -->
+
+<!-- Delete Items Modal -->
+<div class="modal custom-modal fade" id="delete_modal" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+      <div class="modal-content">
+          <div class="modal-body">
+              <div class="form-header">
+                  <h3>Delete Ledger</h3>
+                  <p>Are you sure want to delete?</p>
+              </div>
+              <div class="modal-btn delete-action">
+                  <div class="row">
+                      <div class="col-6">
+                          <button type="reset" data-bs-dismiss="modal"
+                              class="w-100 btn btn-primary paid-continue-btn">Delete</button>
+                      </div>
+                      <div class="col-6">
+                          <button type="submit" data-bs-dismiss="modal"
+                              class="w-100 btn btn-primary paid-cancel-btn">Cancel</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+<!-- /Delete Items Modal -->
+
+<!-- Add Asset -->
+<div class="toggle-sidebar" [ngClass]="{ 'open-filter': Toggledata === true }">
+  <div class="sidebar-layout-filter">
+    <div class="sidebar-header">
+      <h5>Filter</h5>
+      <a (click)="openContent()" href="javascript:void(0);" class="sidebar-closes"
+        ><i class="fa-regular fa-circle-xmark"></i
+      ></a>
+    </div>
+    <div class="sidebar-body">
+      <form action="#" autocomplete="off">
+        <!-- Customer -->
+        <div class="accordion" id="accordionMain1">
+          <div class="card-header-new" id="headingOne">
+            <h6 class="filter-title">
+              <a
+                href="javascript:void(0);"
+                class="w-100"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseOne"
+                aria-expanded="true"
+                aria-controls="collapseOne"
+                >
+                Inventory Ledger
+              </a>
+            </h6>
+          </div>
+
+          <div
+            id="collapseOne"
+            class="collapse show"
+            aria-labelledby="headingOne"
+            data-bs-parent="#accordionExample1"
+            >
+            <div class="card-body-chat">
+              <div class="row">
+                <div class="col-md-12">
+                  <div id="checkBoxes1">
+                    <div class="form-custom">
+                      <!-- ###################################### -->
+                        <!-- <div *ngIf="!(filterByDate || filterByName)" class="my-4 filter-buttons">
+                            <button type="button" class="btn me-2 w-100"
+                                [ngClass]="{'btn-success': isCredit, 'btn-outline-success': !isCredit}"
+                                (click)="toggleCredit()">
+                                Credit
+                            </button>
+                        
+                            <button type="button" class="btn w-100" 
+                                [ngClass]="{'btn-danger': isDebit, 'btn-outline-danger': !isDebit}"
+                                (click)="toggleDebit()">
+                                Debit
+                            </button>
+                        </div> -->
+                        <!-- Filter by Transaction Type -->
+                          <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="filterByType"
+                                  [(ngModel)]="filterByType" name="filterByType">
+                              <label class="form-check-label" for="filterByType">
+                                  Filter by StockOut/StockIn
+                              </label>
+                          </div>
+
+                          <!-- Radio Buttons for Credit/Debit -->
+                          <div *ngIf="filterByType" class="mt-3">
+                              <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="creditType"
+                                      [(ngModel)]="selectedLedgerType" name="transactionType" value="stockIn">
+                                  <label class="form-check-label" for="creditType">
+                                      stockIn
+                                  </label>
+                              </div>
+
+                              <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="debitType"
+                                      [(ngModel)]="selectedLedgerType" name="transactionType" value="stockOut">
+                                  <label class="form-check-label" for="debitType">
+                                      StockOut
+                                  </label>
+                              </div>
+                          </div>
+
+                        <!-- ######################################## -->
+                        <div class="form-check fw-4">
+                          <input class="form-check-input" type="checkbox" id="filterDate"
+                              [(ngModel)]="filterByDate" name="filterDate">
+                          <label class="form-check-label" for="filterDate">
+                              Filter by Date
+                          </label>
+                      </div>
+
+                      <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="filterName"
+                              [(ngModel)]="filterByName" name="filterName">
+                          <label class="form-check-label" for="filterName">
+                              Filter by Name
+                          </label>
+                      </div>
+
+                      <!-- Date Filter Inputs -->
+                      <div *ngIf="filterByDate" class="mt-3">
+                          <label>Start Date:</label>
+                          <input type="date" class="form-control" [(ngModel)]="startDate"
+                              name="startDate">
+
+                          <label class="mt-2">End Date:</label>
+                          <input type="date" class="form-control" [(ngModel)]="endDate"
+                              name="endDate">
+                      </div>
+
+                      <!-- Name Filter Input -->
+                      <div *ngIf="filterByName" class="mt-3">
+                          <label>UserName Name:</label>
+                          <input type="text" class="form-control" [(ngModel)]="user.userName"
+                              name="vendorName" placeholder="Enter Vendor Name">
+                      </div>
+                        <!-- ######################################## -->
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /Customer -->
+
+            <div class="filter-buttons">
+              <button
+                type="submit"
+                class="d-inline-flex align-items-center justify-content-center btn w-100 btn-primary"
+                [disabled]="!(filterByDate || filterByName || filterByType)"
+                (click)="applyFilters()"
+                >
+                Apply
+              </button>
+              <button
+                type="submit"
+                class="d-inline-flex align-items-center justify-content-center btn w-100 btn-secondary"
+                (click)="resetFilters()"
+                >
+                Reset
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!--/Add Asset -->

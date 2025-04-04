@@ -418,6 +418,15 @@ export class DataService {
     return this.http.get(`http://localhost:3000/ledger/${id}`);
   }
 
+  public getInventoryLedgerByPID(id: number) {
+    return this.http.get<apiResultFormat>(`http://localhost:3000/inventoryLedger/${id}`)
+    .pipe(
+      map((res: apiResultFormat) => {
+        return res;
+      })
+    );
+  }
+
   public getCreditedLedger(id: number) {
     return this.http.get(`http://localhost:3000/ledger/credit/${id}`);
   }
@@ -426,12 +435,28 @@ export class DataService {
     return this.http.get(`http://localhost:3000/ledger/debit/${id}`);
   }
 
+  public getInventoryStockInLedger(id: number) {
+    return this.http.get(`http://localhost:3000/inventoryLedger/stockIn/${id}`);
+  }
+
+  public getInventoryStockOutLedger(id: number) {
+    return this.http.get(`http://localhost:3000/inventoryLedger/stockOut/${id}`);
+  }
+
   public getFilteredLedger(id: number, startDate: string, endDate: string, vendorName: string) {
     return this.http.get(`http://localhost:3000/ledger/${id}?startDate=${startDate}&endDate=${endDate}&vendorName=${vendorName}`);
+  
+  }
+  public getInventoryFilteredLedger(id: number, startDate: string, endDate: string, userName: string) {
+    return this.http.get(`http://localhost:3000/inventoryLedger/${id}?startDate=${startDate}&endDate=${endDate}&name=${userName}`);
   }
 
   public addLedger(ledger: any){
     return this.http.post('http://localhost:3000/ledger', ledger);
+  }
+
+  public addInventoryLedger(ledger: any){
+    return this.http.post('http://localhost:3000/inventoryLedger', ledger);
   }
 
   public updateLedgerById(ledger: any){

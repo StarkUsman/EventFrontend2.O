@@ -1,107 +1,157 @@
-import { Component } from '@angular/core';
-import { Sort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { routes, DataService } from 'src/app/core/core.index';
-import {
-  inventoryHistory,
-  pageSelection,
-  apiResultFormat,
-} from 'src/app/core/models/models';
-import { PaginationService, tablePageSize } from 'src/app/shared/sharedIndex';
-
 @Component({
   selector: 'app-inventory-history',
   templateUrl: './inventory-history.component.html',
   styleUrls: ['./inventory-history.component.scss'],
 })
-export class InventoryHistoryComponent {
+export class InventoryHistoryComponent implements OnInit {
   public routes = routes;
-  public tableData: Array<inventoryHistory> = [];
-
-  stock = 'pieces';
-  stock1 = 'pieces';
-
   public Toggledata = false;
-  public searchDataValue = '';
-  // pagination variables
-  public pageSize = 10;
-  public serialNumberArray: Array<number> = [];
-  public totalData = 0;
-  dataSource!: MatTableDataSource<inventoryHistory>;
-  // pagination variables end
-  constructor(
-    private data: DataService,
-    private pagination: PaginationService,
-    private router: Router
-  ) {
-    this.pagination.tablePageSize.subscribe((res: tablePageSize) => {
-      if (this.router.url == this.routes.inventoryHistory) {
-        this.getTableData({ skip: res.skip, limit: res.limit });
-        this.pageSize = res.pageSize;
-      }
+  inventoryLedgerToView: any = [];
+  inventoryToView: any = {};
+  productId: any;
+  filterByDate: boolean = false;
+  filterByName: boolean = false;
+  startDate: string = '';
+  endDate: string = '';
+  user: any = {};
+  isQuantityNegative: boolean = false;
+  closingQuantity: number = 0;
+  closingQuantityDate: string = new Date().toLocaleDateString();
+  filterByType: boolean = false;
+  selectedLedgerType: string = 'stockIn'; // stockIn or stockOut
+
+  constructor(private route: ActivatedRoute, private data: DataService) {}
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      let id = params['id'];
+      this.productId = id;
+      this.data.getInventoryLedgerByPID(id).subscribe((res: any) => {
+        this.inventoryLedgerToView = res.data;
+        this.inventoryLedgerToView.forEach((ledger: any) => {
+          ledger.voucher = ('000000' + ledger.voucher).slice(-6);
+        });
+        this.calClosingQuantity();
+      });
+      this.data.getProductById(id).subscribe((res: any) => {
+        this.inventoryToView = res;
+      });
     });
   }
-  private getTableData(pageOption: pageSelection): void {
-    this.data.getInventoryHistory().subscribe((apiRes: apiResultFormat) => {
-      this.tableData = [];
-      this.serialNumberArray = [];
-      this.totalData = apiRes.totalData;
-      apiRes.data.map((res: inventoryHistory, index: number) => {
-        const serialNumber = index + 1;
-        if (index >= pageOption.skip && serialNumber <= pageOption.limit) {
-          res.sNo = serialNumber;
-          this.tableData.push(res);
-          this.serialNumberArray.push(serialNumber);
+
+  resetFilters(){
+    this.filterByDate = false;
+    this.filterByName = false;
+    this.startDate = '';
+    this.endDate = '';
+    this.user.userName = '';
+    this.isStockIn = true;
+    this.isStockOut = true;
+    this.updateLedger();
+  }
+
+  applyFilters() {
+    if (this.endDate && this.endDate !== '') {
+      this.closingQuantityDate = this.endDate;
+    }
+  
+    // Fetch filtered ledger data based on selected filters
+    this.data.getInventoryFilteredLedger(this.productId, this.startDate, this.endDate, this.user.userName).subscribe((res: any) => {
+      this.inventoryLedgerToView = res.data;
+      this.inventoryLedgerToView.forEach((ledger: any) => {
+        ledger.voucher = ('000000' + ledger.voucher).slice(-6);
+      });
+  
+      // Apply transaction type filter
+      if (this.filterByType) {
+        if (this.selectedLedgerType === 'stockIn') {
+          this.inventoryLedgerToView = this.inventoryLedgerToView.filter((ledger: any) => ledger.stockIn > 0);
+        } else {
+          this.inventoryLedgerToView = this.inventoryLedgerToView.filter((ledger: any) => ledger.stockOut > 0);
         }
-      });
-      this.dataSource = new MatTableDataSource<inventoryHistory>(
-        this.tableData
-      );
-      this.pagination.calculatePageSize.next({
-        totalData: this.totalData,
-        pageSize: this.pageSize,
-        tableData: this.tableData,
-tableData2: [],
-        serialNumberArray: this.serialNumberArray,
-      });
+      }
+
+      this.calClosingQuantity();
     });
   }
 
-  public sortData(sort: Sort) {
-    const data = this.tableData.slice();
+  openContent() {
+    this.Toggledata = !this.Toggledata;
+  }
 
-    if (!sort.active || sort.direction === '') {
-      this.tableData = data;
+  totalStockOut() {
+    let total = 0;
+    if (this.inventoryLedgerToView === null) {
+      return 0;
+    }
+    this.inventoryLedgerToView.forEach((ledger: any) => {
+      total += ledger.stockOut;
+    });
+    return total;
+  }
+
+  totalStockIn() {
+    let total = 0;
+    if (this.inventoryLedgerToView === null) {
+      return 0;
+    }
+    this.inventoryLedgerToView.forEach((ledger: any) => {
+      total += ledger.stockIn;
+    });
+    return total;
+  }
+
+  calClosingQuantity() {
+    if((this.totalStockIn() - this.totalStockOut()) < 0){
+      this.isQuantityNegative = true;
+      this.closingQuantity = this.totalStockOut() - this.totalStockIn();
     } else {
-      this.tableData = data.sort((a, b) => {
-        const aValue = (a as never)[sort.active];
-        const bValue = (b as never)[sort.active];
-        return (aValue < bValue ? -1 : 1) * (sort.direction === 'asc' ? 1 : -1);
-      });
+      this.isQuantityNegative = false;
+      this.closingQuantity = this.totalStockIn() - this.totalStockOut();
     }
   }
 
-  isCollapsed1 = false;
-  isCollapsed2 = false;
-  users = [
-    { name: 'Lobar Handy', checked: false },
-    { name: 'Woodcraft Sandal', checked: false },
-  ];
-  usersTwo = [
-    { name: 'P125392', checked: false },
-    { name: 'P125393', checked: false },
-    { name: 'P125394', checked: false },
-  ];
+  isStockIn: boolean = true;
+  isStockOut: boolean = true;
 
-  toggleCollapse1() {
-    this.isCollapsed1 = !this.isCollapsed1;
+  toggleStockIn() {
+    this.isStockIn = !this.isStockIn;
+    this.updateLedger();
   }
-  toggleCollapse2() {
-    this.isCollapsed2 = !this.isCollapsed2;
+
+  toggleStockOut() {
+    this.isStockOut = !this.isStockOut;
+    this.updateLedger();
   }
-  public toggleData = false;
-  openContent() {
-    this.toggleData = !this.toggleData;
+
+  updateLedger() {
+    if (this.isStockIn && this.isStockOut) {
+      this.data.getInventoryLedgerByPID(this.productId).subscribe((res: any) => {
+        this.inventoryLedgerToView = res.data;
+        this.inventoryLedgerToView.forEach((ledger: any) => {
+          ledger.voucher = ('000000' + ledger.voucher).slice(-6);
+        });
+      });
+    } else if (this.isStockIn) {
+      this.data.getInventoryStockInLedger(this.productId).subscribe((res: any) => {
+        this.inventoryLedgerToView = res.data;
+        this.inventoryLedgerToView.forEach((ledger: any) => {
+          ledger.voucher = ('000000' + ledger.voucher).slice(-6);
+        });
+      });
+    } else if (this.isStockOut) {
+      this.data.getInventoryStockOutLedger(this.productId).subscribe((res: any) => {
+        this.inventoryLedgerToView = res.data;
+        this.inventoryLedgerToView.forEach((ledger: any) => {
+          ledger.voucher = ('000000' + ledger.voucher).slice(-6);
+        });
+      });
+    } else {
+      this.inventoryLedgerToView = null;
+    }
   }
 }
