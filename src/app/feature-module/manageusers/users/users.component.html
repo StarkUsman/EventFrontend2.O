@@ -6,9 +6,6 @@
     <div class="list-btn">
       <ul class="filter-list">
         <li>
-          <a (click)="openContent()"  (keydown.enter)="openContent()" tabindex="0" matTooltip="Filter" href="javascript:void(0);" class="btn btn-filters w-auto popup-toggle" ><span class="me-2"><img src="assets/img/icons/filter-icon.svg" alt="filter"></span>Filter </a>
-        </li>
-        <li>
           <a class="btn btn-primary" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#add_user"><i class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add user</a>
         </li>
       </ul>
@@ -32,7 +29,7 @@
                   <th mat-sort-header="name">User Name</th>
                   <th mat-sort-header="phone">Mobile Number</th>
                   <th mat-sort-header="role">Role </th>
-                  <th mat-sort-header="activity">Last Activity</th>
+                  <!-- <th mat-sort-header="activity">Last Activity</th> -->
                   <th mat-sort-header="created">Created on</th>
                   <th mat-sort-header="status">Status</th>
                   <th>Actions</th>
@@ -41,26 +38,19 @@
               <tbody>
                 @for (data of users; track data; let i = $index) {
                   <tr>
-                    <td>{{data.id}}</td>
+                    <td>{{data.sNo}}</td>
                     <td>
                       <h2 class="table-avatar">
-                        <a [routerLink]="routes.profile" class="avatar avatar-sm me-2"><img class="avatar-img rounded-circle" [src]="data.img" alt="User Image"></a>
-                        <a [routerLink]="routes.profile">{{data.name}}<span>{{data.email}}</span></a>
+                        <a [routerLink]="routes.profile">{{data.firstName}} {{data.lastName}}<span>{{data.email}}</span></a>
                       </h2>
                     </td>
                     <td>{{data.phone}}</td>
                     <td>{{data.role}}</td>
+                    <td>{{data.createdAt}}</td>
                             <td><span [ngClass]="{
-                                'bg-ash-gray text-gray-light': data.activity === '10 mins ago',
-                                ' bg-success-light':
-                                data.activity === 'Online'
-                               }"
-                    class="badge badge-pill ">{{data.activity}}</span></td>
-                    <td>{{data.created}}</td>
-                            <td><span [ngClass]="{
-                                'bg-success-light': data.status === 'Active',
+                                'bg-success-light': data.status === 'active',
                                 ' bg-ash-gray text-gray-light':
-                                data.status === 'Restricted'
+                                data.status === 'inactive'
                                }"
                     class="badge badge-pill ">{{data.status}}</span></td>
                     <td class="d-flex align-items-center">
@@ -69,10 +59,13 @@
                         <div class="dropdown-menu dropdown-menu-right">
                           <ul>
                             <li>
-                              <a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#edit_user"><i class="far fa-edit me-2"></i>Edit</a>
+                              <a (click)="setUserToEdit(data)" class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#edit_user"><i class="far fa-edit me-2"></i>Edit</a>
                             </li>
                             <li>
-                              <a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete_modal"><i class="far fa-trash-alt me-2"></i>Delete</a>
+                              <a (click)="changeStatus(data)" class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal"><i class="far fa-check-circle me-2"></i>{{data.status === 'active' ? 'Deactivate' : 'Activate'}}</a>
+                            </li>
+                            <li>
+                              <a (click)="setUserToDelete(data)" class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete_modal"><i class="far fa-trash-alt me-2"></i>Delete</a>
                             </li>
                           </ul>
                         </div>
@@ -259,7 +252,7 @@
           <div class="col-md-12">
             <div class="card-body">
               <div class="form-groups-item">
-                <h5 class="form-title">Profile Picture</h5>
+                <!-- <h5 class="form-title">Profile Picture</h5>
                 <div class="profile-picture">
                   <div class="upload-profile">
                     <div class="profile-img">
@@ -274,53 +267,54 @@
                     <a class="btn btn-primary me-2">Upload</a>
                     <a class="btn btn-remove">Remove</a>
                   </div>
-                </div>
+                </div> -->
                 <div class="row">
                   <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
                       <label for="FirstName">First Name</label>
-                      <input type="text" class="form-control" placeholder="Enter First Name">
+                      <input type="text" class="form-control" placeholder="Enter First Name" [(ngModel)]="userToAdd.firstName" name="firstName">
                     </div>
                   </div>
                   <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
                       <label for="LastName">Last Name</label>
-                      <input type="text" class="form-control" placeholder="Enter Last Name">
+                      <input type="text" class="form-control" placeholder="Enter Last Name" [(ngModel)]="userToAdd.lastName" name="lastName">
                     </div>
                   </div>
                   <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
-                      <label for="UserName">User Name</label>
-                      <input type="text" class="form-control" placeholder="Enter User Name">
+                      <label for="UserName">User Name<span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" placeholder="Enter User Name" [(ngModel)]="userToAdd.username" name="username">
                     </div>
                   </div>
                   <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
                       <label for="Email">Email</label>
-                      <input type="email" class="form-control" placeholder="Enter Email Address">
+                      <input type="email" class="form-control" placeholder="Enter Email Address" [(ngModel)]="userToAdd.email" name="email">
                     </div>
                   </div>
                   <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
                       <label for="PhoneNumber">Phone Number</label>
-                      <input type="text" class="form-control" placeholder="Enter Phone Number" name="name">
+                      <input type="text" class="form-control" placeholder="Enter Phone Number" [(ngModel)]="userToAdd.phone" name="phone">
                     </div>
                   </div>
                   <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
                       <label for="Role">Role</label>
-                      <mat-select [(ngModel)]="status" [ngModelOptions]="{standalone: true}"class="select custom-mat-select">
-                        <mat-option value="action">Select Role</mat-option>
-                        <mat-option value="countryname1">Role 1</mat-option>
-                        <mat-option value="countryname2">Role 2</mat-option>
+                      <mat-select [(ngModel)]="userToAdd.role" [ngModelOptions]="{standalone: true}"class="select custom-mat-select">
+                        <mat-option value="">Select Role</mat-option>
+                        <mat-option value="admin">Admin</mat-option>
+                        <mat-option value="accounts">Accounts</mat-option>
+                        <mat-option value="store">Store</mat-option>
                       </mat-select>
                     </div>
                   </div>
                   <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="pass-group" id="3">
                       <div class="input-block">
-                        <label for="Password">Password</label>
-                        <input type="password" class="form-control pass-input" placeholder="">
+                        <label for="Password">Password<span class="text-danger">*</span></label>
+                        <input type="password" class="form-control pass-input" placeholder="" [(ngModel)]="userToAdd.password" name="password">
                         <span class="toggle-password feather icon-eye"></span>
                       </div>
                     </div>
@@ -328,19 +322,19 @@
                   <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="pass-group" id="passwordInput2">
                       <div class="input-block">
-                        <label for="Confirm">Confirm Password</label>
-                        <input type="password" class="form-control pass-input" placeholder="">
+                        <label for="Confirm">Confirm Password<span class="text-danger">*</span></label>
+                        <input type="password" class="form-control pass-input" placeholder="" [(ngModel)]="userToAdd.confirmPassword" name="confirmPassword">
                         <span class="toggle-password feather icon-eye"></span>
                       </div>
                     </div>
+                    <span class="text-danger" *ngIf="userToAdd.password != userToAdd.confirmPassword">Password does not match</span>
                   </div>
                   <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="input-block ">
                       <label for="Status">Status</label>
-                      <mat-select [(ngModel)]="Action" [ngModelOptions]="{standalone: true}"class="select custom-mat-select">
-                        <mat-option value="status">Select Status</mat-option>
-                        <mat-option value="countryname1">Active</mat-option>
-                        <mat-option value="countryname2">Inactive</mat-option>
+                      <mat-select [(ngModel)]="userToAdd.status" [ngModelOptions]="{standalone: true}"class="select custom-mat-select">
+                        <mat-option value="active">Active</mat-option>
+                        <mat-option value="inactive">Inactive</mat-option>
                       </mat-select>
                     </div>
                   </div>
@@ -353,7 +347,7 @@
       </div>
       <div class="modal-footer">
         <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</a>
-        <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn">Add User</a>
+        <button (click)="addUser()" [disabled]="(!userToAdd.username || !userToAdd.password || !userToAdd.confirmPassword || (userToAdd.password != userToAdd.confirmPassword))" href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn">Add User</button>
       </div>
     </div>
   </div>
@@ -377,7 +371,7 @@
           <div class="col-md-12">
             <div class="card-body">
               <div class="form-groups-item">
-                <h5 class="form-title">Profile Picture</h5>
+                <!-- <h5 class="form-title">Profile Picture</h5>
                 <div class="profile-picture">
                   <div class="upload-profile">
                     <div class="profile-img">
@@ -394,45 +388,46 @@
                     </label>
                     <a class="btn btn-remove">Remove</a>
                   </div>
-                </div>
+                </div> -->
                 <div class="row">
                   <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
                       <label for="FirstName">First Name</label>
-                      <input type="text" value="John" class="form-control" placeholder="Enter First Name">
+                      <input type="text" value="John" class="form-control" placeholder="Enter First Name" [(ngModel)]="userToEdit.firstName" name="firstName">
                     </div>
                   </div>
                   <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
                       <label  for="LastName">Last Name</label>
-                      <input type="text" class="form-control" value="Smith" placeholder="Enter Last Name">
+                      <input type="text" class="form-control" value="Smith" placeholder="Enter Last Name" [(ngModel)]="userToEdit.lastName" name="lastName">
                     </div>
                   </div>
                   <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
                       <label for="UserName">User Name</label>
-                      <input type="text" class="form-control" value="John Smith" placeholder="Enter User Name">
+                      <input type="text" class="form-control" value="John Smith" placeholder="Enter User Name" [(ngModel)]="userToEdit.username" name="username">
                     </div>
                   </div>
                   <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
                       <label for="Email">Email</label>
-                      <input type="email" class="form-control" value="john@example.com" placeholder="Enter Email Address">
+                      <input type="email" class="form-control" value="john@example.com" placeholder="Enter Email Address" [(ngModel)]="userToEdit.email" name="email">
                     </div>
                   </div>
                   <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
                       <label for="Phone">Phone Number</label>
-                      <input type="text" class="form-control" value="+1 989-438-3131" placeholder="Enter Phone Number" name="name">
+                      <input type="text" class="form-control" value="+1 989-438-3131" placeholder="Enter Phone Number" name="name" [(ngModel)]="userToEdit.phone">
                     </div>
                   </div>
                   <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
                       <label for="Role">Role</label>
-                      <mat-select [(ngModel)]="status" [ngModelOptions]="{standalone: true}"class="select custom-mat-select">
-                        <mat-option value="action">Select Role</mat-option>
-                        <mat-option value="countryname1">Role 1</mat-option>
-                        <mat-option value="countryname2">Role 2</mat-option>
+                      <mat-select [(ngModel)]="userToEdit.role" [ngModelOptions]="{standalone: true}"class="select custom-mat-select">
+                        <mat-option value="">Select Role</mat-option>
+                        <mat-option value="admin">Admin</mat-option>
+                        <mat-option value="accounts">Accounts</mat-option>
+                        <mat-option value="store">Store</mat-option>
                       </mat-select>
                     </div>
                   </div>
@@ -440,7 +435,7 @@
                     <div class="pass-group" id="passwordInput1">
                       <div class="input-block">
                         <label for="Password">Password</label>
-                        <input type="password" class="form-control pass-input" value="12345678" placeholder="">
+                        <input type="password" class="form-control pass-input" placeholder="" [(ngModel)]="userToEdit.password" name="password">
                         <span class="toggle-password feather icon-eye"></span>
                       </div>
                     </div>
@@ -449,7 +444,8 @@
                     <div class="pass-group" id="passwordInput4">
                       <div class="input-block">
                         <label for="Password">Confirm Password</label>
-                        <input type="password" class="form-control pass-input" value="12345678" placeholder="">
+                        <input type="password" class="form-control pass-input" placeholder="" [(ngModel)]="userToEdit.confirmPassword" name="confirmPassword">
+                        <span class="text-danger" *ngIf="userToEdit.password != userToEdit.confirmPassword">Password does not match</span>
                         <span class="toggle-password feather icon-eye"></span>
                       </div>
                     </div>
@@ -457,10 +453,9 @@
                   <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="input-block ">
                       <label for="Status">Status</label>
-                      <mat-select [(ngModel)]="Action" [ngModelOptions]="{standalone: true}"class="select custom-mat-select">
-                        <mat-option value="status">Select Status</mat-option>
-                        <mat-option value="countryname1">Active</mat-option>
-                        <mat-option value="countryname2">Inactive</mat-option>
+                      <mat-select [(ngModel)]="userToEdit.status" [ngModelOptions]="{standalone: true}"class="select custom-mat-select">
+                        <mat-option value="active">Active</mat-option>
+                        <mat-option value="inactive">Inactive</mat-option>
                       </mat-select>
                     </div>
                   </div>
@@ -473,7 +468,7 @@
       </div>
       <div class="modal-footer">
         <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</a>
-        <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn">Update</a>
+        <button href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn" (click)="updateUser()" [disabled]="(!userToEdit.username || !userToEdit.password || !userToEdit.confirmPassword || (userToEdit.password != userToEdit.confirmPassword))">Update</button>
       </div>
     </div>
   </div>
@@ -492,10 +487,10 @@
         <div class="modal-btn delete-action">
           <div class="row">
             <div class="col-6">
-              <a href="javascript:void(0);" class="btn btn-primary paid-continue-btn">Delete</a>
+              <a (click)="deleteUser()" data-bs-dismiss="modal" href="javascript:void(0);" class="btn btn-primary paid-continue-btn">Delete</a>
             </div>
             <div class="col-6">
-              <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-cancel-btn">Cancel</a>
+              <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn">Cancel</a>
             </div>
           </div>
         </div>

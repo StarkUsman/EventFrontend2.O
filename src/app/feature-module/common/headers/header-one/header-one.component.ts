@@ -13,6 +13,7 @@ export class HeaderOneComponent  {
   public headerSidebarStyle = '1';
   public routes = routes;
   elem=document.documentElement
+  user: any = JSON.parse(localStorage.getItem('user') || '{}');
 
   constructor(private auth: AuthService, private sideBar: SideBarService) {
     this.sideBar.toggleSideBar.subscribe((res: string) => {
@@ -27,7 +28,6 @@ export class HeaderOneComponent  {
     });
   }
 
- 
 
   public logOut(): void {
     this.auth.logout();

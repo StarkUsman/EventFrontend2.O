@@ -12,8 +12,8 @@ export class LoginComponent {
   public routes = routes;
   public show_password = true;
   form = new FormGroup({
-    email: new FormControl('admin@dreamguys.in', [Validators.required]),
-    password: new FormControl('123456', [Validators.required]),
+    email: new FormControl('faraz', [Validators.required]),
+    password: new FormControl('123', [Validators.required]),
   });
 
   get f() {
@@ -28,7 +28,7 @@ export class LoginComponent {
 
   loginFormSubmit() {
     if (this.form.valid) {
-      this.auth.login();
+      this.auth.login(this.form.value.email, this.form.value.password);
     }
   }
 }

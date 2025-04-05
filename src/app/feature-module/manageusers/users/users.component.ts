@@ -19,7 +19,7 @@ export class UsersComponent {
   public routes = routes;
   Action = 'status';
   status = 'action';
-  public users: Array<user> = [];
+  public users: Array<any> = [];
   public Toggledata = false;
   // pagination variables
   public pageSize = 10;
@@ -27,6 +27,12 @@ export class UsersComponent {
   public totalData = 0;
   dataSource!: MatTableDataSource<user>;
   public searchDataValue = '';
+  userToAdd: any = {
+    role: '',
+    status: 'inactive',
+  };
+  userToEdit: any = {};
+  userToDelete: number = 0;
   //** / pagination variables
   constructor(
     private data: DataService,
@@ -46,10 +52,10 @@ export class UsersComponent {
       this.users = [];
       this.serialNumberArray = [];
       this.totalData = apiRes.totalData;
-      apiRes.data.map((res: user, index: number) => {
+      apiRes.data.map((res: any, index: number) => {
         const serialNumber = index + 1;
         if (index >= pageOption.skip && serialNumber <= pageOption.limit) {
-          res.id = serialNumber;
+          res.sNo = serialNumber;
           this.users.push(res);
           this.serialNumberArray.push(serialNumber);
         }
@@ -99,5 +105,47 @@ export class UsersComponent {
   public toggleData = false;
   openContent() {
     this.toggleData = !this.toggleData;
+  }
+
+  addUser() {
+    this.data.addUser(this.userToAdd).subscribe((res: any) => {
+
+      this.getTableData({ skip: 0, limit: 10 });
+      this.userToAdd = {};
+
+      this.userToAdd = {
+        role: '',
+        status: 'inactive',
+      };
+    })
+  }
+
+  setUserToEdit(user: user) {
+    this.userToEdit = user;
+  }
+
+  updateUser() {
+    this.data.updateUser(this.userToEdit).subscribe((res: any) => {
+      this.getTableData({ skip: 0, limit: 10 });
+      this.userToEdit = {};
+    })
+  }
+
+  setUserToDelete(user: user) {
+    this.userToDelete = user.id;
+  }
+
+  deleteUser() {
+    this.data.deleteUser(this.userToDelete).subscribe((res: any) => {
+      this.getTableData({ skip: 0, limit: 10 });
+      this.userToDelete = 0;
+    })
+  }
+
+  changeStatus(user: user) {
+    let status = user.status == 'active' ? 'inactive' : 'active';
+    this.data.updateUserStatus(user.id, status).subscribe((res: any) => {
+      this.getTableData({ skip: 0, limit: 10 });
+    })
   }
 }

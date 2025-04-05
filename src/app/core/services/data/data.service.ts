@@ -247,6 +247,15 @@ export class DataService {
       })
     );
   }
+
+  // public addVoucher(voucher: any) {
+  //   return this.http.post('http://localhost:3000/vouchers', voucher);
+  // }
+
+  public login(username: string, password: string) {
+    return this.http.post('http://localhost:3000/users/login', { username, password });
+  }
+
   public getMenus() {
     return this.http.get<apiResultFormat>('http://localhost:3000/menus').pipe(
       map((res: apiResultFormat) => {
@@ -874,13 +883,31 @@ export class DataService {
         })
       );
   }
+
   public getUsers() {
-    return this.http.get<apiResultFormat>('assets/JSON/user.json').pipe(
+    return this.http.get<apiResultFormat>('http://localhost:3000/users').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
     );
   }
+
+  public addUser(user: any) {
+    return this.http.post('http://localhost:3000/users', user);
+  }
+
+  public updateUser(user: any) {
+    return this.http.put(`http://localhost:3000/users/${user.id}`, user);
+  }
+
+  public deleteUser(id: number) {
+    return this.http.delete(`http://localhost:3000/users/${id}`);
+  }
+
+  public updateUserStatus(userId: number, status: string) {
+    return this.http.patch(`http://localhost:3000/users/${userId}/status?status=${status}`, {});
+  }
+
   public getaddpages() {
     return this.http.get<apiResultFormat>('assets/JSON/addpages.json').pipe(
       map((res: apiResultFormat) => {
