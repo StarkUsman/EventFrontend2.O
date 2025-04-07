@@ -28,6 +28,8 @@ export class PurchasesComponent {
   public searchDataValue = '';
   //** / pagination variables
   itemToDetele: number = 0;
+  unfilteredData: any = [];
+
 
   constructor(
     private data: DataService,
@@ -74,6 +76,7 @@ export class PurchasesComponent {
         serialNumberArray: this.serialNumberArray,
         tableData2: [],
       });
+      this.unfilteredData = structuredClone(this.purchase);
     });
   }
 
@@ -113,6 +116,20 @@ export class PurchasesComponent {
   deleteItem(){
     this.data.deletepurchase(this.itemToDetele).subscribe((res: any) => {
       this.getTableData({ skip: 0, limit: this.pageSize });
+    });
+  }
+
+  queryString: string = '';
+  async searchCustomers(){
+    this.purchase = structuredClone(this.unfilteredData);
+    this.purchase = this.purchase.filter((purchase) => {
+      return (
+        purchase.vendor.name?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        purchase.vendor.email?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        purchase.vendor.phone?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        purchase.status?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        purchase.invoice_sr_no?.toLowerCase().includes(this.queryString.toLowerCase())
+      );
     });
   }
 }

@@ -267,6 +267,20 @@ export class AddPurchasesComponent implements OnInit {
     return total;
   }
 
+  addInventoryLedger(newPurchase: any, product: any) {
+
+    let inventoryLedger = {
+      name: "ESV",
+      user: JSON.parse(localStorage.getItem('user') || '{}'),
+      purchasePrice: parseFloat(product.purchasePrice.replace(/[^0-9.]/g, '')),
+      voucher: newPurchase.purch_id,
+      product_id: product.id,
+      stockOut: product.quantity,
+      stockIn: 0,
+    }
+    this.data.addInventoryLedger(inventoryLedger).subscribe((res) => { });
+  }
+
   addPurchase() {
     this.newPurchase.purch_id = parseInt(this.newPurchase.purch_id);
     // remove img from products
@@ -284,6 +298,10 @@ export class AddPurchasesComponent implements OnInit {
     this.selectedProducts.forEach((p: any) => {
       this.data.removePurchaseProduct(p).subscribe((res) => {
       });
+    });
+
+    this.newPurchase.products.forEach((p: any) => {
+      this.addInventoryLedger(this.newPurchase, p);
     });
 
     this.data.addExpense(this.newPurchase).subscribe((res) => {

@@ -41,6 +41,7 @@ export class StatesComponent implements OnInit {
   menuItemToDelete: any = {};
   filteredOptions!: Observable<string[]>;
   categories: any = [];
+  unfilteredData: any = [];
 
   constructor(
     private data: DataService,
@@ -76,6 +77,7 @@ export class StatesComponent implements OnInit {
         serialNumberArray: this.serialNumberArray,
         tableData2: [],
       });
+      this.unfilteredData = structuredClone(this.states);
     });
   }
 
@@ -164,5 +166,17 @@ export class StatesComponent implements OnInit {
     console.log(this.menuItemToDelete);
     this.data.deleteMenuItem(this.menuItemToDelete).subscribe((res: any) => {});
     this.states = this.states.filter((item) => item !== this.menuItemToDelete);
+  }
+
+  queryString: string = '';
+  async searchCustomers(){
+    this.states = structuredClone(this.unfilteredData);
+    this.states = this.states.filter((menuItem) => {
+      return (
+        menuItem.item_name.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        menuItem.item_name_urdu.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        menuItem.category.toLowerCase().includes(this.queryString.toLowerCase())
+      );
+    });
   }
 }

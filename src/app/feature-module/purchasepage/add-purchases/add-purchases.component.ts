@@ -280,6 +280,7 @@ export class AddPurchasesComponent implements OnInit {
 
     let inventoryLedger = {
       name: "PSV",
+      user: JSON.parse(localStorage.getItem('user') || '{}'),
       purchasePrice: parseFloat(product.purchasePrice.replace(/[^0-9.]/g, '')),
       voucher: newPurchase.purch_id,
       product_id: product.id,

@@ -4,6 +4,24 @@
     <h5>Menu</h5>
     <div class="list-btn">
       <ul class="filter-list">
+        <li class="top-nav-search mx-2">
+          <div class="position-relative">
+            <input
+              name="search"
+              (input)="searchCustomers()"
+              [(ngModel)]="queryString"
+              type="text"
+              class="form-control pe-5"
+              placeholder="Search here"
+            />
+            <button
+              type="button"
+              class="btn position-absolute top-50 end-0 translate-middle-y me-2 p-0 border-0 bg-transparent"
+            >
+              <img src="assets/img/icons/search.svg" alt="img" />
+            </button>
+          </div>
+        </li>
         <li>
           <a class="btn btn-primary" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#add_menu" (click)="presetMenu()">Add Menu</a>
         </li>

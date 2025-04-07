@@ -572,7 +572,7 @@
                                           <h2 class="ledger">{{ data.name }}</h2>
                                       </td>
                                       <td> #{{data.voucher}} </td>
-                                      <td>{{data.user}} </td>
+                                      <td>{{data.user.firstName}} {{data.user.lastName}}</td>
                                       <td>{{data.createdAt}} </td>
                                       <td>PKR: {{data.purchasePrice}} </td>
                                       <td><span class="badge bg-success-light">{{data.stockIn > 0 ? data.stockIn : ''}}</span></td>

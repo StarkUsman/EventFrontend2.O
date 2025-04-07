@@ -27,6 +27,7 @@ export class AllInventoryComponent {
  inventoryUpdated: any = {};
  inventoryToDelete: any = {};
  bootstrap: any;
+ unfilteredData: any = [];
 
   constructor(private data: DataService, private pagination: PaginationService,
     private router: Router) {
@@ -55,9 +56,10 @@ export class AllInventoryComponent {
           totalData: this.totalData,
           pageSize: this.pageSize,
           tableData: this.tableData,
-tableData2: [],
+          tableData2: [],
           serialNumberArray: this.serialNumberArray,
         });
+        this.unfilteredData = structuredClone(this.tableData);
       });
     }
   
@@ -125,5 +127,17 @@ tableData2: [],
     this.data.deleteinventory(this.inventoryToDelete).subscribe((res: any) => {});
     
     this.tableData = this.tableData.filter((res: any) => res.id !== this.inventoryToDelete);
+  }
+
+  queryString: string = '';
+  async searchCustomers(){
+    this.tableData = structuredClone(this.unfilteredData);
+    this.tableData = this.tableData.filter((inventory) => {
+      return (
+        inventory.item?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        inventory.code?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        inventory.units?.toLowerCase().includes(this.queryString.toLowerCase())
+      );
+    });
   }
 }

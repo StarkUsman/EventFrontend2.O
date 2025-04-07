@@ -84,6 +84,17 @@ export class SideMenuOneComponent implements OnDestroy {
     // get sidebar data as observable because data is controlled for design to expand submenus
       this.data.getSideBarData.subscribe((res:SideBarData[]) => {
         this.side_bar_data = res;
+        console.log(this.side_bar_data, "sidebar data")
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user.role != 'admin') {
+          this.side_bar_data = this.side_bar_data.filter((item) => item.tittle !== 'Reservations');
+        }
+        if (user.role == 'store') {
+          this.side_bar_data = this.side_bar_data.filter((item) => item.tittle !== 'Main' && item.tittle !== 'Inventory' && item.tittle !== 'User Management' && item.tittle !== 'Roles & Permission');
+          this.side_bar_data.map((mainMenus: MainMenus) => {
+            mainMenus.menu = mainMenus.menu.filter((item) => item.menuValue !== 'Accounts' && item.menuValue !== 'Transactions' && item.menuValue !== 'Settings');
+          });
+        }
     });
   }
 

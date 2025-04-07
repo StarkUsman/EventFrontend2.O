@@ -20,6 +20,7 @@ export class ViewEstimateComponent  implements OnInit {
   filteredOptions!: Observable<string[]>;
   accounts: any = [];
   allAccounts: any = [];
+  unfilteredData: any = [];
 
   constructor(private data: DataService, private http: HttpClient, private router: Router) {}
 
@@ -48,7 +49,10 @@ export class ViewEstimateComponent  implements OnInit {
 
   loadReservations() {
     this.http.get<any[]>(`${this.backendUrl}/bookings`).subscribe(
-      (data) => (this.reservations = data),
+      (data) => {
+        this.reservations = data;
+        this.unfilteredData = structuredClone(this.reservations);
+      },
       (error) => console.error('Error fetching reservations:', error)
     );
   }
@@ -112,6 +116,21 @@ export class ViewEstimateComponent  implements OnInit {
     this.data.addReservationPayment(requestBody).subscribe((res: any) => {
       this.loadReservations();
       this.reservationToAddPayment = {};
+    });
+  }
+
+  queryString: string = '';
+  async searchCustomers(){
+    this.reservations = structuredClone(this.unfilteredData);
+    this.reservations = this.reservations.filter((reservation) => {
+      return (
+        reservation.reservation_name.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        reservation.contact_number.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        reservation.alt_contact_number?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        reservation.description?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        reservation.SLOT.hall.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        reservation.status?.toLowerCase().includes(this.queryString.toLowerCase())
+      );
     });
   }
 }

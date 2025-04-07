@@ -30,6 +30,8 @@ export class CategoryComponent  {
     categoryToDelete: number = 0;
     categoryToEdit: any = {};
     newCategory: any = {};
+    unfilteredData: any = [];
+
   
 
   constructor(private data: DataService,private pagination: PaginationService , private router: Router) {
@@ -64,6 +66,8 @@ export class CategoryComponent  {
         serialNumberArray: this.serialNumberArray,
         tableData2: []
       });
+      this.unfilteredData = structuredClone(this.category);
+
     });
   }
   
@@ -141,6 +145,18 @@ export class CategoryComponent  {
   deleteCategory(id: number) {
     this.data.deleteCategory(id).subscribe((res) => {
       this.getTableData({ skip: 0, limit: this.pageSize });
+    });
+  }
+
+  queryString: string = '';
+  async searchCustomers(){
+    this.category = structuredClone(this.unfilteredData);
+    this.category = this.category.filter((category) => {
+      return (
+        category.category?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        category.shortName?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        category.description?.toLowerCase().includes(this.queryString.toLowerCase())
+      );
     });
   }
 }

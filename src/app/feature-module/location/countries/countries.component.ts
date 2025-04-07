@@ -35,6 +35,7 @@ export class CountriesComponent implements OnInit {
   menuItems: any = [];
   filteredOptions!: Observable<string[]>;
   options: any = [];
+  unfilteredData: any = [];
 
   constructor(
     private data: DataService,
@@ -91,6 +92,7 @@ export class CountriesComponent implements OnInit {
         serialNumberArray: this.serialNumberArray,
         tableData2: [],
       });
+      this.unfilteredData = structuredClone(this.countries);
     });
   }
 
@@ -210,5 +212,18 @@ export class CountriesComponent implements OnInit {
     this.newMenu.menu_item_ids = menu_item_ids;
     this.data.addMenu(this.newMenu).subscribe((res: any) => {});
     window.location.reload();
+  }
+
+  queryString: string = '';
+  async searchCustomers(){
+    this.countries = structuredClone(this.unfilteredData);
+    this.countries = this.countries.filter((menu) => {
+      return (
+        menu.menu_name.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        menu.menu_name_urdu.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        menu.description.toLowerCase().includes(this.queryString.toLowerCase())
+      );
+    }
+  );
   }
 }

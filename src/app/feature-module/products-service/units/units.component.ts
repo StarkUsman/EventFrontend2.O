@@ -30,6 +30,7 @@ export class UnitsComponent {
   unitToDelete: number = 0;
   unitToEdit: any = {};
   newUnit: any = {};
+  unfilteredData: any = [];
 
   constructor(
     private data: DataService,
@@ -65,6 +66,7 @@ export class UnitsComponent {
         serialNumberArray: this.serialNumberArray,
         tableData2: [],
       });
+      this.unfilteredData = structuredClone(this.units);
     });
   }
 
@@ -118,6 +120,17 @@ export class UnitsComponent {
   deleteUnit(sNo: number) {
     this.data.deleteUnits(sNo).subscribe((res) => {
       this.getTableData({ skip: 0, limit: this.pageSize });
+    });
+  }
+
+  queryString: string = '';
+  async searchCustomers(){
+    this.units = structuredClone(this.unfilteredData);
+    this.units = this.units.filter((unit) => {
+      return (
+        unit.unit_name?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        unit.symbol?.toLowerCase().includes(this.queryString.toLowerCase())
+      );
     });
   }
 }

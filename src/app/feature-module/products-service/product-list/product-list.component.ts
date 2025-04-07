@@ -26,6 +26,7 @@ export class ProductListComponent {
     public searchDataValue = '';
     //** / pagination variables
     productToDelete: number = 0;
+    unfilteredData: any = [];
   
 
   constructor(private data: DataService,private pagination: PaginationService , private router: Router) {
@@ -60,6 +61,7 @@ export class ProductListComponent {
         serialNumberArray: this.serialNumberArray,
         tableData2: []
       });
+      this.unfilteredData = structuredClone(this.productlist);
     });
   }
 
@@ -123,6 +125,18 @@ export class ProductListComponent {
   deleteProduct(product_id: number) {
     this.data.deleteProduct(product_id).subscribe((res) => {
       this.getTableData({ skip: 0, limit: this.pageSize });
+    });
+  }
+
+  queryString: string = '';
+  async searchCustomers(){
+    this.productlist = structuredClone(this.unfilteredData);
+    this.productlist = this.productlist.filter((product) => {
+      return (
+        product.item?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        product.code?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        product.category?.toLowerCase().includes(this.queryString.toLowerCase())
+      );
     });
   }
 }

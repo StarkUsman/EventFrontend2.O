@@ -402,7 +402,7 @@ export interface productlist {
   sNo: number,
   id: number;
   item: string;
-  code: string | number;
+  code: string;
   category: string;
   unit: string;
   quantity: number;
@@ -506,6 +506,7 @@ export interface countries {
   menu_name_urdu: string;
   menu_price: string;
   isActive: any;
+  description: string;
 }
 export interface cities {
   sNo: number;
@@ -635,8 +636,8 @@ export interface inventory {
   id: number;
   sNo: number;
   item: string;
-  code: string | number;
-  units: string | number;
+  code: string;
+  units: string;
   quantity: number;
   sales: number;
   purchase: number;

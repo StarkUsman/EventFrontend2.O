@@ -33,6 +33,7 @@ export class ListComponent implements OnInit {
   isAdminLoggedIn = 0;
   categories: any = [];
   subcategories: any = [];
+  unfilteredData: any = [];
 
   constructor(
     private data: DataService,
@@ -65,7 +66,6 @@ export class ListComponent implements OnInit {
 
   private getTableData(pageOption: pageSelection): void {
     this.data.getVendors().subscribe((apiRes: apiResultFormat) => {
-      console.log(apiRes);
       this.tableData = [];
       this.serialNumberArray = [];
       this.totalData = apiRes.totalData;
@@ -85,6 +85,7 @@ export class ListComponent implements OnInit {
         tableData2: [],
         serialNumberArray: this.serialNumberArray,
       });
+      this.unfilteredData = structuredClone(this.tableData);
     });
   }
 
@@ -178,6 +179,18 @@ export class ListComponent implements OnInit {
   deleteVendor(sNo: number) {
     this.data.deleteVendor(sNo).subscribe((res) => {
       this.getTableData({ skip: 0, limit: this.pageSize });
+    });
+  }
+
+  queryString: string = '';
+  async searchCustomers(){
+    this.tableData = structuredClone(this.unfilteredData);
+    this.tableData = this.tableData.filter((vendor) => {
+      return (
+        vendor.name.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        vendor.email.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        vendor.phone.toLowerCase().includes(this.queryString.toLowerCase())
+      );
     });
   }
 }

@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../core/core.index';
+import { AuthGuardRole } from '../core/guards/authRole/auth.guard';
 import { LoggedInGuard } from '../core/guards/loggedIn/logged-in.guard';
 import { FeatureModuleComponent } from './feature-module.component';
+import { AuthGuardRoleAdmin } from '../core/guards/authRoleAdminOnly/auth.guard';
 
 const routes: Routes = [
   {
@@ -19,11 +21,13 @@ const routes: Routes = [
         path: 'dashboard',
         loadChildren: () =>
           import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
+        canActivate: [AuthGuardRole],
       },
       {
         path: 'customer',
         loadChildren: () =>
           import('./customers/customers.module').then((m) => m.CustomersModule),
+        canActivate: [AuthGuardRole],
       },
       {
         path: 'base-ui',
@@ -31,6 +35,7 @@ const routes: Routes = [
           import('./ui-interface/base-ui/base-ui.module').then(
             (m) => m.BaseUIModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'elements',
@@ -38,6 +43,7 @@ const routes: Routes = [
           import('./ui-interface/elements/elements.module').then(
             (m) => m.ElementsModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'tables',
@@ -45,11 +51,13 @@ const routes: Routes = [
           import('./ui-interface/tables/tables.module').then(
             (m) => m.TablesModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'icon',
         loadChildren: () =>
           import('./ui-interface/icon/icon.module').then((m) => m.IconModule),
+        canActivate: [AuthGuardRole],
       },
       {
         path: 'forms',
@@ -57,6 +65,7 @@ const routes: Routes = [
           import('./ui-interface/forms/forms.module').then(
             (m) => m.FormsModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'chart',
@@ -64,6 +73,7 @@ const routes: Routes = [
           import('./ui-interface/charts/charts.module').then(
             (m) => m.ChartsModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'blank-page',
@@ -71,6 +81,7 @@ const routes: Routes = [
           import('./blank-page/blank-page.module').then(
             (m) => m.BlankPageModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'google-maps',
@@ -78,11 +89,13 @@ const routes: Routes = [
           import('./google-maps/google-maps.module').then(
             (m) => m.GoogleMapsModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'profile',
         loadChildren: () =>
           import('./profile/profile.module').then((m) => m.ProfileModule),
+        canActivate: [AuthGuardRole],
       },
       {
         path: 'users',
@@ -90,6 +103,7 @@ const routes: Routes = [
           import('./users-list/users-list.module').then(
             (m) => m.UsersListModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'application',
@@ -97,16 +111,19 @@ const routes: Routes = [
           import('./application/application.module').then(
             (m) => m.ApplicationModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'settings',
         loadChildren: () =>
           import('./setting/setting.module').then((m) => m.SettingModule),
+        canActivate: [AuthGuardRole],
       },
       {
         path: 'blog',
         loadChildren: () =>
           import('./blog/blog.module').then((m) => m.BlogModule),
+        canActivate: [AuthGuardRole],
       },
       {
         path: 'expenses',
@@ -117,21 +134,25 @@ const routes: Routes = [
         path: 'payments',
         loadChildren: () =>
           import('./payments/payments.module').then((m) => m.PaymentsModule),
+        canActivate: [AuthGuardRole],
       },
       {
         path: 'items',
         loadChildren: () =>
           import('./items/items.module').then((m) => m.ItemsModule),
+        canActivate: [AuthGuardRole],
       },
       {
         path: 'reservations',
         loadChildren: () =>
           import('./estimates/estimates.module').then((m) => m.EstimatesModule),
+        canActivate: [AuthGuardRoleAdmin],
       },
       {
         path: 'invoices',
         loadChildren: () =>
           import('./invoices/invoices.module').then((m) => m.InvoicesModule),
+        canActivate: [AuthGuardRole],
       },
       {
         path: 'vendors',
@@ -150,6 +171,7 @@ const routes: Routes = [
           import('./delivery-challans/delivery-challans.module').then(
             (m) => m.DeliveryChallansModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'membership',
@@ -157,11 +179,13 @@ const routes: Routes = [
           import('./membership/membership.module').then(
             (m) => m.MembershipModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'services',
         loadChildren: () =>
           import('./location/location.module').then((m) => m.LocationModule),
+        canActivate: [AuthGuardRole],
       },
       {
         path: 'product-service',
@@ -169,6 +193,7 @@ const routes: Routes = [
           import('./products-service/products-service.module').then(
             (m) => m.ProductsServiceModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'manageusers',
@@ -176,6 +201,7 @@ const routes: Routes = [
           import('./manageusers/manageusers.module').then(
             (m) => m.ManageusersModule
           ),
+          canActivate: [AuthGuardRole],
       },
 
       {
@@ -198,6 +224,7 @@ const routes: Routes = [
           import('./debit-notes/debit-notes.module').then(
             (m) => m.DebitNotesModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'roles-permission',
@@ -205,6 +232,7 @@ const routes: Routes = [
           import('./roles-permission/roles-permission.module').then(
             (m) => m.RolesPermissionModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'delete-account-request',
@@ -212,6 +240,7 @@ const routes: Routes = [
           import('./delete-account-request/delete-account-request.module').then(
             (m) => m.DeleteAccountRequestModule
           ),
+          canActivate: [AuthGuardRole],
       },
 
       {
@@ -220,6 +249,7 @@ const routes: Routes = [
           import('./recurring-pages/recurring-pages.module').then(
             (m) => m.RecurringPagesModule
           ),
+          canActivate: [AuthGuardRole],
       },
 
       {
@@ -228,6 +258,7 @@ const routes: Routes = [
           import('./contact-messages/contact-messages.module').then(
             (m) => m.ContactMessagesModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'ticket-pages',
@@ -235,12 +266,14 @@ const routes: Routes = [
           import('./ticket-pages/ticket-pages.module').then(
             (m) => m.TicketPagesModule
           ),
+          canActivate: [AuthGuardRole],
       },
 
       {
         path: 'pages',
         loadChildren: () =>
           import('./pages/pages.module').then((m) => m.PagesModule),
+        canActivate: [AuthGuardRole],
       },
 
       {
@@ -249,11 +282,13 @@ const routes: Routes = [
           import('./credit-note-pages/credit-note-pages.module').then(
             (m) => m.CreditNotePagesModule
           ),
+          canActivate: [AuthGuardRole],
       },
 
       {
         path: 'faq',
         loadChildren: () => import('./faq/faq.module').then((m) => m.FaqModule),
+        canActivate: [AuthGuardRole],
       },
       {
         path: 'testimonial-page',
@@ -261,6 +296,7 @@ const routes: Routes = [
           import('./testimonial-page/testimonial-page.module').then(
             (m) => m.TestimonialPageModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'customerdetailspage',
@@ -268,6 +304,7 @@ const routes: Routes = [
           import('./customerdetailspage/customerdetailspage.module').then(
             (m) => m.CustomerdetailspageModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'purchasepage',
@@ -282,6 +319,7 @@ const routes: Routes = [
           import('./quotationspage/quotationspage.module').then(
             (m) => m.QuotationspageModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'payment-summary',
@@ -289,6 +327,7 @@ const routes: Routes = [
           import('./payment-summary/payment-summary.module').then(
             (m) => m.PaymentSummaryModule
           ),
+          canActivate: [AuthGuardRole],
       },
 
       {
@@ -297,12 +336,14 @@ const routes: Routes = [
           import('./permission/permission.module').then(
             (m) => m.PermissionModule
           ),
+          canActivate: [AuthGuardRole],
       },
 
       {
         path: 'edit-faq',
         loadChildren: () =>
           import('./edit-faq/edit-faq.module').then((m) => m.EditFaqModule),
+        canActivate: [AuthGuardRole],
       },
       {
         path: 'contact-details',
@@ -310,6 +351,7 @@ const routes: Routes = [
           import('./contact-details/contact-details.module').then(
             (m) => m.ContactDetailsModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'signature-list',
@@ -317,6 +359,7 @@ const routes: Routes = [
           import('./signature-list/signature-list.module').then(
             (m) => m.SignatureListModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'pay-online',
@@ -324,6 +367,7 @@ const routes: Routes = [
           import('./pay-online/pay-online.module').then(
             (m) => m.PayOnlineModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'notifications',
@@ -331,6 +375,7 @@ const routes: Routes = [
           import('./notifications/notifications.module').then(
             (m) => m.NotificationsModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'mail-pay-invoice',
@@ -338,6 +383,7 @@ const routes: Routes = [
           import('./mail-pay-invoice/mail-pay-invoice.module').then(
             (m) => m.MailPayInvoiceModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'super-admin',
@@ -345,11 +391,13 @@ const routes: Routes = [
           import('./super-admin/super-admin.module').then(
             (m) => m.SuperAdminModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'report',
         loadChildren: () =>
           import('./report/report.module').then((m) => m.ReportModule),
+        canActivate: [AuthGuardRole],
       },
     ],
   },

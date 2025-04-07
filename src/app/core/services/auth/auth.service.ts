@@ -28,7 +28,13 @@ export class AuthService {
         localStorage.setItem('timeOut', Date());
         localStorage.setItem('user', JSON.stringify(res));
         localStorage.setItem('userId', res.id);
-        this.router.navigate([routes.dashboard]);
+        if (res.role == 'admin' || res.role == 'accounts') {
+          this.router.navigate([routes.dashboard]);
+        } else if (res.role == 'store') {
+          this.router.navigate([routes.vendorsList]);
+        } else {
+          this.router.navigate([routes.login]);
+        }
         localStorage.setItem('layoutPosition', '1');
       } else if (res.status == 'Inactive' || res.status == 'inactive') {
         this.checkAuth.next('false');

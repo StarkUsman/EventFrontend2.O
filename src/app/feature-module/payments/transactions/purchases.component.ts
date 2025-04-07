@@ -28,6 +28,7 @@ export class PurchasesComponent {
   public searchDataValue = '';
   //** / pagination variables
   itemToDetele: number = 0;
+  unfilteredData: any = [];
 
   constructor(
     private data: DataService,
@@ -74,6 +75,7 @@ export class PurchasesComponent {
         serialNumberArray: this.serialNumberArray,
         tableData2: [],
       });
+      this.unfilteredData = structuredClone(this.purchase);
     });
   }
 
@@ -113,6 +115,25 @@ export class PurchasesComponent {
   deleteItem(){
     this.data.deletepurchase(this.itemToDetele).subscribe((res: any) => {
       this.getTableData({ skip: 0, limit: this.pageSize });
+    });
+  }
+
+  queryString: string = '';
+  async searchCustomers(){
+    this.purchase = structuredClone(this.unfilteredData);
+    this.purchase = this.purchase.filter((purchase) => {
+      return (
+        purchase.trans_id?.toString().toLowerCase().includes(this.queryString.toLowerCase()) ||
+        purchase.amount?.toString().toLowerCase().includes(this.queryString.toLowerCase()) ||
+        purchase.creditAccount.name?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        purchase.creditAccount.email?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        purchase.creditAccount.phone?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        purchase.debitAccount.name?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        purchase.debitAccount.email?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        purchase.debitAccount.phone?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        purchase.voucher?.toString().toLowerCase().includes(this.queryString.toLowerCase()) ||
+        purchase.checkNumber?.toString().toLowerCase().includes(this.queryString.toLowerCase())
+      );
     });
   }
 }

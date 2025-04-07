@@ -2275,7 +2275,7 @@ public sideBar: any[] = [
     menu: [
       {
         menuValue: 'Settings',
-        route: routes.profileSettings,
+        route: routes.companysettings,
         hasSubRoute: false,
         showSubRoute: false,
         icon: 'settings',

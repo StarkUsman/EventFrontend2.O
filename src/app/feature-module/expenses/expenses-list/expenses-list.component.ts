@@ -28,6 +28,7 @@ export class ExpensesListComponent  {
   public searchDataValue = '';
   //** / pagination variables
   itemToDetele: number = 0;
+  unfilteredData: any = [];
 
   constructor(
     private data: DataService,
@@ -74,6 +75,7 @@ export class ExpensesListComponent  {
         serialNumberArray: this.serialNumberArray,
         tableData2: [],
       });
+      this.unfilteredData = structuredClone(this.purchase);
     });
   }
 
@@ -115,4 +117,17 @@ export class ExpensesListComponent  {
   //     this.getTableData({ skip: 0, limit: this.pageSize });
   //   });
   // }
+
+  queryString: string = '';
+  async searchCustomers(){
+    this.purchase = structuredClone(this.unfilteredData);
+    this.purchase = this.purchase.filter((purchase) => {
+      return (
+        purchase.purch_id?.toString().toLowerCase().includes(this.queryString.toLowerCase()) ||
+        purchase.reference_no?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        purchase.total_amount?.toString().toLowerCase().includes(this.queryString.toLowerCase())
+        // purchase.code?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+      );
+    });
+  }
 }
