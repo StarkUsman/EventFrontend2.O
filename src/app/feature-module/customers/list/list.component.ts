@@ -29,7 +29,6 @@ export class ListComponent implements OnInit {
   vendorToDelete: number = 0;
   vendorToEdit: any = {};
   newVendor: any = {};  
-  // pagination variables end
   isAdminLoggedIn = 0;
   categories: any = [];
   subcategories: any = [];
