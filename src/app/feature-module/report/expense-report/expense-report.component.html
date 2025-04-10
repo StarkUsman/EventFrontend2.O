@@ -114,11 +114,17 @@
                     <td>PKR:{{data.totalExpense}}</td>
                   </tr>
                 }
-
+                <tr>
+                  <td colspan="3">
+                      <p>Total Expense as on {{closingExpenseDate()}}</p>
+                  </td>
+                  <td><span class="text-success fw-600"></span></td>
+                  <td colspan="2"><span class="text-primary fw-600">PKR:{{totalDebit()}}</span></td>
+              </tr>
               </tbody>
             </table>
           </div>
-          <app-custom-pagination></app-custom-pagination>
+          <!-- <app-custom-pagination></app-custom-pagination> -->
         </div>
       </div>
     </div>

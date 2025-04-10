@@ -132,6 +132,28 @@ export class ExpenseReportComponent implements OnInit {
     { name: 'Designing', checked: false },
   ];
 
+  closingExpenseDate(){
+    if(this.endDate){
+      return this.endDate;
+    } else {
+      // return today's Pakistan date
+      const today = new Date();
+      const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
+      const formatter = new Intl.DateTimeFormat('en-PK', options);
+      const parts = formatter.formatToParts(today);
+      const formattedDate = `${parts[2].value}-${parts[0].value}-${parts[4].value}`;
+      return formattedDate;
+    }
+  }
+
+  totalDebit() {
+    let total = 0;
+    for (const vendor of this.expensereport) {
+      total += parseFloat(vendor.totalExpense);
+    }
+    return total.toFixed(2);
+  }
+
   getDateRange(startStr: string, endStr: string): [Date, Date] {
     const start = new Date(startStr);
     const end = new Date(endStr);
