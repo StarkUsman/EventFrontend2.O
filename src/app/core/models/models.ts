@@ -16,7 +16,7 @@ export interface vendor {
   phone: string;
   created: string;
   balance: string;
-  category: string;
+  category: any;
   subcategory: string;
 }
 export interface customers {

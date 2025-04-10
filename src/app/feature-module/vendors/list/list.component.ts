@@ -125,8 +125,9 @@ export class ListComponent {
     }
   
     this.nameError = false;
+    this.newVendor.category = {};
+    this.newVendor.category.category = 'vendor';
 
-    this.newVendor.category = 'vendor';
     this.data.addVendor(this.newVendor).subscribe((res: any) => {
       this.getTableData({ skip: 0, limit: this.pageSize });
 

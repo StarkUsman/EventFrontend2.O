@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -16,12 +16,12 @@ import { DataService } from 'src/app/core/services/data/data.service';
   templateUrl: './expense-report.component.html',
   styleUrls: ['./expense-report.component.scss'],
 })
-export class ExpenseReportComponent {
+export class ExpenseReportComponent implements OnInit {
   isCollapsed = false;
   showFilter = false;
   public Toggledata = false;
   public routes = routes;
-  public expensereport: Array<expensereport> = [];
+  public expensereport: Array<any> = [];
   // pagination variables
   public pageSize = 10;
   public serialNumberArray: Array<number> = [];
@@ -29,7 +29,10 @@ export class ExpenseReportComponent {
   dataSource!: MatTableDataSource<expensereport>;
   public searchDataValue = '';
   //** / pagination variables
-
+  startDate: string = '';
+  endDate: string = '';
+  allSubCategories: any = [];
+  unfilteredData: Array<any> = [];
   constructor(
     private data: DataService,
     private pagination: PaginationService,
@@ -43,20 +46,34 @@ export class ExpenseReportComponent {
     });
   }
 
+  ngOnInit(): void {
+    this.data.getExpenseAccountCategory().subscribe((res: any) => {
+      this.allSubCategories = res.subcategory;
+      for (const subCategory of this.allSubCategories) {
+        subCategory.checked = true;
+      }
+    })
+  }
+
   private getTableData(pageOption: pageSelection): void {
     this.data.getExpense().subscribe((apiRes: apiResultFormat) => {
       this.expensereport = [];
       this.serialNumberArray = [];
       this.totalData = apiRes.totalData;
-      apiRes.data.map((res: expensereport, index: number) => {
+      apiRes.data.map((res: any, index: number) => {
         const serialNumber = index + 1;
         if (index >= pageOption.skip && serialNumber <= pageOption.limit) {
           res.sNo = serialNumber;
           this.expensereport.push(res);
           this.serialNumberArray.push(serialNumber);
+          res.totalExpense = 0;
+          for (const ledger of res.ledger) {
+            res.totalExpense += ledger.amountDebit;
+          }
+          res.totalExpense = res.totalExpense.toFixed(2);
         }
       });
-      this.dataSource = new MatTableDataSource<expensereport>(
+      this.dataSource = new MatTableDataSource<any>(
         this.expensereport,
       );
       this.pagination.calculatePageSize.next({
@@ -66,6 +83,7 @@ export class ExpenseReportComponent {
         serialNumberArray: this.serialNumberArray,
         tableData2: [],
       });
+      this.unfilteredData = structuredClone(this.expensereport);
     });
   }
 
@@ -113,4 +131,44 @@ export class ExpenseReportComponent {
     { name: 'Medical', checked: false },
     { name: 'Designing', checked: false },
   ];
+
+  getDateRange(startStr: string, endStr: string): [Date, Date] {
+    const start = new Date(startStr);
+    const end = new Date(endStr);
+    end.setHours(23, 59, 59, 999);
+    return [start, end];
+  }  
+
+  filterData() {
+    this.expensereport = structuredClone(this.unfilteredData);
+    for (const subCategory of this.allSubCategories) {
+      if (!subCategory.checked) {
+        this.expensereport = this.expensereport.filter((item) => item.subcategory !== subCategory.subcategory);
+      }
+    }
+
+    if (this.startDate && this.endDate) {
+      const [start, end] = this.getDateRange(this.startDate, this.endDate);
+
+      const filteredVendors = this.expensereport.map((vendor: any) => {
+        const filteredLedger = vendor.ledger.filter((entry: any) => {
+          const entryDate = new Date(entry.createdAt);
+          return entryDate >= start && entryDate <= end;
+        });
+
+        const totalExpense = filteredLedger.reduce(
+          (sum: number, entry: any) => sum + entry.amountDebit,
+          0
+        );
+
+        return {
+          ...vendor,
+          ledger: filteredLedger,
+          totalExpense,
+        };
+      });
+
+      this.expensereport = filteredVendors;
+    }
+  }
 }

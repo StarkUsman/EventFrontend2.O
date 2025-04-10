@@ -375,6 +375,10 @@ export class DataService {
     );
   }
 
+  public getExpenseAccountCategory() {
+    return this.http.get('http://localhost:3000/acategory/EXPENSE');
+  }
+
   public addaCategory(category: any) {
     return this.http.post('http://localhost:3000/acategory', category);
   }
@@ -970,13 +974,11 @@ export class DataService {
   }
 
   public getExpense() {
-    return this.http
-      .get<apiResultFormat>('assets/JSON/expense-report.json')
-      .pipe(
-        map((res: apiResultFormat) => {
-          return res;
-        })
-      );
+    return this.http.get<apiResultFormat>('http://localhost:3000/reports/EXPENSE').pipe(
+      map((res: apiResultFormat) => {
+        return res;
+      })
+    );
   }
   public getSubscription() {
     return this.http.get<apiResultFormat>('assets/JSON/subscription.json').pipe(
