@@ -951,6 +951,9 @@ export class routes {
   public static get expenseReport(): string {
     return this.report + '/expense-report';
   }
+  public static get eventexpenseReport(): string {
+    return this.report + '/event-expense-report';
+  }
   public static get purchaseReport(): string {
     return this.baseUrl + '/report/purchase-report';
   }

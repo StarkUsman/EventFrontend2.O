@@ -15,6 +15,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'event-expense-report',
+        loadChildren: () =>
+          import('./event-expense-report/expense-report.module').then(
+            (m) => m.ExpenseReportModule
+          ),
+      },
+      {
         path: 'purchase-report',
         loadChildren: () =>
           import('./purchase-report/purchase-report.module').then(

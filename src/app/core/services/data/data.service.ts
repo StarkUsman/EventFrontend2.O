@@ -1619,6 +1619,12 @@ public sideBar: any[] = [
           },
 
           {
+            menuValue: 'Event Expense Report',
+            route: routes.eventexpenseReport,
+            base: routes.eventexpenseReport
+          },
+
+          {
             menuValue: 'Purchase Report',
             route: routes.purchaseReport,
             base: routes.purchaseReport,
