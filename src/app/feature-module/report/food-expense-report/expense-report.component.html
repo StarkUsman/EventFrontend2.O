@@ -4,6 +4,28 @@
     <h5>Expense Report</h5>
     <div class="list-btn">
       <ul class="filter-list">
+        <!-- <li>
+          <a (click)="openContent()"  (keydown.enter)="openContent()" tabindex="0" class="btn btn-filters w-auto popup-toggle" matTooltip="Filter"><span
+            class="me-2"><img src="assets/img/icons/filter-icon.svg" alt="filter"></span>Filter </a>
+          </li> -->
+          <!-- <li class="">
+            <div class="dropdown dropdown-action" matTooltip="Download">
+              <a href="javascript:void(0);" class="btn-filters" data-bs-toggle="dropdown" aria-expanded="false"><span><i
+              class="feather icon-download"></i></span></a>
+              <div class="dropdown-menu dropdown-menu-end">
+                <ul class="d-block">
+                  <li>
+                    <a class="d-flex align-items-center download-item" href="javascript:void(0);" download><i
+                    class="far fa-file-pdf me-2"></i>PDF</a>
+                  </li>
+                  <li>
+                    <a class="d-flex align-items-center download-item" href="javascript:void(0);" download><i
+                    class="far fa-file-text me-2"></i>CVS</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </li> -->
           <li class="top-nav-search mx-2">
             <div class="position-relative">
               <div class="d-flex align-items-center">
@@ -13,20 +35,20 @@
                 <label class="btn btn-primary form-control mx-2" for="endDate">To</label>
                 <input type="date" class="form-control me-2" placeholder="End Date"  name="endDate" [(ngModel)]="endDate" (ngModelChange)="filterData()">
                 
-                <!-- <div class="dropdown">
+                <div class="dropdown">
                   <button class="btn btn-import me-2 dropdown-toggle" type="button" id="multiSelectDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    Select SubCategory
+                    Select Products
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="multiSelectDropdown">
-                    @for (subcategory of allSubCategories; track subcategory) {
+                    @for (product of unfilteredData; track product) {
                       <li>
                         <label class="dropdown-item">
-                          <input type="checkbox" name="subcategory" [(ngModel)]="subcategory.checked" (change)="filterData()"> {{ subcategory.subcategory }}
+                          <input type="checkbox" name="subcategory" [(ngModel)]="product.checked" (change)="filterData()"> {{ product.item }}
                         </label>
                       </li>
                     }
                   </ul>
-                </div> -->
+                </div>
               </div>
             </div>
           </li>
@@ -76,9 +98,9 @@
               <thead class="thead-light">
                 <tr>
                   <th mat-sort-header="sno">#</th>
-                  <th mat-sort-header="companyname">Account Name</th>
-                  <th mat-sort-header="amount">Categoty</th>
-                  <th mat-sort-header="payment">SubCategory</th>
+                  <th mat-sort-header="companyname">Product Name</th>
+                  <th mat-sort-header="payment">Purchase Price</th>
+                  <th mat-sort-header="amount">ExpenseQuantity</th>
                   <th mat-sort-header="category">Total Expense</th>
                 </tr>
               </thead>
@@ -86,9 +108,9 @@
                 @for (data of expensereport; track data; let i = $index) {
                   <tr>
                     <td>{{data.sNo}}</td>
-                    <td>{{data.name}}</td>
-                    <td>{{data.category.category}}</td>
-                    <td>{{data.subcategory}}</td>
+                    <td>{{data.item}}</td>
+                    <td>PKR:{{data.purchasePrice}}</td>
+                    <td>{{data.totalQuantity}}</td>
                     <td>PKR:{{data.totalExpense}}</td>
                   </tr>
                 }
@@ -96,8 +118,8 @@
                   <td colspan="3">
                       <p>Total Expense as on {{closingExpenseDate()}}</p>
                   </td>
-                  <td><span class="text-success fw-600"></span></td>
-                  <td colspan="2"><span class="text-primary fw-600">PKR:{{totalDebit()}}</span></td>
+                  <td></td>
+                  <td><span class="text-primary fw-600">PKR:{{totalDebit()}}</span></td>
               </tr>
               </tbody>
             </table>

@@ -980,6 +980,14 @@ export class DataService {
       })
     );
   }
+
+  public getInventoryExpense() {
+    return this.http.get<apiResultFormat>('http://localhost:3000/reports/INVENTORY').pipe(
+      map((res: apiResultFormat) => {
+        return res;
+      })
+    );
+  }
   public getSubscription() {
     return this.http.get<apiResultFormat>('assets/JSON/subscription.json').pipe(
       map((res: apiResultFormat) => {
@@ -1617,13 +1625,16 @@ public sideBar: any[] = [
             route: routes.expenseReport,
             base: routes.expenseReport,
           },
-
           {
             menuValue: 'Event Expense Report',
             route: routes.eventexpenseReport,
-            base: routes.eventexpenseReport
+            base: routes.eventexpenseReport,
           },
-
+          {
+            menuValue: 'Food Expense Report',
+            route: routes.foodexpenseReport,
+            base: routes.foodexpenseReport,
+          },
           {
             menuValue: 'Purchase Report',
             route: routes.purchaseReport,

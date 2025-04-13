@@ -22,7 +22,7 @@ export class LowStockReportComponent {
   showFilter = false;
   public Toggledata = false;
   public routes = routes;
-  public expensereport: Array<stockreport> = [];
+  public expensereport: Array<any> = [];
   // pagination variables
   public pageSize = 10;
   public serialNumberArray: Array<number> = [];
@@ -45,11 +45,12 @@ export class LowStockReportComponent {
   }
 
   private getTableData(pageOption: pageSelection): void {
-    this.data.getstockReport().subscribe((apiRes: apiResultFormat) => {
+    this.data.getProductlist().subscribe((apiRes: apiResultFormat) => {
       this.expensereport = [];
       this.serialNumberArray = [];
       this.totalData = apiRes.totalData;
-      apiRes.data.map((res: stockreport, index: number) => {
+      apiRes.data = apiRes.data.filter((item: any) => item.quantity <= item.alertQuantity);
+      apiRes.data.map((res: any, index: number) => {
         const serialNumber = index + 1;
         if (index >= pageOption.skip && serialNumber <= pageOption.limit) {
           res.sNo = serialNumber;

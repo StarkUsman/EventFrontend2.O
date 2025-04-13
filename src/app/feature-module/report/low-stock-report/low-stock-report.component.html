@@ -4,11 +4,11 @@
     <h5>Low Stock Report</h5>
     <div class="list-btn">
       <ul class="filter-list">
-        <li>
+        <!-- <li>
           <a (click)="openContent()"  (keydown.enter)="openContent()" tabindex="0" class="btn btn-filters w-auto popup-toggle" matTooltip="Filter"><span
             class="me-2"><img src="assets/img/icons/filter-icon.svg" alt="filter"></span>Filter </a>
-          </li>
-          <li class="">
+          </li> -->
+          <!-- <li class="">
             <div class="dropdown dropdown-action" matTooltip="Download">
               <a href="javascript:void(0);" class="btn-filters" data-bs-toggle="dropdown"
                 aria-expanded="false"><span><i class="feather icon-download"></i></span></a>
@@ -25,10 +25,10 @@
                       </ul>
                     </div>
                   </div>
-                </li>
+                </li> -->
                 <li>
-                  <a class="btn-filters" href="javascript:void(0);" matTooltip="Print"><span><i
-                  class="feather icon-printer"></i></span> </a>
+                  <a class="btn-filters" href="javascript:window.print()"><span><i
+                    class="feather icon-printer"></i></span></a>
                 </li>
               </ul>
             </div>
@@ -64,19 +64,19 @@
         <!-- /Search Filter -->
 
         <div class="row">
-          <div class="col-sm-12">
-            <div class=" card-table">
+          <div class="col-lg-12">
+            <div class="card">
               <div class="card-body">
-                <div class="table-responsive">
-                  <table matSort (matSortChange)="sortData($event)" class="table table-center table-hover datatable">
+                <div class="">
+                  <table matSort (matSortChange)="sortData($event)" class="table table-striped mb-0 table-hover datatable">
                     <thead class="thead-light">
                       <tr>
                         <th mat-sort-header="sno">#</th>
                         <th mat-sort-header="product">Product</th>
-                        <th mat-sort-header="sku">SKU</th>
+                        <th mat-sort-header="sku">Code</th>
                         <th mat-sort-header="category">Category</th>
-                        <th mat-sort-header="openQty">Opening Qty</th>
-                        <th mat-sort-header="closeQty">Closing Qty</th>
+                        <th mat-sort-header="openQty">Alert Qty</th>
+                        <th mat-sort-header="closeQty">Available Qty</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -85,24 +85,24 @@
                           <td>{{data.sNo}}</td>
                           <td>
                             <h2 class="table-avatar">
-                              <a [routerLink]="routes.profile" class="avatar avatar-md me-2 companies"><img
-                                class="avatar-img sales-rep" [src]="data.productImg"
+                              <a class="avatar avatar-md me-2 companies"><img
+                                class="avatar-img sales-rep" [src]="data.img"
                               alt="User Image"></a>
-                              <a [routerLink]="routes.productlist">{{data.product}}
+                              <a [routerLink]="routes.productlist">{{data.item}}
                               </a>
                             </h2>
                           </td>
-                          <td>{{data.sku}}</td>
+                          <td>{{data.code}}</td>
                           <td>{{data.category}}</td>
-                          <td>{{data.openQty}}</td>
-                          <td>{{data.closeQty}}</td>
+                          <td>{{data.alertQuantity}}</td>
+                          <td class="text-danger">{{data.quantity}}</td>
                         </tr>
                       }
 
                     </tbody>
                   </table>
                 </div>
-                <app-custom-pagination></app-custom-pagination>
+                <!-- <app-custom-pagination></app-custom-pagination> -->
               </div>
             </div>
           </div>
