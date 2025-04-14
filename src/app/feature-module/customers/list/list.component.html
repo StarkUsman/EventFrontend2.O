@@ -176,7 +176,7 @@
                                 </td>
                                 <td>{{ data.phone }}</td>
                                 <td>{{ data.created }}</td>
-                                <td>{{ data.category.category || "N/A" }}</td>
+                                <td>{{ data.category?.category || "N/A" }}</td>
                                 <td>PKR:{{ data.balance }}</td>
                                 <td class="d-flex align-items-center">
                                   <a [routerLink]="routes.customerLedger" class="btn btn-greys me-2" [queryParams]="{ id: data.id }"
