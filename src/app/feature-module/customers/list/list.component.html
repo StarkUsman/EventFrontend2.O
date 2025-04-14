@@ -156,8 +156,8 @@
                           <tr>
                             <th mat-sort-header="sNo">#</th>
                             <th mat-sort-header="name">Name</th>
+                            <th mat-sort-header="created">نام (اردو)</th>
                             <th mat-sort-header="phone">Phone</th>
-                            <th mat-sort-header="created">Created</th>
                             <th mat-sort-header="category">Category</th>
                             <th mat-sort-header="balance">Balance</th>
                             <th mat-sort-header="action">Actions</th>
@@ -174,8 +174,8 @@
                                     >
                                   </h2>
                                 </td>
+                                <td>{{ data.name_urdu }}</td>
                                 <td>{{ data.phone }}</td>
-                                <td>{{ data.created }}</td>
                                 <td>{{ data.category?.category || "N/A" }}</td>
                                 <td>PKR:{{ data.balance }}</td>
                                 <td class="d-flex align-items-center">
@@ -387,6 +387,12 @@
                                 </div>
                                 <div class="col-lg-12 col-sm-12">
                                   <div class="input-block mb-3">
+                                    <label for="name">نام (اردو)</label>
+                                    <input type="text" class="form-control" [(ngModel)]="newVendor.name_urdu" #nameInput="ngModel" placeholder="اردو میں نام لکھیں" required="true">
+                                  </div>
+                                </div>
+                                <div class="col-lg-12 col-sm-12">
+                                  <div class="input-block mb-3">
                                     <label for="email">Email</label>
                                     <input type="text" class="form-control" [(ngModel)]="newVendor.email" placeholder="Enter Email Address" required="true">
                                   </div>
@@ -457,6 +463,11 @@
                                     Name is required.
                                   </div>
                                 </div>
+                                <div class="col-lg-12 col-md-12">
+                                  <div class="input-block mb-3">
+                                    <label for="name">نام (اردو)</label>
+                                    <input type="text" class="form-control" [(ngModel)]="vendorToEdit.name_urdu" placeholder="اردو میں نام لکھیں" required="true">
+                                  </div>
                                 <div class="col-lg-12 col-md-12">
                                   <div class="input-block mb-3">
                                     <label for="Email">Email</label>

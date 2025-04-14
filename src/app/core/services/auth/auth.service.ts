@@ -25,6 +25,7 @@ export class AuthService {
       if (res.status == 'Active' || res.status == 'active') {
         this.checkAuth.next('true');
         localStorage.setItem('authenticated', 'true');
+        sessionStorage.setItem('authenticated', 'true');
         localStorage.setItem('timeOut', Date());
         localStorage.setItem('user', JSON.stringify(res));
         localStorage.setItem('userId', res.id);

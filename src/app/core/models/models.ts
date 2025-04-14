@@ -11,6 +11,7 @@ export interface vendor {
   id: number;
   sNo: number;
   name: string;
+  name_urdu: string;
   img: string;
   email: string;
   phone: string;
