@@ -25,7 +25,6 @@ export class AuthService {
       if (res.status == 'Active' || res.status == 'active') {
         this.checkAuth.next('true');
         localStorage.setItem('authenticated', 'true');
-        sessionStorage.setItem('authenticated', 'true');
         localStorage.setItem('timeOut', Date());
         localStorage.setItem('user', JSON.stringify(res));
         localStorage.setItem('userId', res.id);
@@ -41,6 +40,7 @@ export class AuthService {
         this.checkAuth.next('false');
         alert('Your account is inactive, please contact admin');
       } else {
+        console.log("going to show alert");
         this.checkAuth.next('false');
         alert('Invalid credentials');
       }
@@ -56,6 +56,5 @@ export class AuthService {
     this.router.navigate([routes.login]);
     this.checkAuth.next("false");
     localStorage.clear();
-    sessionStorage.clear();
   }
 }

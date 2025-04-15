@@ -324,6 +324,11 @@ export class DataService {
     return this.http.put(`http://localhost:3000/bookings/payment/${body.id}`, body);
   }
 
+  public deleteReservation(id: number) {
+    return this.http.delete(`http://localhost:3000/bookings/${id}`);
+  }
+
+
   public getVendors() {
     return this.http.get<apiResultFormat>('http://localhost:3000/vendors').pipe(
       map((res: apiResultFormat) => {
@@ -1328,6 +1333,11 @@ public sideBar: any[] = [
             base: routes.reservationList,
           },
           {
+            menuValue: 'Add Reservation',
+            route: routes.addreservation,
+            base: routes.addreservation,
+          },
+          {
             menuValue: 'Menus',
             route: routes.menu,
             base: routes.menu,
@@ -1349,7 +1359,7 @@ public sideBar: any[] = [
     separateRoute: false,
     menu: [
       {
-        menuValue: 'Products / Services',
+        menuValue: 'Products',
         hasSubRoute: true,
         showSubRoute: false,
         icon: 'package',
@@ -1359,6 +1369,11 @@ public sideBar: any[] = [
             menuValue: 'Product List',
             route: routes.productlist,
             base: routes.productlist,
+          },
+          {
+            menuValue: 'Add Product',
+            route: routes.addproducts,
+            base: routes.addproducts,
           },
           {
             menuValue: 'Category',
@@ -1505,21 +1520,43 @@ public sideBar: any[] = [
     menu: [
       {
         menuValue: 'Purchases',
-        route: routes.purchase,
-        hasSubRoute: false,
+        // route: routes.purchase,
+        hasSubRoute: true,
         showSubRoute: false,
         icon: 'shopping-cart',
         base: 'purchasepage',
-        subMenus: [],
+        subMenus: [
+          {
+            menuValue: 'Purchase List',
+            route: routes.purchase,
+            base: routes.purchase,
+          },
+          {
+            menuValue: 'Add Purchase',
+            route: routes.addpurchases,
+            base: routes.addpurchases,
+          },
+        ],
       },
       {
         menuValue: 'Purchase Returns',
         route: routes.purchaseorders,
-        hasSubRoute: false,
+        hasSubRoute: true,
         showSubRoute: false,
         icon: 'shopping-bag',
         base: 'purchase-return',
-        subMenus: [],
+        subMenus: [
+          {
+            menuValue: 'Purchase Return List',
+            route: routes.purchaseorders,
+            base: routes.purchaseorders,
+          },
+          {
+            menuValue: 'Add Purchase Return',
+            route: routes.addpurchasreturn,
+            base: routes.addpurchasreturn,
+          },
+        ],
       },
       // {
       //   menuValue: 'Debit Notes',
@@ -1541,12 +1578,23 @@ public sideBar: any[] = [
     menu: [
       {
         menuValue: 'Expenses',
-        route: routes.expensesList,
-        hasSubRoute: false,
+        // route: routes.expensesList,
+        hasSubRoute: true,
         showSubRoute: false,
         icon: 'file-plus',
         base: 'expenses',
-        subMenus: [],
+        subMenus: [
+          {
+            menuValue: 'Expenses',
+            route: routes.expensesList,
+            base: routes.expensesList,
+          },
+          {
+            menuValue: 'Add Expense',
+            route: routes.addexpenses,
+            base: routes.addexpenses,
+          },
+        ],
       },
       {
         menuValue: 'Transactions',
@@ -1560,6 +1608,11 @@ public sideBar: any[] = [
             menuValue: 'Transaction List',
             route: routes.transactionList,
             base: routes.transactionList,
+          },
+          {
+            menuValue: 'Add Transaction',
+            route: routes.addTransaction,
+            base: routes.addTransaction,
           },
           {
             menuValue: 'Vouchers',

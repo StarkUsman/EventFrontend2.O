@@ -23,7 +23,7 @@
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-12">
                   <div class="input-block mb-3 add-products">
-                    <label for="Product ">Product Code (SKU)<span class="text-danger">  *</span></label>
+                    <label for="Product ">Product Code</label>
                     <input
                       type="text"
                       class="form-control"
@@ -46,36 +46,13 @@
                       <div class="input-block mb-3">
                         <label for="Purchase">Purchase Price  <span class="text-danger">  *</span></label>
                         <input
-                        type="text"
+                        type="number"
                         class="form-control"
                         placeholder="Enter Purchase Prices"
                         [(ngModel)]="newProduct.purchasePrice"
                         >
                       </div>
                     </div>
-                    <!-- <div class="col-lg-4 col-md-6 col-sm-12">
-                      <div class="input-block mb-3">
-                        <label for="Selling">Selling Price  <span class="text-danger">  *</span></label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          placeholder="Enter Selling Price"
-                          [(ngModel)]="newProduct.sellingPrice"
-                          >
-                        </div>
-                      </div> -->
-                        <!-- <div class="col-lg-4 col-md-6 col-sm-12">
-                          <div class="input-block mb-3">
-                            <label for="Quantity"> Quantity <span class="text-danger">  *</span></label>
-                            <input
-                              type="number"
-                              class="form-control"
-                              placeholder="Enter Quantity"
-                              [(ngModel)]="newProduct.quantity"
-                              name="name"
-                              >
-                            </div>
-                          </div> -->
                           <div class="col-lg-4 col-md-6 col-sm-12">
                             <div class="input-block mb-3">
                               <label for="Units">Units</label>
@@ -143,7 +120,7 @@
                             <button [routerLink]="routes.productlist" type="reset" class="btn btn-primary me-2">
                               Cancel
                             </button>
-                            <button [routerLink]="routes.productlist" type="submit" class="btn btn-primary" (click)="addProduct()">
+                            <button [disabled]="(!newProduct.purchasePrice || !newProduct.item)" [routerLink]="routes.addproducts" type="submit" class="btn btn-primary" (click)="addProduct()">
                               Add Item
                             </button>
                           </form>

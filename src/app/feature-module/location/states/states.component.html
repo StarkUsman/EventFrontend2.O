@@ -351,7 +351,7 @@
                     <div class="row">
                       <div class="col-lg-12 col-md-6 col-sm-12">
                         <div class="input-block mb-3">
-                          <label for="menuItem">Name</label>
+                          <label for="menuItem">Name <span class="text-danger">*</span></label>
                           <input type="text" class="form-control" placeholder="Enter MenuItem Name" [(ngModel)]="newMenuItem.item_name">
                         </div>
                       </div>
@@ -372,8 +372,8 @@
                           <mat-form-field class="w-100">
                             <mat-label>Category</mat-label>
                             <input type="text"
-                                   placeholder="Select Menu Items"
-                                   aria-label="MenuItem"
+                                   placeholder="Select Category"
+                                   aria-label="Category"
                                    matInput
                                    [(ngModel)]="newMenuItem.category"
                                    [formControl]="control"
@@ -393,18 +393,6 @@
                           <input type="number" class="form-control" placeholder="Enter Price" [(ngModel)]="newMenuItem.price">
                         </div>
                       </div>
-                      <!-- <div class="col-lg-12 col-md-6 col-sm-12">
-                        <div class="input-block mb-3">
-                          <label for="Country ">Country Name</label>
-                          <mat-select [(ngModel)]="name1" [ngModelOptions]="{standalone: true}"
-                            class="select custom-mat-select">
-                            <mat-option value="state">Select State Name</mat-option>
-                            <mat-option value="countryname1">State Name 1</mat-option>
-                            <mat-option value="countryname2">State Name 2</mat-option>
-                            <mat-option value="countryname3">State Name 3</mat-option>
-                          </mat-select>
-                        </div>
-                      </div> -->
                     </div>
                   </div>
                 </div>
@@ -413,7 +401,7 @@
           </div>
           <div class="modal-footer">
             <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</a>
-            <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn" (click)="addMenuItem()">Add MenuItem</a>
+            <button [disabled]="!newMenuItem.item_name" href="javascript:void(0);" class="btn btn-primary paid-continue-btn" (click)="addMenuItem()">Add MenuItem</button>
           </div>
         </div>
       </div>
@@ -440,7 +428,7 @@
                     <div class="row">
                       <div class="col-lg-12 col-md-6 col-sm-12">
                         <div class="input-block mb-3">
-                          <label for="menuItem">Name</label>
+                          <label for="menuItem">Name <span class="text-danger">*</span></label>
                           <input type="text" class="form-control" placeholder="Enter MenuItem Name" [(ngModel)]="menuItemToEdit.item_name">
                         </div>
                       </div>
@@ -461,8 +449,8 @@
                           <mat-form-field class="w-100">
                             <mat-label>Category</mat-label>
                             <input type="text"
-                                   placeholder="Select Menu Items"
-                                   aria-label="MenuItem"
+                                   placeholder="Select Category"
+                                   aria-label="Category"
                                    matInput
                                    [(ngModel)]="menuItemToEdit.category"
                                    [formControl]="control"
@@ -490,7 +478,7 @@
           </div>
           <div class="modal-footer">
             <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</a>
-            <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn" (click)="updateMenuItem()">Update</a>
+            <button [disabled]="!menuItemToEdit.item_name" href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn" (click)="updateMenuItem()">Update</button>
           </div>
         </div>
       </div>

@@ -96,6 +96,8 @@ export class AddProductsComponent implements OnDestroy,OnInit {
   }
 
   addProduct() {
-    this.data.addProduct(this.newProduct).subscribe((res) => {});
+    this.data.addProduct(this.newProduct).subscribe((res) => {
+      this.newProduct = {};
+    });
   }
 }

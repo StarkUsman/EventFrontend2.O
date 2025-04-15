@@ -158,8 +158,13 @@ export class StatesComponent implements OnInit {
   }
 
   addMenuItem() {
-    this.data.addMenuItem(this.newMenuItem).subscribe((res: any) => {});
-    window.location.reload();
+    this.data.addMenuItem(this.newMenuItem).subscribe((res: any) => {
+      this.newMenuItem = {};
+      this.pagination.tablePageSize.subscribe((res: tablePageSize) => {
+        this.getTableData({ skip: res.skip, limit: res.limit });
+        this.pageSize = res.pageSize;
+      });
+    });
   }
 
   deleteMenuItem() {

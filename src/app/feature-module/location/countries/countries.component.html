@@ -353,7 +353,7 @@
                 <div class="row">
                   <div class="col-lg-8 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
-                      <label for="Country">Menu Name</label>
+                      <label for="Country">Menu Name <span class="text-danger">*</span></label>
                       <input type="text" class="form-control" placeholder="Enter Menu Name" [(ngModel)]="newMenu.menu_name">
                     </div>
                   </div>
@@ -436,7 +436,7 @@
                   <div class="col-lg-12 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
                       <label for="Country">Menu Price</label>
-                      <input type="text" class="form-control" placeholder="Enter Menu Name" [(ngModel)]="newMenu.menu_price">
+                      <input type="number" class="form-control" placeholder="Enter Menu Price" [(ngModel)]="newMenu.menu_price">
                     </div>
                   </div>
                 </div>
@@ -447,7 +447,7 @@
       </div>
       <div class="modal-footer">
         <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</a>
-        <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn" (click)="addMenu()">Add Menu</a>
+        <button [disabled]="!newMenu.menu_name" href="javascript:void(0);" class="btn btn-primary paid-continue-btn" (click)="addMenu()">Add Menu</button>
       </div>
     </div>
   </div>
@@ -582,7 +582,7 @@
                   <div class="col-lg-12 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
                       <label for="Country">Menu Price</label>
-                      <input type="text" class="form-control" placeholder="Enter Menu Name" [(ngModel)]="menuToEdit.menu_price">
+                      <input type="number" class="form-control" placeholder="Enter Menu Price" [(ngModel)]="menuToEdit.menu_price">
                     </div>
                   </div>
                 </div>

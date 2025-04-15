@@ -195,7 +195,7 @@
         <div class="col-md-4" *ngFor="let menu of availableMenus">
           <div class="card menu-card"
             (click)="selectMenu(menu)"
-            [ngClass]="{'selected-menu': reservationToEdit?.selectedMenu.menu_id == menu.menu_id}"
+            [ngClass]="{'selected-menu': reservationToEdit?.selectedMenu?.menu_id == menu.menu_id}"
             style="cursor: pointer; transition: 0.3s; border: 2px solid transparent; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
 
             <div class="card-body">
@@ -211,14 +211,12 @@
               <h5 class="card-title">{{ menu.menu_name }}</h5>
               <p class="card-text"><strong>Description:</strong> {{
                 menu.description }}</p>
-              <p class="card-text"><strong>Price:</strong> {{ menu.menu_price |
-                currency }}</p>
+              <p class="card-text"><strong>Price:</strong> PKR:{{ menu.menu_price }}</p>
 
               <ul style="padding-left: 15px;">
                 <li *ngFor="let item of menu.menu_items"
                   style="font-size: 14px;">
-                  <span>{{ item.item_name }} - {{ item.price | currency
-                    }}</span>
+                  <span>{{ item.item_name }}  PKR:{{ item.price }}</span>
                 </li>
               </ul>
             </div>
@@ -262,8 +260,6 @@
           <div class="menu-head">
             <div>
               <h5 class="card-title">{{ reservationToEdit.selectedMenu.menu_name }}</h5>
-              <!-- <p><strong>Price:</strong> {{ reservationToEdit.selectedMenu.price |
-                currency }}</p> -->
                 <div class="service-row mt-1">
                   <input type="number" [(ngModel)]="reservationToEdit.selectedMenu.menu_price" name="menuPrice" class="quantity" (input)="updateMenuPriceTotal(reservationToEdit.selectedMenu.menu_price)">
                 </div>
@@ -278,7 +274,7 @@
             <div *ngFor="let item of menuItems" class="menu-item-card">
               <div class="menu-item-details">
                 <label class="menuItemLabel">{{ item.item_name }}</label>
-                <label class="menuItemLabel">{{ item.price | currency }}</label>
+                <label class="menuItemLabel">PKR:{{ item.price || 'N/A' }}</label>
                 <button *ngIf="item.selected"
                   class="btn btn-danger"
                   (click)="removeMenuItem(item)">
@@ -308,8 +304,7 @@
             id="service-{{ service.additional_service_id }}"
             [(ngModel)]="service.selected">
           <label class="menuItemLabel">
-            {{ service.additional_service_name }} - {{ service.price | currency
-            }}
+            {{ service.additional_service_name }}  PKR:{{ service.price }}
           </label>
         </div>
       </div>

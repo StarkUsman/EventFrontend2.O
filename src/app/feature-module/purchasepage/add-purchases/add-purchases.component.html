@@ -21,7 +21,7 @@
               </div>
               <div class="col-lg-4 col-md-6 col-sm-12">
                 <div class="input-block mb-3">
-                  <label htmlFor="label">Select Vendor</label>
+                  <label htmlFor="label">Select Vendor <span class="text-danger">*</span></label>
                       <mat-select
                         [(ngModel)]="newPurchase.vendor"
                         [ngModelOptions]="{ standalone: true }"
@@ -89,10 +89,10 @@
                       <div class="col-lg-12 col-md-6 col-sm-12">
                         <div class="input-block mb-3">
                           <mat-form-field class="w-100">
-                            <mat-label>Products</mat-label>
+                            <mat-label>Products <span class="text-danger">*</span></mat-label>
                             <input type="text"
-                                   placeholder="Select Menu Items"
-                                   aria-label="MenuItem"
+                                   placeholder="Select Products"
+                                   aria-label="Product"
                                    matInput
                                    [formControl]="control"
                                    [matAutocomplete]="auto">
@@ -118,7 +118,7 @@
                             >
                             <thead class="thead-light">
                               <tr>
-                                <th mat-sort-header="product">Product / Service</th>
+                                <th mat-sort-header="product">Products</th>
                                 <th mat-sort-header="quantity">Quantity</th>
                                 <th mat-sort-header="unit">Unit</th>
                                 <th mat-sort-header="rate">Rate</th>
@@ -220,8 +220,8 @@
                             </div>
                           </div>
                           <div class="text-end">
-                            <button type="reset" class="btn btn-primary me-2">Cancel</button>
-                            <button [routerLink]="routes.purchase" type="submit" class="btn btn-primary" (click)="addPurchase()">Save</button>
+                            <button [routerLink]="routes.purchase" type="reset" class="btn btn-primary me-2">Cancel</button>
+                            <button [disabled]="(!newPurchase.vendor || selectedProducts.length === 0)" [routerLink]="routes.purchase" type="submit" class="btn btn-primary" (click)="addPurchase()">Save</button>
                           </div>
                         </div>
                       </div>

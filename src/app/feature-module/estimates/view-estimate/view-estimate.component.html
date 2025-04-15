@@ -37,40 +37,51 @@
       <div class="card-table">
           <div class="card-body">
               <div class="table-responsive">
-                  <table class="table table-center table-hover">
+                <div class="table-scroll">
+                  <table matSort
+                    (matSortChange)="sortData($event)"
+                    class="table table-center table-hover datatable"
+                    >
                       <thead class="thead-light">
                           <tr>
-                              <th>ID</th>
-                              <th>Booking Name</th>
-                              <th>Contact Number</th>
-                              <th>Booking Type</th>
-                              <th>Date</th>
-                              <th>Hall</th>
-                              <th>Menu</th>
-                              <th>Actions</th>
+                              <th mat-sort-header="sNo">ID</th>
+                              <th mat-sort-header="reservation_name">Booking Name</th>
+                              <th mat-sort-header="contact_number">Contact Number</th>
+                              <th mat-sort-header="date">Booking Date</th>
+                              <th mat-sort-header="dashboardDate">Event Date</th>
+                              <th mat-sort-header="hall">Hall</th>
+                              <th mat-sort-header="total_price">Total Cost</th>
+                              <th mat-sort-header="payment_received">Paid</th>
+                              <th mat-sort-header="total_remaining">Due</th>
+                              <th mat-sort-header="status">Status</th>
+                              <th mat-sort-header="action">Actions</th>
                           </tr>
                       </thead>
                       <tbody>
-                          <tr *ngFor="let reservation of reservations let i = index">
-                              <td>{{ i+1 }}</td>
+                        @for (reservation of reservations; track reservation; let i = $index) {
+                          <tr>
+                            <td>{{ reservation.sNo }}</td>
                               <td>{{ reservation.reservation_name }}</td>
                               <td>{{ reservation.contact_number }}</td>
-                              <td>{{ reservation.booking_type }}</td>
+                              <td>{{ reservation.date }}</td>
                               <td>{{ reservation.dashboardDate }}</td>
                               <td>{{ reservation.SLOT.hall }}</td>
-                              <td>{{ reservation.selectedMenu.menu_name }}</td>
+                              <td>{{ reservation.total_price }}</td>
+                              <td>{{ reservation.payment_received }}</td>
+                              <td>{{ reservation.total_remaining }}</td>
+                              <td>{{ reservation.status }}</td>
                               <td class="d-flex align-items-center">
                                 <div class="dropdown dropdown-action">
                                   <a
-                                    href="javascript:void(0);"
-                                    class="btn-action-icon"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                    ><i class="fas fa-ellipsis-v"></i
-                                  ></a>
-                                  <div class="dropdown-menu dropdown-menu-right">
-                                    <ul>
-                                      <li>
+                                  href="javascript:void(0);"
+                                  class="btn-action-icon"
+                                  data-bs-toggle="dropdown"
+                                  aria-expanded="false"
+                                  ><i class="fas fa-ellipsis-v"></i
+                                    ></a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                      <ul>
+                                        <li>
                                         <a
                                           class="dropdown-item"
                                           [routerLink]="routes.editReservation"
@@ -84,12 +95,12 @@
                                             href="javascript:void(0);"
                                             data-bs-toggle="modal"
                                             data-bs-target="#delete_modal"
-                                            (click)="deleteReservation(reservation.booking_id)"
+                                            (click)="setReservationToDelete(reservation)"
                                             ><i class="far fa-trash-alt me-2"></i>Delete</a
                                             >
                                           </li>
-                                        <li>
-                                          <a
+                                          <li>
+                                            <a
                                             class="dropdown-item"
                                             href="javascript:void(0);"
                                             data-bs-toggle="modal"
@@ -102,84 +113,37 @@
                                       </div>
                                     </div>
                                   </td>
-                          </tr>
+                                </tr>
+                              }
                       </tbody>
                   </table>
               </div>
+            </div>
+            <app-custom-pagination></app-custom-pagination>
           </div>
       </div>
   </div>
 </div>
 
-
-<div class="modal custom-modal fade" id="add_payment" role="dialog">
+<div class="modal custom-modal fade" id="delete_modal" role="dialog">
   <div class="modal-dialog modal-dialog-centered modal-md">
     <div class="modal-content">
-      <div class="modal-header border-0 pb-0">
-        <div class="form-header modal-header-title text-start mb-0">
-          <h4 class="mb-0">Add Payment</h4>
-        </div>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-
-        </button>
-      </div>
       <div class="modal-body">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="card-body">
-              <div class="form-groups-item border-0 pb-0">
-                <div class="row">
-                  <div class="col-lg-8 col-md-6 col-sm-12">
-                    <div class="input-block mb-3">
-                      <label for="Country">Reservation Name</label>
-                      <input [disabled]="true" type="text" class="form-control" placeholder="Enter Menu Name" [(ngModel)]="reservationToAddPayment.reservation_name">
-                    </div>
-                  </div>
-                  <div class="col-lg-4 col-md-6 col-sm-12">
-                    <div class="input-block mb-3">
-                      <label for="Menu">Status</label>
-                      <input [disabled]="true" type="text" class="form-control" placeholder="Enter Status" [(ngModel)]="reservationToAddPayment.status">
-                    </div>
-                  </div>                  
-                  <div class="col-lg-12 col-md-6 col-sm-12">
-                    <div class="input-block mb-3">
-                      <mat-form-field class="w-100">
-                        <mat-label>Select Account <span class="text-danger">*</span></mat-label>
-                        <input type="text"
-                               placeholder="Select Menu Items"
-                               aria-label="MenuItem"
-                               matInput
-                               [formControl]="control" 
-                               [matAutocomplete]="auto">
-                        <mat-autocomplete #auto="matAutocomplete">
-                          @for (option of filteredOptions | async; track option) {
-                            <mat-option [value]="option" (onSelectionChange)="selectAccount(option)"
-                            >{{option}}</mat-option>
-                          }
-                        </mat-autocomplete>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <div class="col-lg-12 col-md-6 col-sm-12">
-                    <div class="input-block mb-3">
-                      <label for="Country">Amount To Add <span class="text-danger">*</span> </label>
-                      <input type="number" class="form-control" placeholder="Enter Amount to Add" [(ngModel)]="reservationToAddPayment.paymentToAdd">
-                    </div>
-                  </div>
-                </div>
-              </div>
+        <div class="form-header">
+          <h3>Delete Reservation</h3>
+          <p>Are you sure want to delete?</p>
+        </div>
+        <div class="modal-btn delete-action">
+          <div class="row">
+            <div class="col-6">
+              <button data-bs-dismiss="modal" class="w-100 btn btn-primary paid-continue-btn" (click)="deleteReservation()">Delete</button>
+            </div>
+            <div class="col-6">
+              <button type="submit" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-continue-btn">Cancel</button>
             </div>
           </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</a>
-        <button href="javascript:void(0);" data-bs-dismiss="modal" 
-            [disabled]="!reservationToAddPayment.paymentToAdd || !reservationToAddPayment.account"
-            class="btn btn-primary paid-continue-btn"
-            (click)="addAmount()">Add Amount</button>
-      </div>
     </div>
   </div>
 </div>
-<!-- /Edit Items Modal -->

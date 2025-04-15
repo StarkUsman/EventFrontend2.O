@@ -148,7 +148,7 @@ export class SideMenuFiveComponent {
         else if( menuValue &&   menuValue === resMenu.menuValue &&  menuValue !== 'Customers'){
           resMenu.showSubRoute = !resMenu.showSubRoute;
         }
-        else if( menuValue &&   menuValue === resMenu.menuValue &&  menuValue !== 'Products / Services'){
+        else if( menuValue &&   menuValue === resMenu.menuValue &&  menuValue !== 'Products'){
           resMenu.showSubRoute = !resMenu.showSubRoute;
         }
         else {

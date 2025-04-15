@@ -284,12 +284,15 @@ export class AddEstimatesComponent implements OnInit {
   }
 
   saveReservation() {
+    this.reservation.date = new Date(); 
     this.reservation.add_service_ids = this.additionalServicesSelected.map(service => service.additional_service_id);
     this.reservation.menu_items_ids = this.menuItems.filter(item => item.selected).map(item => item.menu_item_id);
     this.reservation.total_menu_price = this.reservation.selectedMenu.finalPrice;
     this.reservation.grandTotal = this.reservation.selectedMenu.finalPrice + this.reservation.additionalPrice;
     this.reservation.total_price = this.getGrandTotal();
     this.reservation.SLOT = this.slotSelected;
+    this.reservation.status = 'PENDING'
+    this.reservation.total_remaining = parseFloat(this.reservation.grandTotal) - parseFloat(this.reservation.discount)
     
     this.data.addReservation(this.reservation).subscribe((res: any) => {
       console.log('Reservation saved:', res);

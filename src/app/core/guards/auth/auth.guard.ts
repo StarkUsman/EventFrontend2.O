@@ -15,7 +15,7 @@ export class AuthGuard  {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    if ((localStorage.getItem('authenticated')) && (sessionStorage.getItem('authenticated'))) {
+    if (localStorage.getItem('authenticated')) {
       return true;
     } else {
       this.router.navigate([routes.login]);

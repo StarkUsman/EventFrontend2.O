@@ -210,8 +210,16 @@ export class CountriesComponent implements OnInit {
   addMenu(){
     let menu_item_ids = this.menuItemsSelected.map((item: any) => item.menu_item_id);
     this.newMenu.menu_item_ids = menu_item_ids;
-    this.data.addMenu(this.newMenu).subscribe((res: any) => {});
-    window.location.reload();
+    this.data.addMenu(this.newMenu).subscribe((res: any) => {
+      this.newMenu = {};
+      this.menuItemsSelected = [];
+
+      this.pagination.tablePageSize.subscribe((res: tablePageSize) => {
+        this.getTableData({ skip: res.skip, limit: res.limit });
+        this.pageSize = res.pageSize;
+      });
+    });
+    // window.location.reload();
   }
 
   queryString: string = '';

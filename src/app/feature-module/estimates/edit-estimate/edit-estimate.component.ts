@@ -284,12 +284,14 @@ export class EditEstimateComponent implements OnInit {
     if (this.reservationToEdit.status === "DRAFTED"){
       this.reservationToEdit.status = "PENDING";
     }
+    this.reservationToEdit.date = new Date(); 
     this.reservationToEdit.add_service_ids = this.additionalServicesSelected.map(service => service.additional_service_id);
     this.reservationToEdit.menu_items_ids = this.menuItems.filter(item => item.selected).map(item => item.menu_item_id);
     this.reservationToEdit.total_menu_price = this.reservationToEdit.selectedMenu.finalPrice;
     this.reservationToEdit.grandTotal = this.reservationToEdit.selectedMenu.finalPrice + this.reservationToEdit.additionalPrice;
     this.reservationToEdit.total_price = this.getGrandTotal();
     this.reservationToEdit.SLOT = this.slotSelected;
+    this.reservationToEdit.total_remaining = parseFloat(this.reservationToEdit.grandTotal) - parseFloat(this.reservationToEdit.discount);
     
     this.data.updateReservation(this.reservationToEdit).subscribe((res: any) => {
       this.router.navigate([routes.reservationList]);

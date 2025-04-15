@@ -1,10 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { routes, ToasterService, DataService } from 'src/app/core/core.index';
+import { routes, DataService } from 'src/app/core/core.index';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
+import { Sort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import {
+  apiResultFormat,
+  pageSelection,
+  vendor,
+} from 'src/app/core/models/models';
+import { PaginationService, tablePageSize } from 'src/app/shared/sharedIndex';
 @Component({
   selector: 'app-view-estimate',
   templateUrl: './view-estimate.component.html',
@@ -14,20 +22,57 @@ export class ViewEstimateComponent  implements OnInit {
   control = new FormControl();
   public routes = routes;
   backendUrl = 'http://localhost:3000';
-  reservations: any[] = [];
   menus: any[] = [];
   additionalServices: any[] = [];
   filteredOptions!: Observable<string[]>;
   accounts: any = [];
   allAccounts: any = [];
   unfilteredData: any = [];
+  public Toggledata = false;
+  public reservations: Array<any> = [];
+  public pageSize = 10;
+  public serialNumberArray: Array<number> = [];
+  public totalData = 0;
+  showFilter = false;
+  dataSource!: MatTableDataSource<any>;
+  reservationToDelete: any = {};
 
-  constructor(private data: DataService, private http: HttpClient, private router: Router) {}
+  constructor(private data: DataService, private http: HttpClient, private router: Router, private pagination: PaginationService) {
+    this.pagination.tablePageSize.subscribe((res: tablePageSize) => {
+      if (this.router.url == this.routes.reservationList) {
+        this.getTableData({ skip: res.skip, limit: res.limit });
+        this.pageSize = res.pageSize;
+      }
+    });
+  }
+
+  private getTableData(pageOption: pageSelection): void {
+    this.data.getReservations().subscribe((apiRes: apiResultFormat) => {
+      console.log(apiRes);
+      this.reservations = [];
+      this.serialNumberArray = [];
+      this.totalData = apiRes.totalData;
+      apiRes.data.map((res: any, index: number) => {
+        const serialNumber = index + 1;
+        if (index >= pageOption.skip && serialNumber <= pageOption.limit) {
+          res.sNo = serialNumber;
+          this.reservations.push(res);
+          this.serialNumberArray.push(serialNumber);
+        }
+      });
+      this.unfilteredData = structuredClone(this.reservations);
+      this.dataSource = new MatTableDataSource<any>(this.reservations);
+      this.pagination.calculatePageSize.next({
+        totalData: this.totalData,
+        pageSize: this.pageSize,
+        tableData: this.reservations,
+        tableData2: [],
+        serialNumberArray: this.serialNumberArray,
+      });
+    });
+  }
 
   ngOnInit() {
-    this.loadReservations();
-    this.loadMenus();
-    this.loadAdditionalServices();
     this.data.getAssetAccounts().subscribe((res: any) => {
       this.allAccounts = res.data;
       for (let i = 0; i < res.data.length; i++) {
@@ -47,57 +92,40 @@ export class ViewEstimateComponent  implements OnInit {
     return this.accounts.filter((option: any) => option.toLowerCase().includes(filterValue));
   }
 
-  loadReservations() {
-    this.http.get<any[]>(`${this.backendUrl}/bookings`).subscribe(
-      (data) => {
-        this.reservations = data;
-        this.unfilteredData = structuredClone(this.reservations);
-      },
-      (error) => console.error('Error fetching reservations:', error)
-    );
-  }
+  public sortData(sort: Sort) {
+    const data = this.reservations.slice();
 
-  loadMenus() {
-    this.http.get<{ data: any[] }>(`${this.backendUrl}/menus`).subscribe(
-      (data) => (this.menus = data.data),
-      (error) => console.error('Error fetching menus:', error)
-    );
-  }
-
-  loadAdditionalServices() {
-    this.http.get<any[]>(`${this.backendUrl}/additional-services`).subscribe(
-      (data) => (this.additionalServices = data),
-      (error) => console.error('Error fetching additional services:', error)
-    );
+    if (!sort.active || sort.direction === '') {
+      this.reservations = data;
+    } else {
+      this.reservations = data.sort((a, b) => {
+        const aValue = (a as never)[sort.active];
+        const bValue = (b as never)[sort.active];
+        return (aValue < bValue ? -1 : 1) * (sort.direction === 'asc' ? 1 : -1);
+      });
+    }
   }
 
   selectAccount(account: any) {
     this.reservationToAddPayment.account = this.allAccounts.find((acc: any) => acc.name === account);
   }
 
-  getAdditionalServices(serviceIds: string) {
-    if (!serviceIds) return 'None';
-    const ids = serviceIds.split(',').map(id => parseInt(id.trim(), 10));
-    return this.additionalServices
-      .filter(service => ids.includes(service.additional_service_id))
-      .map(service => service.additional_service_name)
-      .join(', ');
-  }
-
   addReservation() {
     this.router.navigate(['/reservations/add-reservation']);
   }
 
-  deleteReservation(bookingId: number) {
-    if (confirm('Are you sure you want to delete this reservation?')) {
-      this.http.delete(`${this.backendUrl}/bookings/${bookingId}`).subscribe(
-        () => {
-          alert('Reservation deleted successfully!');
-          this.loadReservations();
-        },
-        (error) => console.error('Error deleting reservation:', error)
-      );
-    }
+  setReservationToDelete(reservation: any) {
+    this.reservationToDelete = reservation;
+  }
+
+  deleteReservation() {
+    this.data.deleteReservation(this.reservationToDelete.booking_id).subscribe((res: any) => {
+      this.pagination.tablePageSize.subscribe((res: tablePageSize) => {
+        this.getTableData({ skip: res.skip, limit: res.limit });
+        this.pageSize = res.pageSize;
+        this.reservationToDelete = {};
+      });
+    });
   }
 
   reservationToAddPayment: any = {};
@@ -114,8 +142,11 @@ export class ViewEstimateComponent  implements OnInit {
     }
 
     this.data.addReservationPayment(requestBody).subscribe((res: any) => {
-      this.loadReservations();
-      this.reservationToAddPayment = {};
+      this.pagination.tablePageSize.subscribe((res: tablePageSize) => {
+        this.getTableData({ skip: res.skip, limit: res.limit });
+        this.pageSize = res.pageSize;
+        this.reservationToAddPayment = {};
+      });
     });
   }
 

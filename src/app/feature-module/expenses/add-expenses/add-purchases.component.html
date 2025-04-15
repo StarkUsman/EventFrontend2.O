@@ -47,10 +47,10 @@
                       <div class="col-lg-12 col-md-6 col-sm-12">
                         <div class="input-block mb-3">
                           <mat-form-field class="w-100">
-                            <mat-label>Products</mat-label>
+                            <mat-label>Products <span class="text-danger">*</span></mat-label>
                             <input type="text"
-                                   placeholder="Select Menu Items"
-                                   aria-label="MenuItem"
+                                   placeholder="Select Products"
+                                   aria-label="Product"
                                    matInput
                                    [formControl]="control"
                                    [matAutocomplete]="auto">
@@ -76,7 +76,7 @@
                             >
                             <thead class="thead-light">
                               <tr>
-                                <th mat-sort-header="product">Product / Service</th>
+                                <th mat-sort-header="product">Product</th>
                                 <th mat-sort-header="quantity">Quantity</th>
                                 <th mat-sort-header="unit">Unit</th>
                                 <th mat-sort-header="rate">Rate</th>
@@ -178,8 +178,8 @@
                             </div>
                           </div>
                           <div class="text-end">
-                            <button type="reset" class="btn btn-primary me-2">Cancel</button>
-                            <button [routerLink]="routes.expensesList" type="submit" class="btn btn-primary" (click)="addPurchase()">Save</button>
+                            <button [routerLink]="routes.expensesList" type="reset" class="btn btn-primary me-2">Cancel</button>
+                            <button [disabled]="selectedProducts.length === 0" [routerLink]="routes.expensesList" type="submit" class="btn btn-primary" (click)="addPurchase()">Save</button>
                           </div>
                         </div>
                       </div>
@@ -299,52 +299,3 @@
                               </div>
                             </div>
                             <!-- /Delete Items Modal -->
-
-                            <!-- Add Bank Details Modal -->
-                            <div class="modal custom-modal fade" id="bank_details" role="dialog">
-                              <div class="modal-dialog modal-dialog-centered modal-md">
-                                <div class="modal-content">
-                                  <div class="modal-header border-0 pb-0">
-                                    <div class="form-header modal-header-title text-start mb-0">
-                                      <h4 class="mb-0">Add Bank Details</h4>
-                                    </div>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-
-                                    </button>
-                                  </div>
-                                  <div class="modal-body">
-                                    <div class="row">
-                                      <div class="col-lg-12 col-md-12">
-                                        <div class="input-block mb-3">
-                                          <label for="Bank">Bank Name <span class="text-danger">*</span></label>
-                                          <input type="text" class="form-control" placeholder="Enter Bank Name">
-                                        </div>
-                                      </div>
-                                      <div class="col-lg-12 col-md-12">
-                                        <div class="input-block mb-3">
-                                          <label for=">Account">Account Number <span class="text-danger">*</span></label>
-                                          <input type="number" class="form-control" placeholder="Enter Account Number">
-                                        </div>
-                                      </div>
-                                      <div class="col-lg-12 col-md-12">
-                                        <div class="input-block mb-3">
-                                          <label for="Branch">Branch Name <span class="text-danger">*</span></label>
-                                          <input type="text" class="form-control" placeholder="Enter Branch Name">
-                                        </div>
-                                      </div>
-                                      <div class="col-lg-12 col-md-12">
-                                        <div class="input-block mb-0">
-                                          <label for="IFSC">IFSC Code <span class="text-danger">*</span></label>
-                                          <input type="number" class="form-control" placeholder="Enter IFSC COde">
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="modal-footer">
-                                    <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Back</a>
-                                    <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn">Save</a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <!-- /Add Bank Details Modal -->

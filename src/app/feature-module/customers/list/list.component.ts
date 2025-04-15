@@ -117,6 +117,9 @@ export class ListComponent implements OnInit {
 
   setVendorToEdit(sNo: number) {
     this.vendorToEdit = this.tableData.find((vendor) => vendor.sNo === sNo);
+    this.vendorToEdit.category = this.categories.find(
+      (category: any) => category.category === this.vendorToEdit.category.category
+    );
   }
 
   nameError = false;
