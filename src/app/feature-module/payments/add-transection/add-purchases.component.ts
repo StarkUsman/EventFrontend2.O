@@ -7,7 +7,9 @@ import {
   editcreditnotes,
   pageSelection,
 } from 'src/app/core/models/models';
-
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 interface Food {
   value: string;
   viewValue: string;
@@ -51,6 +53,12 @@ export class AddPurchasesComponent implements OnInit {
   allAccounts: any = [];
   newTransaction: any = {};
   trans_id: any = null;
+  categories: any = [];
+  creditControl = new FormControl();
+  debitControl = new FormControl();
+
+  filteredCreditOptions!: Observable<string[]>;
+  filteredDebitOptions!: Observable<string[]>;
 
   constructor(private data: DataService) {
     this.newTransaction.date = this.purchaseDateValue;
@@ -59,6 +67,20 @@ export class AddPurchasesComponent implements OnInit {
   ngOnInit(): void {
     this.data.getVendors().subscribe((res) => {
       this.allAccounts = res.data;
+
+      for (let i = 0; i < res.data.length; i++) {
+        this.categories.push(res.data[i].name);
+      }
+
+      this.filteredCreditOptions = this.creditControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value || ''))
+      );
+
+      this.filteredDebitOptions = this.debitControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value || ''))
+      );
     });
     
     this.data.getVouchers().subscribe((res) => {
@@ -70,7 +92,6 @@ export class AddPurchasesComponent implements OnInit {
     });
 
     this.data.getTransaction().subscribe((res) => {
-      // set newTransaction.purch_id to last purch_id + 1 and make it 6 digit
       this.trans_id = res.data[0]? (res.data[0].id + 1) : 1;
       let purch_id = res.data[0] ? res.data[0].trans_id : 100;
       purch_id = parseInt(purch_id) + 1;
@@ -80,6 +101,12 @@ export class AddPurchasesComponent implements OnInit {
       }
       this.newTransaction.trans_id = purch_id;
     });
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.categories.filter((option: any) => option.toLowerCase().includes(filterValue));
   }
 
   files: File[] = [];
@@ -109,6 +136,20 @@ export class AddPurchasesComponent implements OnInit {
     this.remainingAmount = this.debitBalance - this.newTransaction.amount;
   }
 
+  onDebitAccountSelected(event: any){
+    this.newTransaction.debitAccount = this.allAccounts.find((account: any) => account.name === event);
+    this.copyAmount(this.newTransaction.debitAccount)
+    console.log("############################");
+    console.log(event);
+    console.log("############################")
+  }
+
+  onCreditAccountSelected(event: any){
+    this.newTransaction.creditAccount = this.allAccounts.find((account: any) => account.name === event);
+    console.log("############################");
+    console.log(event);
+    console.log("############################")
+  }
 
   // ledger function
   addLedger(purch_id: any, vendor_id: any, amountDebit: any) {

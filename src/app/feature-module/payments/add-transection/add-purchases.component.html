@@ -63,19 +63,25 @@
                 <!-- ############################################################ -->
                 <div class="col-lg-4 col-md-6 col-sm-12">
                   <div class="input-block mb-3">
-                    <label htmlFor="label">Credit Account <span class="text-danger">*</span></label>
-                        <mat-select
-                          [(ngModel)]="newTransaction.creditAccount"
-                          [ngModelOptions]="{ standalone: true }"
-                          class="select custom-mat-select"
-                          >
-                          <mat-option *ngFor="let account of allAccounts" [value]="account">
-                            {{ account.name }}
-                          </mat-option>
-                        </mat-select>
-                        <div class="mt-1" *ngIf="newTransaction.creditAccount" [ngClass]="{'text-danger': newTransaction.creditAccount.balanceNumber < 0, 'text-success-light': newTransaction.creditAccount.balanceNumber >= 0}">
-                          Current Balance : {{ newTransaction.creditAccount.balance }}
-                        </div>
+                      <mat-form-field class="w-100">
+                        <mat-label>Credit Account <span class="text-danger">*</span></mat-label>
+                        <input type="text"
+                          placeholder="Select Credit Account"
+                          aria-label="Credit Account"
+                          matInput
+                          [(ngModel)]="newTransaction.creditAccountName"
+                          [formControl]="creditControl"
+                          [matAutocomplete]="creditAuto">
+                        <mat-autocomplete #creditAuto="matAutocomplete" (optionSelected)="onCreditAccountSelected($event.option.value)">
+                          @for (option of filteredCreditOptions | async; track option) {
+                            <mat-option [value]="option"
+                            >{{option}}</mat-option>
+                          }
+                        </mat-autocomplete>
+                      </mat-form-field>
+                      <div class="mt-1" *ngIf="newTransaction.creditAccount" [ngClass]="{'text-danger': newTransaction.creditAccount.balanceNumber < 0, 'text-success-light': newTransaction.creditAccount.balanceNumber >= 0}">
+                        Current Balance : {{ newTransaction.creditAccount.balance }}
+                      </div>
                   </div>
                 </div>
                 <div class="col-lg-1 col-md-6 col-sm-12">
@@ -85,19 +91,25 @@
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-12">
                   <div class="input-block mb-3">
-                    <div class="spaceBetween"><label htmlFor="label">Debit Account <span class="text-danger">*</span></label><span *ngIf="newTransaction.amount" [ngClass]="{'text-danger': remainingAmount < 0, 'text-success-light': remainingAmount >= 0}"
+                    <div class="spaceBetween"><span *ngIf="newTransaction.amount" [ngClass]="{'text-danger': remainingAmount < 0, 'text-success-light': remainingAmount >= 0}"
                       >Remaining Balance: PKR{{remainingAmount}}</span></div>
-                        <mat-select
-                          [(ngModel)]="newTransaction.debitAccount"
-                          [ngModelOptions]="{ standalone: true }"
-                          class="select custom-mat-select"
-                          (selectionChange)="copyAmount(newTransaction.debitAccount)"
-                          >
-                          <mat-option *ngFor="let account of allAccounts" [value]="account">
-                            {{ account.name }}
-                          </mat-option>
-                        </mat-select>
-                        <div class="mt-1" *ngIf="newTransaction.debitAccount" [ngClass]="{'text-danger': newTransaction.debitAccount.balanceNumber < 0, 'text-success-light': newTransaction.debitAccount.balanceNumber >= 0}">
+                      <mat-form-field class="w-100">
+                        <mat-label>Debit Account <span class="text-danger">*</span></mat-label>
+                        <input type="text"
+                          placeholder="Select Debit Account"
+                          aria-label="Debit Account"
+                          matInput
+                          [(ngModel)]="newTransaction.debitAccountName"
+                          [formControl]="debitControl"
+                          [matAutocomplete]="debitAuto">
+                        <mat-autocomplete #debitAuto="matAutocomplete" (optionSelected)="onDebitAccountSelected($event.option.value)">
+                          @for (option of filteredDebitOptions | async; track option) {
+                            <mat-option [value]="option"
+                            >{{option}}</mat-option>
+                          }
+                        </mat-autocomplete>
+                      </mat-form-field>
+                        <div *ngIf="newTransaction.debitAccount" [ngClass]="{'text-danger': newTransaction.debitAccount.balanceNumber < 0, 'text-success-light': newTransaction.debitAccount.balanceNumber >= 0}">
                           Current Balance : {{ newTransaction.debitAccount.balance }}
                         </div>
                   </div>

@@ -11,45 +11,15 @@ import jsonDoc from './doc'
   styleUrls: ['./add-products.component.scss']
 })
 export class AddProductsComponent implements OnDestroy,OnInit {
-  editordoc = jsonDoc;
   files: File[] = [];
   public routes = routes;
-  nation = 'units';
-  Discount='select Discount'
-  Tax='tax'
   newProduct: any = {};
   units: any = [];
   categories: any = [];
+  products: any = [];
 
   constructor(private data: DataService) {}
  
-  config: AngularEditorConfig = {
-    editable: true,
-    spellcheck: true,
-    sanitize: false,
-    height: '15rem',
-    minHeight: '5rem',
-    placeholder: 'Enter text here...',
-    translate: 'no',
-    defaultParagraphSeparator: 'p',
-    defaultFontName: 'Arial',
-    toolbarHiddenButtons: [['bold']],
-    customClasses: [
-      {
-        name: 'quote',
-        class: 'quote',
-      },
-      {
-        name: 'redText',
-        class: 'redText',
-      },
-      {
-        name: 'titleText',
-        class: 'titleText',
-        tag: 'h1',
-      },
-    ],
-  };
   onSelect(event: { addedFiles: File[] }) {
     const file = event.addedFiles[0]; 
     this.files.push(...event.addedFiles);
@@ -63,30 +33,18 @@ export class AddProductsComponent implements OnDestroy,OnInit {
   onRemove(event:File) {
    this.files.splice(this.files.indexOf(event), 1);
   }
-  editor!: Editor;
-  toolbar: Toolbar = [
-    ['bold', 'italic'],
-    ['underline', 'strike'],
-    ['code', 'blockquote'],
-    
-    [{ heading: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] }],
-    ['link', 'image'],
-    ['text_color', 'background_color'],
-    ['align_left', 'align_center', 'align_right', 'align_justify'],
-  ];
-  form = new FormGroup({
-    editorContent: new FormControl(
-      { value: jsonDoc, disabled: false },
-      Validators.required()
-    ),
-  });
   ngOnDestroy(): void {
-    this.editor.destroy();
+    // this.editor.destroy();
   }
  
 
   ngOnInit(): void {
-    this.editor = new Editor();
+    this.data.getProductlist().subscribe((res) => {
+      this.products = res.data;
+      this.newProduct.code = res.data[0]?.code ? parseFloat(res.data[0].code) + 1 : 101;
+      this.newProduct.code = String(this.newProduct.code).padStart(6, '0');
+    });
+
     this.data.getUnits().subscribe((res) => {
       this.units = res.data;
     });
