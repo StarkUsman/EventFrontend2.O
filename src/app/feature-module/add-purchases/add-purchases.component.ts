@@ -276,6 +276,19 @@ export class AddPurchasesComponent implements OnInit {
     this.data.addLedger(ledger).subscribe((res) => { });
   }
 
+  addInventoryLedger(newPurchase: any, product: any) {
+
+    let inventoryLedger = {
+      name: "PRV",
+      user: JSON.parse(localStorage.getItem('user') || '{}'),
+      purchasePrice: parseFloat(product.purchasePrice.replace(/[^0-9.]/g, '')),
+      voucher: newPurchase.purch_id,
+      product_id: product.id,
+      stockOut: product.quantity,
+      stockIn: 0,
+    }
+    this.data.addInventoryLedger(inventoryLedger).subscribe((res) => { });
+  }
 
   addPurchase() {
     this.newPurchase.purch_id = parseInt(this.newPurchase.purch_id);
@@ -291,9 +304,13 @@ export class AddPurchasesComponent implements OnInit {
     this.newPurchase.status = "Pending";
     this.newPurchase.paymentmode = "cash";
     // make api call for each product selectedProducts
-    this.selectedProducts.forEach((p: any) => {
-      this.data.removePurchaseProduct(p).subscribe((res) => {
-      });
+    // this.selectedProducts.forEach((p: any) => {
+    //   this.data.removePurchaseProduct(p).subscribe((res) => {
+    //   });
+    // });
+
+    this.newPurchase.products.forEach((p: any) => {
+      this.addInventoryLedger(this.newPurchase, p);
     });
 
     this.addLedger(this.newPurchase.purch_id, this.newPurchase.vendor.id, this.newPurchase.total_amount)

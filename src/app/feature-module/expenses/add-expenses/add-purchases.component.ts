@@ -295,10 +295,10 @@ export class AddPurchasesComponent implements OnInit {
     this.newPurchase.status = "Pending";
     this.newPurchase.paymentmode = "cash";
     // make api call for each product selectedProducts
-    this.selectedProducts.forEach((p: any) => {
-      this.data.removePurchaseProduct(p).subscribe((res) => {
-      });
-    });
+    // this.selectedProducts.forEach((p: any) => {
+    //   this.data.removePurchaseProduct(p).subscribe((res) => {
+    //   });
+    // });
 
     this.newPurchase.products.forEach((p: any) => {
       this.addInventoryLedger(this.newPurchase, p);

@@ -60,6 +60,7 @@ export class AddPurchasesComponent implements OnInit {
   product_to_remove: any = {};
   filteredOptions!: Observable<string[]>;
   products: any = [];
+  newProduct: any = {};
 
   constructor(private data: DataService) {
     this.newPurchase.purchase_date = this.purchaseDateValue;
@@ -208,6 +209,26 @@ export class AddPurchasesComponent implements OnInit {
     this.files.splice(this.files.indexOf(event), 1);
   }
 
+  initNewProduct(){
+    this.data.getProductlist().subscribe((res) => {
+      this.newProduct.code = res.data[0]?.code ? parseFloat(res.data[0].code) + 1 : 101;
+      this.newProduct.code = String(this.newProduct.code).padStart(6, '0');
+    });
+  }
+
+  addProduct() {
+    this.data.addProduct(this.newProduct).subscribe((res: any) => {
+      res.purchasePrice = res.purchasePrice.toFixed(2),
+      this.newProduct = {};
+      this.products.push(res.item);
+      this.allProducts.push(res);
+      this.filteredOptions = this.control.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value || '')),
+        );
+    });
+  }
+
   onProductSelect(productName: any) {
     const product = this.allProducts.find((p: any) => p.item === productName);
     if (product) {
@@ -305,10 +326,10 @@ export class AddPurchasesComponent implements OnInit {
     this.newPurchase.status = "Pending";
     this.newPurchase.paymentmode = "cash";
     // make api call for each product selectedProducts
-    this.selectedProducts.forEach((p: any) => {
-      this.data.addPurchaseProduct(p).subscribe((res) => {
-      });
-    });
+    // this.selectedProducts.forEach((p: any) => {
+    //   this.data.addPurchaseProduct(p).subscribe((res) => {
+    //   });
+    // });
 
     this.addLedger(this.newPurchase.purch_id, this.newPurchase.vendor.id, this.newPurchase.total_amount);
     
