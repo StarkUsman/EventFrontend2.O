@@ -192,7 +192,7 @@
                           </div>
                           <div class="text-end">
                             <button [routerLink]="routes.transactionList" type="reset" class="btn btn-primary me-2">Cancel</button>
-                            <button [disabled]="(!newTransaction.voucher || !newTransaction.creditAccount || !newTransaction.debitAccount || !newTransaction.amount ||(newTransaction.voucher === 'BPV' && !newTransaction.checkNumber))" [routerLink]="routes.transactionDetails" [queryParams]="{ id: trans_id }" type="submit" class="btn btn-primary" (click)="addTransaction()">Save</button>
+                            <button [disabled]="(!newTransaction.voucher || !newTransaction.creditAccount || !newTransaction.debitAccount || !newTransaction.amount ||(newTransaction.voucher === 'BPV' && !newTransaction.checkNumber))" type="submit" class="btn btn-primary" (click)="addTransaction()">Save</button>
                           </div>
                         </div>
                       </div>

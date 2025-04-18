@@ -50,12 +50,15 @@ export class AddProductsComponent implements OnDestroy,OnInit {
     });
     this.data.getCategory().subscribe((res) => {
       this.categories = res.data;
+      this.newProduct.category = res.data[0]?.id;
     });
   }
 
   addProduct() {
     this.data.addProduct(this.newProduct).subscribe((res) => {
+      let nextProcuctCode = parseFloat(this.newProduct.code) + 1;
       this.newProduct = {};
+      this.newProduct.code = String(nextProcuctCode).padStart(6, '0');
     });
   }
 }

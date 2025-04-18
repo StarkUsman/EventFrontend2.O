@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -60,7 +61,7 @@ export class AddPurchasesComponent implements OnInit {
   filteredCreditOptions!: Observable<string[]>;
   filteredDebitOptions!: Observable<string[]>;
 
-  constructor(private data: DataService) {
+  constructor(private router: Router, private data: DataService) {
     this.newTransaction.date = this.purchaseDateValue;
   }
 
@@ -166,8 +167,12 @@ export class AddPurchasesComponent implements OnInit {
 
 
   addTransaction() {
-    this.data.addTransaction(this.newTransaction).subscribe((res) => {
+    this.data.addTransaction(this.newTransaction).subscribe((res: any) => {
       this.newTransaction = {};
+      const transId = res.id;
+      this.router.navigate([routes.transactionDetails], {
+        queryParams: { id: transId }
+      });
     });
   }
 }

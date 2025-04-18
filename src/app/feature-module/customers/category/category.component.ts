@@ -17,7 +17,7 @@ import {map, startWith} from 'rxjs/operators';
 export class CategoryComponent implements OnInit {
   control = new FormControl();
   public routes = routes;
-  public category: Array<category> = [];
+  public category: Array<any> = [];
   isCollapsed = false;
   parent = 'none';
   parent2 = 'none';

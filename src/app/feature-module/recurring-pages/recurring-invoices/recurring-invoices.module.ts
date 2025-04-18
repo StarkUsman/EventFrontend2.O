@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RecurringInvoicesRoutingModule } from './recurring-invoices-routing.module';
 import { RecurringInvoicesComponent } from './recurring-invoices.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 
@@ -15,7 +16,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
   imports: [
     CommonModule,
     RecurringInvoicesRoutingModule,
-    SharedModule
+    SharedModule,
+    MatAutocompleteModule
  
   ]
 })

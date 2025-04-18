@@ -244,7 +244,7 @@ const routes: Routes = [
       },
 
       {
-        path: 'recurring-pages',
+        path: 'salaries',
         loadChildren: () =>
           import('./recurring-pages/recurring-pages.module').then(
             (m) => m.RecurringPagesModule

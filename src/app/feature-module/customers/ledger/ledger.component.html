@@ -26,7 +26,7 @@
         </div>
         <div class="list-btn">
             <ul class="filter-list">
-                <li>
+                <!-- <li>
                     <div *ngIf="isBalanceNegative" class="closing-balance">
                         <span class="d-flex align-items-center text-danger-light"><i
                                 class="fa fa-refresh me-2 text-danger-light"></i>Closing Balance: -PKR{{closingBalanceAmount}}</span>
@@ -35,8 +35,8 @@
                         <span class="d-flex align-items-center bg-success-light"><i
                                 class="fa fa-refresh me-2 text-success-light"></i>Closing Balance: PKR{{closingBalanceAmount}}</span>
                     </div>
-                </li>
-                <li>
+                </li> -->
+                <!-- <li>
                     <div class="dropdown dropdown-action" matTooltip="Download">
                         <a href="javascript:void(0);" class="btn-filters" data-bs-toggle="dropdown" aria-expanded="false"><span><i
                                     class="feather icon-download"></i></span></a>
@@ -53,7 +53,7 @@
                             </ul>
                         </div>
                     </div>
-                </li>
+                </li> -->
                 <li>
                     <a class="btn-filters" href="javascript:void(0);" matTooltip="Print"><span><i
                                 class="feather icon-printer"></i></span> </a>
@@ -83,10 +83,11 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th>Name</th>
-                                    <th>Purchase Voucher #</th>
+                                    <th>Voucher #</th>
                                     <th>Created</th>
                                     <th>Credit</th>
                                     <th>Debit</th>
+                                    <th>Remaining Balance</th>
                                     <!-- <th>Closing Balance</th> -->
                                 </tr>
                             </thead>
@@ -100,15 +101,19 @@
                                         <td> {{data.createdAt}} </td>
                                         <td><span class="badge bg-success-light">{{data.amountCredit > 0 ? data.amountCredit : ''}}</span></td>
                                         <td><span class="badge bg-danger-light">{{data.amountDebit > 0 ? data.amountDebit : ''}}</span></td>
+                                        <td><span class="badge " [ngClass]="(data.balance<0) ? 'text-danger-light' : 'bg-success-light'">
+                                            {{ data.balance }}
+                                          </span></td>
                                         <!-- <td>{{data.balance}}</td> -->
                                     </tr>
                                     }
                                 <tr>
-                                    <td colspan="3">
+                                    <td colspan="5">
                                         <p>Closing Balance as on {{closingBalanceDate}}</p>
                                     </td>
-                                    <td><span class="text-success fw-600">{{totalCredit()}}</span></td>
-                                    <td colspan="2"><span class="text-primary fw-600">{{totalDebit()}}</span></td>
+                                    <td><span class="badge" [ngClass]="isBalanceNegative ? 'text-danger-light' : 'bg-success-light'">
+                                         {{ isBalanceNegative ? '-PKR' : 'PKR' }}{{ closingBalanceAmount }}
+                                      </span></td>
                                 </tr>
                             </tbody>
                         </table>

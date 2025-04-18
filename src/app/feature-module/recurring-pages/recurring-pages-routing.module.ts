@@ -5,7 +5,7 @@ import { RecurringPagesComponent } from './recurring-pages.component';
 const routes: Routes = [
   { path: '', component: RecurringPagesComponent,children :[
     {
-      path: 'recurring-invoices',
+      path: 'list',
       loadChildren: () =>
         import('./recurring-invoices/recurring-invoices.module').then(
           (m) => m.RecurringInvoicesModule

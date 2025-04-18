@@ -785,6 +785,14 @@ export class routes {
   public static get ledger(): string {
     return this.baseUrl + '/ledger';
   }
+
+  public static get salaries(): string {
+    return this.baseUrl + '/salaries';
+  }
+  public static get salariesList(): string {
+    return this.salaries + '/list';
+  }
+
   public static get recurringpages(): string {
     return this.baseUrl + '/recurring-pages';
   }

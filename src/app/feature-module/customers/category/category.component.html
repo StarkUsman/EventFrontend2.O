@@ -135,7 +135,7 @@
                         <tr>
                           <th  mat-sort-header="id">#</th>
                           <th mat-sort-header="category">Category Name</th>
-                          <th mat-sort-header="total">Description</th>
+                          <th mat-sort-header="total">Subcategories</th>
                           <th>Action</th>
                         </tr>
                       </thead>
@@ -144,7 +144,11 @@
                           <tr>
                             <td>{{data.sNo}}</td>
                             <td><a href="" class="product-list-item-img"><span>{{data.category}}</span></a></td>
-                            <td>{{data.description}}</td>
+                            <td>
+                              {{ data.subcategory[0]?.subcategory }}
+                              <span *ngIf="data.subcategory[0]?.subcategory && data.subcategory[1]?.subcategory">, </span>
+                              {{ data.subcategory[1]?.subcategory }}
+                            </td>
                             <td class="d-flex align-items-center">
                               <a class=" btn-action-icon me-2"  href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#edit_category" (click)="setCategoryToEdit(data.id)"><i class="feather icon-edit"></i></a>
                               <a class=" btn-action-icon" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete_modal" (click)="setCategoryToDelete(data.id)"><i class="feather icon-trash-2"></i></a>

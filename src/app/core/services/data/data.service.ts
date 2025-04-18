@@ -372,6 +372,26 @@ export class DataService {
     return this.http.put(`http://localhost:3000/vouchers/${voucher.id}`, voucher);
   }
 
+  public getSalary() {
+    return this.http.get<apiResultFormat>('http://localhost:3000/salary').pipe(
+      map((res: apiResultFormat) => {
+        return res;
+      })
+    );
+  }
+
+  public addSalary(salary: any) {
+    return this.http.post('http://localhost:3000/salary', salary);
+  }
+  
+  public updateSalary(salary: any) {
+    return this.http.put(`http://localhost:3000/salary/${salary.id}`, salary);
+  }
+
+  public deleteSalary(id: number) {
+    return this.http.delete(`http://localhost:3000/salary/${id}`);
+  }
+
   public getAccountsCategory() {
     return this.http.get<apiResultFormat>('http://localhost:3000/acategory').pipe(
       map((res: apiResultFormat) => {
@@ -1620,6 +1640,15 @@ public sideBar: any[] = [
             base: routes.voucherList,
           },
         ],
+      },
+      {
+        menuValue: 'Salaries',
+        route: routes.salariesList,
+        hasSubRoute: false,
+        showSubRoute: false,
+        icon: 'clipboard',
+        base: 'salaries',
+        subMenus: [],
       },
     ],
   },

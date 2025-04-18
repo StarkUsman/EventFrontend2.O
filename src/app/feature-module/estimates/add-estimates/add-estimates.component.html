@@ -160,14 +160,14 @@
                   [ngClass]="{'btnSelected': isSlotSelected(slotType, day, Date[j], 'Morning'),
                     'slotDrafted': isSlotDrafted(slotType, day, Date[j], 'Morning'),
                     'slotBooked': isSlotBooked(slotType, day, Date[j], 'Morning')}"
-                  [disabled]= "isSlotBooked(slotType, day, Date[j], 'Morning') && (!isSlotDrafted(slotType, day, Date[j], 'Morning'))"
+                  [disabled]= "isSlotBooked(slotType, day, Date[j], 'Morning')"
                   (click)="markSlotSelected(slotType, day, Date[j], 'Morning')"
                   >Morning</button>
                   <button class="btn specialBtnEVN" 
                   [ngClass]="{'btnSelected': isSlotSelected(slotType, day, Date[j], 'Evening'),
                     'slotDrafted': isSlotDrafted(slotType, day, Date[j], 'Evening'),
                     'slotBooked': isSlotBooked(slotType, day, Date[j], 'Evening')}"
-                  [disabled]= "isSlotBooked(slotType, day, Date[j], 'Evening') && (!isSlotDrafted(slotType, day, Date[j], 'Evening'))"
+                  [disabled]= "isSlotBooked(slotType, day, Date[j], 'Evening')"
                   (click)="markSlotSelected(slotType, day, Date[j], 'Evening')"
                   >Evening</button>
                 </div>

@@ -45,6 +45,15 @@ export class ListComponent implements OnInit {
         this.pageSize = res.pageSize;
       }
     });
+    let user: any = localStorage.getItem('user');
+    if (user) {
+      user = JSON.parse(user);
+      if (user && user.role && user.role == 'admin') {
+        this.isAdminLoggedIn = 1;
+      } else {
+        this.isAdminLoggedIn = 0;
+      }
+    }
   }
 
   ngOnInit(): void {
