@@ -13,45 +13,10 @@ export class AuthService {
 
   constructor(private data: DataService, private router: Router, private sidebar: SideBarService) {}
 
-  public login(email: any, password: any): void {
-    console.log(email, password);
-
-    this.data.login(email, password).subscribe((res: any) => {
-      console.log("====================================");
-      console.log(res);
-      console.log("====================================");
-      console.log(res.status);
-      console.log("====================================");
-      if (res.status == 'Active' || res.status == 'active') {
-        this.checkAuth.next('true');
-        localStorage.setItem('authenticated', 'true');
-        localStorage.setItem('timeOut', Date());
-        localStorage.setItem('user', JSON.stringify(res));
-        localStorage.setItem('userId', res.id);
-        if (res.role == 'admin' || res.role == 'accounts') {
-          this.router.navigate([routes.dashboard]);
-        } else if (res.role == 'store') {
-          this.router.navigate([routes.vendorsList]);
-        } else {
-          this.router.navigate([routes.login]);
-        }
-        localStorage.setItem('layoutPosition', '1');
-      } else if (res.status == 'Inactive' || res.status == 'inactive') {
-        this.checkAuth.next('false');
-        alert('Your account is inactive, please contact admin');
-      } else {
-        console.log("going to show alert");
-        this.checkAuth.next('false');
-        alert('Invalid credentials');
-      }
-    });
-
-    // this.checkAuth.next('true');
-    // localStorage.setItem('authenticated', 'true');
-    // localStorage.setItem('timeOut', Date());
-    // this.router.navigate([routes.dashboard]);
-    // localStorage.setItem('layoutPosition', '1');
+  public login(email: any, password: any): any {
+    return this.data.login(email, password);
   }
+  
   public logout(): void {
     this.router.navigate([routes.login]);
     this.checkAuth.next("false");

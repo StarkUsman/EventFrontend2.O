@@ -92,7 +92,7 @@ export class CountriesComponent implements OnInit {
         serialNumberArray: this.serialNumberArray,
         tableData2: [],
       });
-      this.unfilteredData = structuredClone(this.countries);
+      this.unfilteredData = structuredClone(apiRes.data);
     });
   }
 

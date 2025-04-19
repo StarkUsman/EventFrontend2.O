@@ -53,7 +53,6 @@ export class AddPurchasesComponent implements OnInit {
   allVouchers: any = [];
   allAccounts: any = [];
   newTransaction: any = {};
-  trans_id: any = null;
   categories: any = [];
   creditControl = new FormControl();
   debitControl = new FormControl();
@@ -93,8 +92,7 @@ export class AddPurchasesComponent implements OnInit {
     });
 
     this.data.getTransaction().subscribe((res) => {
-      this.trans_id = res.data[0]? (res.data[0].id + 1) : 1;
-      let purch_id = res.data[0] ? res.data[0].trans_id : 100;
+      let purch_id = res.data[res.data.length-1] ? res.data[res.data.length-1].trans_id : 100;
       purch_id = parseInt(purch_id) + 1;
       purch_id = purch_id.toString();
       while (purch_id.length < 6) {
@@ -140,16 +138,10 @@ export class AddPurchasesComponent implements OnInit {
   onDebitAccountSelected(event: any){
     this.newTransaction.debitAccount = this.allAccounts.find((account: any) => account.name === event);
     this.copyAmount(this.newTransaction.debitAccount)
-    console.log("############################");
-    console.log(event);
-    console.log("############################")
   }
 
   onCreditAccountSelected(event: any){
     this.newTransaction.creditAccount = this.allAccounts.find((account: any) => account.name === event);
-    console.log("############################");
-    console.log(event);
-    console.log("############################")
   }
 
   // ledger function

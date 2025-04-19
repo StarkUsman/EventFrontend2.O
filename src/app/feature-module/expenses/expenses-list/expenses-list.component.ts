@@ -75,7 +75,7 @@ export class ExpensesListComponent  {
         serialNumberArray: this.serialNumberArray,
         tableData2: [],
       });
-      this.unfilteredData = structuredClone(this.purchase);
+      this.unfilteredData = structuredClone(apiRes.data);
     });
   }
 

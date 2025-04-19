@@ -12,7 +12,7 @@
 
             <form [formGroup]="form" (ngSubmit)="loginFormSubmit()">
               <div class="input-block mb-3">
-                <label htmlFor="label" class="form-control-label">Username</label>
+                <label htmlFor="label" class="form-control-label">Username <span class="text-danger">*</span></label>
                 <input id="label"
                   class="form-control"
                   type="text"
@@ -41,7 +41,7 @@
                   }
                 </div>
                 <div class="input-block mb-3">
-                  <label htmlFor="label" class="form-control-label">Password</label>
+                  <label htmlFor="label" class="form-control-label">Password <span class="text-danger">*</span></label>
                   <div class="pass-group">
                     <input id="label"
                       class="form-control"
@@ -80,7 +80,7 @@
                       }
                     </div>
                   </div>
-                  <div class="input-block mb-3">
+                  <!-- <div class="input-block mb-3">
                     <div class="row">
                       <div class="col-6">
                         <div class="custom-control custom-checkbox">
@@ -100,7 +100,7 @@
                               >
                             </div>
                           </div>
-                        </div>
+                        </div> -->
                         <button
                           [disabled]="form.invalid"
                           class="btn btn-lg btn-block btn-primary w-100"
@@ -108,14 +108,14 @@
                           >
                           Login
                         </button>
-                        <div class="login-or">
-                          <span class="or-line"></span>
+                        <div *ngIf="showLoginError" class="login-or">
+                          <span class="or-line text-danger">{{loginError}}</span>
                           <!-- <span class="span-or">orOR</span> -->
                         </div>
-                        <div class="text-center dont-have">
+                        <!-- <div class="text-center dont-have">
                           Don't have an account yet?
                           <a [routerLink]="routes.register">Register</a>
-                        </div>
+                        </div> -->
                       </form>
                     </div>
                   </div>

@@ -210,6 +210,26 @@ export class DataService {
       })
     );
   }
+  public getServices() {
+    return this.http.get<apiResultFormat>('http://localhost:3000/additional-services/formatted').pipe(
+      map((res: apiResultFormat) => {
+        return res;
+      })
+    );
+  }
+
+  public addService(service: any){
+    return this.http.post('http://localhost:3000/additional-services', service);
+  }
+
+  public updateService(service: any){
+    return this.http.put(`http://localhost:3000/additional-services/${service.additional_service_id}`, service);
+  }
+
+  public deleteService(id: number){
+    return this.http.delete(`http://localhost:3000/additional-services/${id}`);
+  }
+
   public getCities() {
     return this.http.get<apiResultFormat>('assets/JSON/city.json').pipe(
       map((res: apiResultFormat) => {
@@ -1366,6 +1386,11 @@ public sideBar: any[] = [
             menuValue: 'Menu-Items',
             route: routes.menuItems,
             base: routes.menuItems,
+          },
+          {
+            menuValue: 'Additional Services',
+            route: routes.additionalServices,
+            base: routes.additionalServices,
           },
         ],
       },

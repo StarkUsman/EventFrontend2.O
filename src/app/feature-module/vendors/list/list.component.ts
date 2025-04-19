@@ -31,6 +31,7 @@ export class ListComponent {
   newVendor: any = {};  
   // pagination variables end
   isAdminLoggedIn = 0;
+  unfilteredData: any = [];
 
   constructor(
     private data: DataService,
@@ -67,6 +68,7 @@ export class ListComponent {
         tableData2: [],
         serialNumberArray: this.serialNumberArray,
       });
+      this.unfilteredData = structuredClone(apiRes.data);
     });
   }
 
@@ -163,6 +165,19 @@ export class ListComponent {
   deleteVendor(sNo: number) {
     this.data.deleteVendor(sNo).subscribe((res) => {
       this.getTableData({ skip: 0, limit: this.pageSize });
+    });
+  }
+
+  queryString: string = '';
+  async searchCustomers(){
+    this.tableData = structuredClone(this.unfilteredData);
+    this.tableData = this.tableData.filter((vendor) => {
+      return (
+        vendor.name?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        vendor.email?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        vendor.phone?.toString().toLowerCase().includes(this.queryString.toLowerCase())
+        // purchase.code?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+      );
     });
   }
 }

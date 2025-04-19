@@ -93,7 +93,7 @@ export class ListComponent implements OnInit {
         tableData2: [],
         serialNumberArray: this.serialNumberArray,
       });
-      this.unfilteredData = structuredClone(this.tableData);
+      this.unfilteredData = structuredClone(apiRes.data);
     });
   }
 

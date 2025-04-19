@@ -83,7 +83,7 @@ export class ExpenseReportComponent implements OnInit {
         serialNumberArray: this.serialNumberArray,
         tableData2: [],
       });
-      this.unfilteredData = structuredClone(this.expensereport);
+      this.unfilteredData = structuredClone(apiRes.data);
     });
   }
 

@@ -66,7 +66,7 @@ export class UnitsComponent {
         serialNumberArray: this.serialNumberArray,
         tableData2: [],
       });
-      this.unfilteredData = structuredClone(this.units);
+      this.unfilteredData = structuredClone(apiRes.data);
     });
   }
 

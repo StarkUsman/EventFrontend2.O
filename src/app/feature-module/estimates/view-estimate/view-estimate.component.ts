@@ -60,7 +60,7 @@ export class ViewEstimateComponent  implements OnInit {
           this.serialNumberArray.push(serialNumber);
         }
       });
-      this.unfilteredData = structuredClone(this.reservations);
+      this.unfilteredData = structuredClone(apiRes.data);
       this.dataSource = new MatTableDataSource<any>(this.reservations);
       this.pagination.calculatePageSize.next({
         totalData: this.totalData,

@@ -659,6 +659,9 @@ export class routes {
   public static get editMenyItem(): string {
     return this.services + '/edit-menuItems';
   }
+  public static get additionalServices(): string {
+    return this.services + '/additional-Services';
+  }
   public static get addAdditionalServices(): string {
     return this.services + '/add-additional-Services';
   }

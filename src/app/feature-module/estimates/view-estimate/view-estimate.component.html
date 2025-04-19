@@ -59,7 +59,7 @@
                       </thead>
                       <tbody>
                         @for (reservation of reservations; track reservation; let i = $index) {
-                          <tr>
+                          <tr [ngClass]="{ 'drafted-row': reservation.status === 'DRAFTED' }">
                             <td>{{ reservation.sNo }}</td>
                               <td>{{ reservation.reservation_name }}</td>
                               <td>{{ reservation.contact_number }}</td>
@@ -99,7 +99,7 @@
                                             ><i class="far fa-trash-alt me-2"></i>Delete</a
                                             >
                                           </li>
-                                          <li>
+                                          <li *ngIf="reservation.status !== 'FULLFILLED'">
                                             <a
                                             class="dropdown-item"
                                             href="javascript:void(0);"

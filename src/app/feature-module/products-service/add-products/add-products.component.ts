@@ -59,6 +59,7 @@ export class AddProductsComponent implements OnDestroy,OnInit {
       let nextProcuctCode = parseFloat(this.newProduct.code) + 1;
       this.newProduct = {};
       this.newProduct.code = String(nextProcuctCode).padStart(6, '0');
+      this.newProduct.category = this.categories[0]?.id;
     });
   }
 }

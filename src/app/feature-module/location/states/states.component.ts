@@ -77,7 +77,7 @@ export class StatesComponent implements OnInit {
         serialNumberArray: this.serialNumberArray,
         tableData2: [],
       });
-      this.unfilteredData = structuredClone(this.states);
+      this.unfilteredData = structuredClone(apiRes.data);
     });
   }
 
