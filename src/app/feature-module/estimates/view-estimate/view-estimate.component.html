@@ -99,7 +99,7 @@
                                             ><i class="far fa-trash-alt me-2"></i>Delete</a
                                             >
                                           </li>
-                                          <li *ngIf="reservation.status !== 'FULLFILLED'">
+                                          <li *ngIf="(reservation.status !== 'FULLFILLED' && reservation.status !== 'DRAFTED')">
                                             <a
                                             class="dropdown-item"
                                             href="javascript:void(0);"

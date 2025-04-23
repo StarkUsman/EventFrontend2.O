@@ -32,8 +32,13 @@ export class LedgerComponent implements OnInit {
       this.vendorId = id;
       this.data.getLedgerByVID(id).subscribe((res: any) => {
         this.ledgerToView = res.data;
-        this.ledgerToView.forEach((ledger: any) => {
+        this.ledgerToView.forEach((ledger: any, index: number) => {
           ledger.purch_id = ('000000' + ledger.purch_id).slice(-6);
+          if (index === 0) {
+            ledger.balance = -ledger.amountDebit || ledger.amountCredit;
+          } else {
+            ledger.balance = ledger.amountDebit ? this.ledgerToView[index - 1].balance - ledger.amountDebit : this.ledgerToView[index - 1].balance + ledger.amountCredit;
+          }
         });
         this.closingBalance();
       });

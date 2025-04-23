@@ -10,7 +10,7 @@
           <div class="row align-item-center">
             <div class="col-lg-4 col-md-6 col-sm-12">
               <div class="input-block mb-3">
-                <label htmlFor="label">Expense Id</label>
+                <label htmlFor="label">Expense Voucher#</label>
                 <input
                   id="label"
                   type="text"
@@ -18,21 +18,6 @@
                   disabled="true"
                   [(ngModel)]="purchaseToEdit.purch_id"
                   />
-                </div>
-              </div>
-              <div class="col-lg-4 col-md-6 col-sm-12">
-                <div class="input-block mb-3">
-                  <label htmlFor="label">Select Vendor</label>
-                      <mat-select
-                        disabled="true"
-                        [(ngModel)]="purchaseToEdit.vendor"
-                        [ngModelOptions]="{ standalone: true }"
-                        class="select custom-mat-select"
-                        >
-                        <mat-option *ngFor="let vendor of allVendors" [value]="vendor">
-                          {{ vendor.name }}
-                        </mat-option>
-                      </mat-select>
                 </div>
               </div>
               <div class="col-lg-4 col-md-6 col-sm-12">
@@ -49,43 +34,19 @@
                     />
                   </div>
                 </div>
-                <div class="col-lg-4 col-md-6 col-sm-12">
-                  <div class="input-block mb-3">
-                    <label htmlFor="label">Due Date</label>
-                    <input
-                      id="labbel"
-                      type="text"
-                      class="datetimepicker form-control"
-                      placeholder="Select Date"
-                      [(ngModel)]="purchaseToEdit.due_date"
-                      bsDatepicker [bsConfig]="{ adaptivePosition: true }"
-                      [(bsValue)]="dueDateValue"
-                      />
-                    </div>
-                  </div>
-                  <!-- <div class="col-lg-4 col-md-6 col-sm-12">
+                  <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
                       <label htmlFor="label">Reference No</label>
                       <input
                         id="label"
                         type="text"
                         class="form-control"
-                        placeholder="Enter Phone Number"
+                        placeholder="Enter Reference Number"
+                        [(ngModel)]="purchaseToEdit.reference_no"
                         />
                       </div>
-                    </div> -->
-                    <div class="col-lg-4 col-md-6 col-sm-12">
-                      <div class="input-block mb-3">
-                        <label for="Supplier">Supplier Invoice Serial No</label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          placeholder="Enter Supplier Invoice Serial No"
-                          [(ngModel)]="purchaseToEdit.invoice_sr_no"
-                          />
-                        </div>
-                      </div>
-                      <div class="col-lg-12">
+                    </div>
+                    <div class="col-lg-12">
                         <div class="input-block mb-3">
                           <label htmlFor="label">Products</label>
                           <ul class="form-group-plus css-equal-heights">
@@ -153,14 +114,14 @@
                                       (click)="setEditProduct(data)"
                                       ><span><i class="feather icon-edit"></i></span
                                     ></a>
-                                    <a
+                                    <!-- <a
                                       href="javascript:void(0);"
                                       class="btn-action-icon"
                                       data-bs-toggle="modal"
                                       (click)="setDeleteProduct(data)"
                                       data-bs-target="#delete_discount"
                                       ><span><i class="feather icon-trash-2"></i></span
-                                    ></a>
+                                    ></a> -->
                                   </td>
                                 </tr>
                               }
@@ -214,7 +175,7 @@
                             </div>
                           </div>
                           <div class="text-end">
-                            <button type="reset" class="btn btn-primary cancel me-2">Cancel</button>
+                            <button type="reset" class="btn btn-primary me-2">Cancel</button>
                             <button [routerLink]="routes.expensesList" type="submit" class="btn btn-primary" (click)="editPurchase()">Save</button>
                           </div>
 

@@ -488,6 +488,10 @@ export class DataService {
   public getLedgerByPRID(id: number, purch_id: any) {
     return this.http.get(this.backendUrl+`/ledger/${id}/pret/${purch_id}`);
   }
+
+  public getLedgerByEVID(id: number, purch_id: any) {
+    return this.http.get(this.backendUrl+`/ledger/${id}/expense/${purch_id}`);
+  }
   
   public getInventoryLedgerByPID(id: number) {
     return this.http.get<apiResultFormat>(this.backendUrl+`/inventoryLedger/${id}`)
@@ -504,6 +508,10 @@ export class DataService {
   
   public getInventoryLedgerByPRUID(id: number, purch_id: any) {
     return this.http.get(this.backendUrl+`/inventoryLedger/${id}/pret/${purch_id}`);
+  }
+
+  public getInventoryLedgerByEPID(id: number, purch_id: any) {
+    return this.http.get(this.backendUrl+`/inventoryLedger/${id}/expense/${purch_id}`);
   }
 
   public updateInventoryLedgerByID(ledger: any) {
@@ -826,6 +834,10 @@ export class DataService {
   
   public addExpense(expense: any) {
     return this.http.post(this.backendUrl+'/expenses', expense);
+  }
+  
+  public editExpense(expense: any) {
+    return this.http.put(this.backendUrl+`/expenses/${expense.id}`, expense);
   }
 
   public getExpenseByID(id: number) {

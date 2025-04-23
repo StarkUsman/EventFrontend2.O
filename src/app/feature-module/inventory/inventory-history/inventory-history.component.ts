@@ -32,8 +32,15 @@ export class InventoryHistoryComponent implements OnInit {
       this.productId = id;
       this.data.getInventoryLedgerByPID(id).subscribe((res: any) => {
         this.inventoryLedgerToView = res.data;
-        this.inventoryLedgerToView.forEach((ledger: any) => {
+        this.inventoryLedgerToView.forEach((ledger: any, index: number) => {
           ledger.voucher = ('000000' + ledger.voucher).slice(-6);
+          if (index === 0) {
+            ledger.quantity = ledger.stockIn || -ledger.stockOut;
+          } else {
+            ledger.quantity = ledger.stockIn
+              ? this.inventoryLedgerToView[index - 1].quantity + ledger.stockIn
+              : this.inventoryLedgerToView[index - 1].quantity - ledger.stockOut;
+          }
         });
         this.calClosingQuantity();
       });

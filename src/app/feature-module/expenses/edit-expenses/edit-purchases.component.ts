@@ -51,7 +51,7 @@ export class EditPurchasesComponent implements OnInit {
   public pageSelection: Array<pageSelection> = [];
   public totalPages = 0;
   //** / pagination variables
-  allVendors: any = [];
+  vendor: any = {};
   allProducts: any = [];
   purchaseToEdit: any = {};
   selectedProduct: any = {};
@@ -60,25 +60,22 @@ export class EditPurchasesComponent implements OnInit {
   selectedProductEdit: any = {};
   total_purch_amount: any = 0;
   product_to_remove: any = {};
-  ledgerToUpdate: any = {};
 
   constructor(private route: ActivatedRoute, private data: DataService) {}
 
   ngOnInit(): void {
     this.getTableData();
-    this.data.getVendors().subscribe((res) => {
-      this.allVendors = res.data;
+    this.data.getVendorByName("FOOD EXPENSE").subscribe((res: any) => {
+      this.vendor = res;
     });
     this.data.getProductlist().subscribe((res) => {
       this.allProducts = res.data;
     });
     this.route.queryParams.subscribe(params => {
       let id = params['id'];
-      this.data.getPurchaseById(id).subscribe((res: any) => {
+      this.data.getExpenseByID(id).subscribe((res: any) => {
         this.purchaseToEdit = res;
         this.purchaseDateValue = new Date(this.purchaseToEdit.purchase_date);
-        this.dueDateValue = new Date(this.purchaseToEdit.due_date);
-        this.purchaseToEdit.vendor = this.allVendors.find((v: any) => v.id === this.purchaseToEdit.vendor.id);
         this.selectedProducts = this.purchaseToEdit.products;
         this.oldPurchaseRef = JSON.parse(JSON.stringify(res));
         this.total_purch_amount = this.calculateTotalAmount();
@@ -219,8 +216,7 @@ export class EditPurchasesComponent implements OnInit {
   onProductSelect(product: any) {
     if (product) {
       product.quantity = 1;
-      let price = product.purchasePrice.replace(/[^0-9.]/g, '');
-      price = parseFloat(price);
+      let price = parseFloat(product.purchasePrice);
       product.amount = price * product.quantity;
       this.selectedProducts.push(product);
 
@@ -240,14 +236,14 @@ export class EditPurchasesComponent implements OnInit {
   }
 
   setEditProduct(product: any) {
-    product.price = parseFloat(product.purchasePrice.replace(/[^0-9.]/g, ''));
+    product.price = parseFloat(product.purchasePrice);
     product.discount = 0;
     product.tax = "0";
     this.selectedProductEdit = product;
   }
 
   updateProduct() {
-    this.selectedProductEdit.purchasePrice = "$" + this.selectedProductEdit.price;
+    this.selectedProductEdit.purchasePrice = this.selectedProductEdit.price;
     this.selectedProductEdit.amount = (this.selectedProductEdit.price * this.selectedProductEdit.quantity) - this.selectedProductEdit.discount;
     this.selectedProductEdit.amount = this.selectedProductEdit.amount + (this.selectedProductEdit.amount * (parseFloat(this.selectedProductEdit.tax) / 100));
     this.selectedProducts = this.selectedProducts.map((p: any) => {
@@ -266,24 +262,42 @@ export class EditPurchasesComponent implements OnInit {
     return total;
   }
 
-  updateLedger(purch_id: any, amountDebit: any) {
-    this.data.getLedgerByVID(this.purchaseToEdit.vendor.id).subscribe((res: any) => {
-      let ledgers = res.data;
-      // filter out the ledger with the same purch_id
-      let ledger = ledgers.find((l: any) => l.purch_id === purch_id);
-      if (ledger) {
-        this.ledgerToUpdate = ledger;
-        this.ledgerToUpdate.name = "ER";
-        this.ledgerToUpdate.amountDebit = amountDebit;
-        this.data.updateLedgerById(this.ledgerToUpdate).subscribe((res) => { });
-      }
+  updateLedger() {
+    this.data.getLedgerByEVID(this.vendor.vendor_id, this.purchaseToEdit.purch_id).subscribe((res: any) => {
+      let ledger = res.ledger[0];
+      let ledgerToUpdate = {
+        id: ledger.id,
+        name: ledger.name,
+        purch_id: this.purchaseToEdit.purch_id,
+        vendor_id: ledger.vendor_id,
+        amountDebit: 0,
+        amountCredit: this.purchaseToEdit.total_amount,
+      };
+      this.data.updateLedgerById(ledgerToUpdate).subscribe((res: any) => {});
     });
 
   }
 
+  updateInventoryLedger(purchase: any, product: any) {
+    this.data.getInventoryLedgerByEPID(product.id, purchase.purch_id).subscribe((res: any) => {
+      let ledger = res.ledger[0];
+      let ledgerToUpdate = {
+        id: ledger.id,
+        name: ledger.name,
+        purchasePrice: product.purchasePrice,
+        user: JSON.parse(localStorage.getItem('user') || '{}'),
+        voucher: this.purchaseToEdit.purch_id,
+        product_id: product.id,
+        stockIn: 0,
+        stockOut: product.quantity,
+      };
+
+      this.data.updateInventoryLedgerByID(ledgerToUpdate).subscribe((res: any) => {});
+    });
+  }
+
   editPurchase() {
     this.purchaseToEdit.purch_id = parseInt(this.purchaseToEdit.purch_id);
-    // remove img from products
     this.selectedProducts = this.selectedProducts.map((p: any) => {
       delete p.img;
       delete p.sNo;
@@ -294,21 +308,14 @@ export class EditPurchasesComponent implements OnInit {
     this.purchaseToEdit.total_amount = this.calculateTotalAmount();
     this.purchaseToEdit.status = "Pending";
     this.purchaseToEdit.paymentmode = "cash";
-
-    this.oldPurchaseRef.products.forEach((p: any) => {
-      this.data.removePurchaseProduct(p).subscribe((res) => {
-      });
-    });
     
-    this.selectedProducts.forEach((p: any) => {
-      this.data.addPurchaseProduct(p).subscribe((res) => {
-      });
-    });
-    
-    this.updateLedger(this.oldPurchaseRef.purch_id, this.oldPurchaseRef.total_amount);
-    this.updateLedger(this.purchaseToEdit.purch_id, this.purchaseToEdit.total_amount)
+    this.updateLedger();
 
-    this.data.editPurchase(this.purchaseToEdit).subscribe((res) => {
+    this.purchaseToEdit.products.forEach((p: any) => {
+      this.updateInventoryLedger(this.purchaseToEdit, p);
+    });
+
+    this.data.editExpense(this.purchaseToEdit).subscribe((res) => {
     });
   }
 }

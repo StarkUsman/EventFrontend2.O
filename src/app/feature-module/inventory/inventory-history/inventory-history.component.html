@@ -107,7 +107,7 @@
                                       <p>Closing Quantity as on {{closingQuantityDate}}</p>
                                   </td>
                                   <td><span class="badge" [ngClass]="isQuantityNegative ? 'text-danger-light' : 'bg-success-light'">
-                                    {{ isQuantityNegative ? '-PKR' : 'PKR' }}{{ closingQuantity }}
+                                    {{ isQuantityNegative ? '-' : '' }}{{ closingQuantity }}
                                  </span></td>
                               </tr>
                           </tbody>
