@@ -695,6 +695,9 @@ export class routes {
   public static get addpurchasreturn(): string {
     return this.baseUrl + '/add-purchase-return';
   }
+  public static get editpurchasreturn(): string {
+    return this.baseUrl + '/edit-purchase-return';
+  }
   public static get debitnotes(): string {
     return this.baseUrl + '/debit-notes';
   }

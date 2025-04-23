@@ -257,8 +257,28 @@
     <div class="page-header">
       <div class="content-page-header">
         <h5>Additional Services</h5>
-        </div>
+        <ul class="filter-list">
+          <li>
+            <!-- <a class="btn btn-primary" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#add_menu">Add Menu</a> -->
+            <mat-form-field class="w-100">
+              <mat-label>MenuItems</mat-label>
+              <input type="text"
+                     placeholder="Select Menu Items"
+                     aria-label="MenuItem"
+                     matInput
+                     [formControl]="control"
+                     [matAutocomplete]="auto">
+              <mat-autocomplete #auto="matAutocomplete">
+                @for (option of filteredOptions | async; track option) {
+                  <mat-option [value]="option" (onSelectionChange)="onMenuItemSelect(option)"
+                  >{{option}}</mat-option>
+                }
+              </mat-autocomplete>
+            </mat-form-field>
+          </li>
+        </ul>
       </div>
+    </div>
 
     <!-- Display Selected Menu -->
     <div *ngIf="reservation.selectedMenu">

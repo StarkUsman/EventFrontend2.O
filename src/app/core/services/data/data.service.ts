@@ -9,6 +9,7 @@ import { SideBar, SideBarData, SideBarMenu, apiResultFormat, vendor } from '../.
   providedIn: 'root',
 })
 export class DataService {
+  backendUrl: string = 'http://localhost:3000';
   constructor(private http: HttpClient) {}
 
   public getEvents() {
@@ -211,7 +212,7 @@ export class DataService {
     );
   }
   public getServices() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/additional-services/formatted').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/additional-services/formatted').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
@@ -219,15 +220,15 @@ export class DataService {
   }
 
   public addService(service: any){
-    return this.http.post('http://localhost:3000/additional-services', service);
+    return this.http.post(this.backendUrl+'/additional-services', service);
   }
 
   public updateService(service: any){
-    return this.http.put(`http://localhost:3000/additional-services/${service.additional_service_id}`, service);
+    return this.http.put(this.backendUrl+`/additional-services/${service.additional_service_id}`, service);
   }
 
   public deleteService(id: number){
-    return this.http.delete(`http://localhost:3000/additional-services/${id}`);
+    return this.http.delete(this.backendUrl+`/additional-services/${id}`);
   }
 
   public getCities() {
@@ -269,15 +270,15 @@ export class DataService {
   }
 
   // public addVoucher(voucher: any) {
-  //   return this.http.post('http://localhost:3000/vouchers', voucher);
+  //   return this.http.post(this.backendUrl+'/vouchers', voucher);
   // }
 
   public login(username: string, password: string) {
-    return this.http.post('http://localhost:3000/users/login', { username, password });
+    return this.http.post(this.backendUrl+'/users/login', { username, password });
   }
 
   public getMenus() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/menus').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/menus').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
@@ -285,23 +286,23 @@ export class DataService {
   }
   
   public addMenu(menu: any) {
-    return this.http.post('http://localhost:3000/menus', menu);
+    return this.http.post(this.backendUrl+'/menus', menu);
   }
   
   public deleteMenu(id: number) {
-    return this.http.delete(`http://localhost:3000/menus/${id}`);
+    return this.http.delete(this.backendUrl+`/menus/${id}`);
   }
   
   public updateMenu(menu: any) {
-    return this.http.put(`http://localhost:3000/menus/${menu.menu_id}`, menu);
+    return this.http.put(this.backendUrl+`/menus/${menu.menu_id}`, menu);
   }
   
   public getMenuItems() {
-    return this.http.get(`http://localhost:3000/menu-items`);
+    return this.http.get(this.backendUrl+`/menu-items`);
   }
 
   public getAllMenuItems() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/menu-items/formatted').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/menu-items/formatted').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
@@ -309,19 +310,19 @@ export class DataService {
   }
 
   public updateMenuItem(menuItem: any) {
-    return this.http.put(`http://localhost:3000/menu-items/${menuItem.menu_item_id}`, menuItem);
+    return this.http.put(this.backendUrl+`/menu-items/${menuItem.menu_item_id}`, menuItem);
   }
 
   public addMenuItem(menuItem: any) {
-    return this.http.post('http://localhost:3000/menu-items', menuItem);
+    return this.http.post(this.backendUrl+'/menu-items', menuItem);
   }
 
   public deleteMenuItem(menuItem: any) {
-    return this.http.delete(`http://localhost:3000/menu-items/${menuItem.menu_item_id}`);
+    return this.http.delete(this.backendUrl+`/menu-items/${menuItem.menu_item_id}`);
   }
 
   public getReservations() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/bookings/formatted').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/bookings/formatted').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
@@ -329,28 +330,28 @@ export class DataService {
   }
 
   public getReservationById(id: number) {
-    return this.http.get(`http://localhost:3000/bookings/${id}`);
+    return this.http.get(this.backendUrl+`/bookings/${id}`);
   }
 
   public addReservation(reservation: any) {
-    return this.http.post('http://localhost:3000/bookings', reservation);
+    return this.http.post(this.backendUrl+'/bookings', reservation);
   }
 
   public updateReservation(reservation: any) {
-    return this.http.put(`http://localhost:3000/bookings/${reservation.booking_id}`, reservation);
+    return this.http.put(this.backendUrl+`/bookings/${reservation.booking_id}`, reservation);
   }
 
   public addReservationPayment(body: any) {
-    return this.http.put(`http://localhost:3000/bookings/payment/${body.id}`, body);
+    return this.http.put(this.backendUrl+`/bookings/payment/${body.id}`, body);
   }
 
   public deleteReservation(id: number) {
-    return this.http.delete(`http://localhost:3000/bookings/${id}`);
+    return this.http.delete(this.backendUrl+`/bookings/${id}`);
   }
 
 
   public getVendors() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/vendors').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/vendors').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
@@ -358,7 +359,7 @@ export class DataService {
   }
 
   public getVendorsOnly() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/vendors/category').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/vendors/category').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
@@ -366,14 +367,14 @@ export class DataService {
   }
 
   public getAssetAccounts() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/vendors/assets').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/vendors/assets').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
     );
   }
   public getVouchers() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/vouchers').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/vouchers').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
@@ -381,19 +382,19 @@ export class DataService {
   }
 
   public deleteVoucher(sNo: number) {
-    return this.http.delete(`http://localhost:3000/vouchers/${sNo}`);
+    return this.http.delete(this.backendUrl+`/vouchers/${sNo}`);
   }
 
   public addVoucher(voucher: any) {
-    return this.http.post('http://localhost:3000/vouchers', voucher);
+    return this.http.post(this.backendUrl+'/vouchers', voucher);
   }
 
   public updateVoucher(voucher: any) {
-    return this.http.put(`http://localhost:3000/vouchers/${voucher.id}`, voucher);
+    return this.http.put(this.backendUrl+`/vouchers/${voucher.id}`, voucher);
   }
 
   public getSalary() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/salary').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/salary').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
@@ -401,19 +402,19 @@ export class DataService {
   }
 
   public addSalary(salary: any) {
-    return this.http.post('http://localhost:3000/salary', salary);
+    return this.http.post(this.backendUrl+'/salary', salary);
   }
   
   public updateSalary(salary: any) {
-    return this.http.put(`http://localhost:3000/salary/${salary.id}`, salary);
+    return this.http.put(this.backendUrl+`/salary/${salary.id}`, salary);
   }
 
   public deleteSalary(id: number) {
-    return this.http.delete(`http://localhost:3000/salary/${id}`);
+    return this.http.delete(this.backendUrl+`/salary/${id}`);
   }
 
   public getAccountsCategory() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/acategory').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/acategory').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
@@ -421,23 +422,23 @@ export class DataService {
   }
 
   public getExpenseAccountCategory() {
-    return this.http.get('http://localhost:3000/acategory/EXPENSE');
+    return this.http.get(this.backendUrl+'/acategory/EXPENSE');
   }
 
   public addaCategory(category: any) {
-    return this.http.post('http://localhost:3000/acategory', category);
+    return this.http.post(this.backendUrl+'/acategory', category);
   }
 
   public updateaCategory(category: any) {
-    return this.http.put(`http://localhost:3000/acategory/${category.id}`, category);
+    return this.http.put(this.backendUrl+`/acategory/${category.id}`, category);
   }
 
   public deleteaCategory(id: number) {
-    return this.http.delete(`http://localhost:3000/acategory/${id}`);
+    return this.http.delete(this.backendUrl+`/acategory/${id}`);
   }
 
   public getAccountsSubCategory() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/asubcategory').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/asubcategory').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
@@ -445,80 +446,104 @@ export class DataService {
   }
 
   public addaSubCategory(subcategory: any) {
-    return this.http.post('http://localhost:3000/asubcategory', subcategory);
+    return this.http.post(this.backendUrl+'/asubcategory', subcategory);
   }
 
   public updateaSubCategory(subcategory: any) {
-    return this.http.put(`http://localhost:3000/asubcategory/${subcategory.id}`, subcategory);
+    return this.http.put(this.backendUrl+`/asubcategory/${subcategory.id}`, subcategory);
   }
 
   public deleteaSubCategory(id: number) {
-    return this.http.delete(`http://localhost:3000/asubcategory/${id}`);
+    return this.http.delete(this.backendUrl+`/asubcategory/${id}`);
   }
 
   public getVendorById(id: number) {
-    return this.http.get(`http://localhost:3000/vendors/${id}`);
+    return this.http.get(this.backendUrl+`/vendors/${id}`);
+  }
+
+  public getVendorByName(name: any) {
+    return this.http.get(this.backendUrl+`/vendors/name/${name}`);
   }
 
   public deleteVendor(sNo: number) {
-    return this.http.delete(`http://localhost:3000/vendors/${sNo}`);
+    return this.http.delete(this.backendUrl+`/vendors/${sNo}`);
   }
 
   public addVendor(vendor: any) {
-    return this.http.post('http://localhost:3000/vendors', vendor);
+    return this.http.post(this.backendUrl+'/vendors', vendor);
   }
 
   public updateVendor(vendor: any) {
-    return this.http.put(`http://localhost:3000/vendors/${vendor.id}`, vendor);
+    return this.http.put(this.backendUrl+`/vendors/${vendor.id}`, vendor);
   }
 
   public getLedgerByVID(id: number) {
-    return this.http.get(`http://localhost:3000/ledger/${id}`);
+    return this.http.get(this.backendUrl+`/ledger/${id}`);
   }
 
+  public getLedgerByPID(id: number, purch_id: any) {
+    return this.http.get(this.backendUrl+`/ledger/${id}/purch/${purch_id}`);
+  }
+
+  public getLedgerByPRID(id: number, purch_id: any) {
+    return this.http.get(this.backendUrl+`/ledger/${id}/pret/${purch_id}`);
+  }
+  
   public getInventoryLedgerByPID(id: number) {
-    return this.http.get<apiResultFormat>(`http://localhost:3000/inventoryLedger/${id}`)
+    return this.http.get<apiResultFormat>(this.backendUrl+`/inventoryLedger/${id}`)
     .pipe(
       map((res: apiResultFormat) => {
         return res;
       })
     );
   }
+  
+  public getInventoryLedgerByPUID(id: number, purch_id: any) {
+    return this.http.get(this.backendUrl+`/inventoryLedger/${id}/purch/${purch_id}`);
+  }
+  
+  public getInventoryLedgerByPRUID(id: number, purch_id: any) {
+    return this.http.get(this.backendUrl+`/inventoryLedger/${id}/pret/${purch_id}`);
+  }
+
+  public updateInventoryLedgerByID(ledger: any) {
+    return this.http.put(this.backendUrl+`/inventoryLedger/${ledger.id}`, ledger);
+  }
 
   public getCreditedLedger(id: number) {
-    return this.http.get(`http://localhost:3000/ledger/credit/${id}`);
+    return this.http.get(this.backendUrl+`/ledger/credit/${id}`);
   }
 
   public getDebitiedLedger(id: number) {
-    return this.http.get(`http://localhost:3000/ledger/debit/${id}`);
+    return this.http.get(this.backendUrl+`/ledger/debit/${id}`);
   }
 
   public getInventoryStockInLedger(id: number) {
-    return this.http.get(`http://localhost:3000/inventoryLedger/stockIn/${id}`);
+    return this.http.get(this.backendUrl+`/inventoryLedger/stockIn/${id}`);
   }
 
   public getInventoryStockOutLedger(id: number) {
-    return this.http.get(`http://localhost:3000/inventoryLedger/stockOut/${id}`);
+    return this.http.get(this.backendUrl+`/inventoryLedger/stockOut/${id}`);
   }
 
   public getFilteredLedger(id: number, startDate: string, endDate: string, vendorName: string) {
-    return this.http.get(`http://localhost:3000/ledger/${id}?startDate=${startDate}&endDate=${endDate}&vendorName=${vendorName}`);
+    return this.http.get(this.backendUrl+`/ledger/${id}?startDate=${startDate}&endDate=${endDate}&vendorName=${vendorName}`);
   
   }
   public getInventoryFilteredLedger(id: number, startDate: string, endDate: string, userName: string) {
-    return this.http.get(`http://localhost:3000/inventoryLedger/${id}?startDate=${startDate}&endDate=${endDate}&name=${userName}`);
+    return this.http.get(this.backendUrl+`/inventoryLedger/${id}?startDate=${startDate}&endDate=${endDate}&name=${userName}`);
   }
 
   public addLedger(ledger: any){
-    return this.http.post('http://localhost:3000/ledger', ledger);
+    return this.http.post(this.backendUrl+'/ledger', ledger);
   }
 
   public addInventoryLedger(ledger: any){
-    return this.http.post('http://localhost:3000/inventoryLedger', ledger);
+    return this.http.post(this.backendUrl+'/inventoryLedger', ledger);
   }
 
   public updateLedgerById(ledger: any){
-    return this.http.put(`http://localhost:3000/ledger/${ledger.id}`, ledger);
+    return this.http.put(this.backendUrl+`/ledger/${ledger.id}`, ledger);
   }
 
   public getLedger() {
@@ -581,7 +606,7 @@ export class DataService {
       );
   }
   public getUnits() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/units').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/units').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
@@ -589,19 +614,19 @@ export class DataService {
   }
 
   public deleteUnits(sNo: number) {
-    return this.http.delete(`http://localhost:3000/units/${sNo}`);
+    return this.http.delete(this.backendUrl+`/units/${sNo}`);
   }
 
   public addUnits(unit: any) {
-    return this.http.post('http://localhost:3000/units', unit);
+    return this.http.post(this.backendUrl+'/units', unit);
   }
 
   public updateUnits(unit: any) {
-    return this.http.put(`http://localhost:3000/units/${unit.unit_id}`, unit);
+    return this.http.put(this.backendUrl+`/units/${unit.unit_id}`, unit);
   }
 
   public getCategory() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/category').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/category').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
@@ -609,19 +634,19 @@ export class DataService {
   }
 
   public deleteCategory(id: number) {
-    return this.http.delete(`http://localhost:3000/category/${id}`);
+    return this.http.delete(this.backendUrl+`/category/${id}`);
   }
 
   public addCategory(category: any) {
-    return this.http.post('http://localhost:3000/category', category);
+    return this.http.post(this.backendUrl+'/category', category);
   }
 
   public updateCategory(category: any) {
-    return this.http.put(`http://localhost:3000/category/${category.id}`, category);
+    return this.http.put(this.backendUrl+`/category/${category.id}`, category);
   }
 
   public getProductlist() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/products').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/products').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
@@ -629,19 +654,23 @@ export class DataService {
   }
 
   public deleteProduct(id: number) {
-    return this.http.delete(`http://localhost:3000/products/${id}`);
+    return this.http.delete(this.backendUrl+`/products/${id}`);
   }
 
   public getProductById(id: number) {
-    return this.http.get(`http://localhost:3000/products/${id}`);
+    return this.http.get(this.backendUrl+`/products/${id}`);
   }
 
   public updateProduct(product: any) {
-    return this.http.put(`http://localhost:3000/products/${product.id}`, product);
+    return this.http.put(this.backendUrl+`/products/${product.id}`, product);
+  }
+
+  public updateProductPrice(product: any) {
+    return this.http.put(this.backendUrl+`/products/price/${product.id}`, product);
   }
 
   public addProduct(product: any) {
-    return this.http.post('http://localhost:3000/products', product);
+    return this.http.post(this.backendUrl+'/products', product);
   }
 
   public getcreditnotes() {
@@ -772,7 +801,7 @@ export class DataService {
       );
   }
   public getinventory() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/inventory').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/inventory').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
@@ -780,15 +809,15 @@ export class DataService {
   }
 
   public updateinventory(inventory: any) {
-    return this.http.put(`http://localhost:3000/inventory/${inventory.id}`, inventory);
+    return this.http.put(this.backendUrl+`/inventory/${inventory.id}`, inventory);
   }
 
   public deleteinventory(id: number) {
-    return this.http.delete(`http://localhost:3000/inventory/${id}`);
+    return this.http.delete(this.backendUrl+`/inventory/${id}`);
   }
   
   public getExpenses() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/expenses').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/expenses').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
@@ -796,22 +825,22 @@ export class DataService {
   }
   
   public addExpense(expense: any) {
-    return this.http.post('http://localhost:3000/expenses', expense);
+    return this.http.post(this.backendUrl+'/expenses', expense);
   }
 
   public getExpenseByID(id: number) {
-    return this.http.get(`http://localhost:3000/expenses/${id}`);
+    return this.http.get(this.backendUrl+`/expenses/${id}`);
   }
 
   public getpurchase() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/purchase').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/purchase').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
     );
   }
   public getpurchaseReturn() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/purchaseReturn').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/purchaseReturn').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
@@ -819,45 +848,53 @@ export class DataService {
   }
   
   public addPurchaseProduct(product: any) {
-    return this.http.post('http://localhost:3000/products/addQuantity', product);
+    return this.http.post(this.backendUrl+'/products/addQuantity', product);
   }
   
   public removePurchaseProduct(product: any) {
-    return this.http.post('http://localhost:3000/products/removeQuantity', product);
+    return this.http.post(this.backendUrl+'/products/removeQuantity', product);
   }
 
   public addPurchase(purchase: any) {
-    return this.http.post('http://localhost:3000/purchase', purchase);
+    return this.http.post(this.backendUrl+'/purchase', purchase);
   }
   public addPurchaseReturn(purchase: any) {
-    return this.http.post('http://localhost:3000/purchaseReturn', purchase);
+    return this.http.post(this.backendUrl+'/purchaseReturn', purchase);
   }
 
   public editPurchase(purchase: any) {
-    return this.http.put(`http://localhost:3000/purchase/${purchase.id}`, purchase);
+    return this.http.put(this.backendUrl+`/purchase/${purchase.id}`, purchase);
+  }
+
+  public editPurchaseReturn(purchase: any) {
+    return this.http.put(this.backendUrl+`/purchaseReturn/${purchase.id}`, purchase);
   }
   
   public updatePurchaseStatus(purchaseId: number, status: string) {
-    return this.http.put(`http://localhost:3000/purchase/status/${purchaseId}`, { status });
+    return this.http.put(this.backendUrl+`/purchase/status/${purchaseId}`, { status });
   }
   
   public deletepurchase(sNo: number) {
-    return this.http.delete(`http://localhost:3000/purchase/${sNo}`);
+    return this.http.delete(this.backendUrl+`/purchase/${sNo}`);
   }
   public deletepurchaseReturn(sNo: number) {
-    return this.http.delete(`http://localhost:3000/purchaseReturn/${sNo}`);
+    return this.http.delete(this.backendUrl+`/purchaseReturn/${sNo}`);
   }
   
   public getPurchaseById(id: number) {
-    return this.http.get(`http://localhost:3000/purchase/${id}`);
+    return this.http.get(this.backendUrl+`/purchase/${id}`);
+  }
+
+  public getPurchaseReturnById(id: number) {
+    return this.http.get(this.backendUrl+`/purchaseReturn/${id}`);
   }
   
   public getDashboardData() {
-    return this.http.get(`http://localhost:3000/dash`);
+    return this.http.get(this.backendUrl+`/dash`);
   }
   
   public getUCReservations() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/bookings/upcoming').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/bookings/upcoming').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
@@ -904,17 +941,17 @@ export class DataService {
     );
   }
   public getTransaction() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/transaction').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/transaction').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
     );
   }
   public addTransaction(transaction: any) {
-    return this.http.post('http://localhost:3000/transaction', transaction);
+    return this.http.post(this.backendUrl+'/transaction', transaction);
   }
   public getTransactionById(id: number) {
-    return this.http.get(`http://localhost:3000/transaction/${id}`);
+    return this.http.get(this.backendUrl+`/transaction/${id}`);
   }
   public getrole() {
     return this.http.get<apiResultFormat>('assets/JSON/role.json').pipe(
@@ -934,7 +971,7 @@ export class DataService {
   }
 
   public getUsers() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/users').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/users').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
@@ -942,19 +979,19 @@ export class DataService {
   }
 
   public addUser(user: any) {
-    return this.http.post('http://localhost:3000/users', user);
+    return this.http.post(this.backendUrl+'/users', user);
   }
 
   public updateUser(user: any) {
-    return this.http.put(`http://localhost:3000/users/${user.id}`, user);
+    return this.http.put(this.backendUrl+`/users/${user.id}`, user);
   }
 
   public deleteUser(id: number) {
-    return this.http.delete(`http://localhost:3000/users/${id}`);
+    return this.http.delete(this.backendUrl+`/users/${id}`);
   }
 
   public updateUserStatus(userId: number, status: string) {
-    return this.http.patch(`http://localhost:3000/users/${userId}/status?status=${status}`, {});
+    return this.http.patch(this.backendUrl+`/users/${userId}/status?status=${status}`, {});
   }
 
   public getaddpages() {
@@ -1019,7 +1056,7 @@ export class DataService {
   }
 
   public getExpense() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/reports/EXPENSE').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/reports/EXPENSE').pipe(
       map((res: apiResultFormat) => {
         return res;
       })
@@ -1027,7 +1064,7 @@ export class DataService {
   }
 
   public getInventoryExpense() {
-    return this.http.get<apiResultFormat>('http://localhost:3000/reports/INVENTORY').pipe(
+    return this.http.get<apiResultFormat>(this.backendUrl+'/reports/INVENTORY').pipe(
       map((res: apiResultFormat) => {
         return res;
       })

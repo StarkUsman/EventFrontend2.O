@@ -270,7 +270,7 @@ export class AddPurchasesComponent implements OnInit {
   addInventoryLedger(newPurchase: any, product: any) {
 
     let inventoryLedger = {
-      name: "ESV",
+      name: "SOV",
       user: JSON.parse(localStorage.getItem('user') || '{}'),
       purchasePrice: parseFloat(product.purchasePrice.replace(/[^0-9.]/g, '')),
       voucher: newPurchase.purch_id,
@@ -279,6 +279,21 @@ export class AddPurchasesComponent implements OnInit {
       stockIn: 0,
     }
     this.data.addInventoryLedger(inventoryLedger).subscribe((res) => { });
+  }
+
+  addLedger(purch_id: any, amountCredit: any) {
+    this.data.getVendorByName("FOOD EXPENSE").subscribe((res: any) => {
+      let vendor = res;
+      let ledger = {
+        name: "EV",
+        purch_id: purch_id,
+        vendor_id: vendor.vendor_id,
+        amountDebit: 0,
+        amountCredit: amountCredit,
+      };
+      
+      this.data.addLedger(ledger).subscribe((res) => { });
+    });
   }
 
   addPurchase() {
@@ -303,6 +318,8 @@ export class AddPurchasesComponent implements OnInit {
     this.newPurchase.products.forEach((p: any) => {
       this.addInventoryLedger(this.newPurchase, p);
     });
+
+    this.addLedger(this.newPurchase.purch_id, this.newPurchase.total_amount)
 
     this.data.addExpense(this.newPurchase).subscribe((res) => {
     });

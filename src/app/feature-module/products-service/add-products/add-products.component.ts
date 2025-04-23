@@ -41,7 +41,7 @@ export class AddProductsComponent implements OnDestroy,OnInit {
   ngOnInit(): void {
     this.data.getProductlist().subscribe((res) => {
       this.products = res.data;
-      this.newProduct.code = res.data[0]?.code ? parseFloat(res.data[0].code) + 1 : 101;
+      this.newProduct.code = res.data[res.data.length - 1]?.code ? parseFloat(res.data[res.data.length - 1].code) + 1 : 101;
       this.newProduct.code = String(this.newProduct.code).padStart(6, '0');
     });
 

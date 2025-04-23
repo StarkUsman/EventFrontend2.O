@@ -3,6 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DataService, routes, ToasterService } from 'src/app/core/core.index';
 import { HttpClient } from '@angular/common/http';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'app-edit-estimate',
@@ -10,6 +13,10 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./edit-estimate.component.scss'],
 })
 export class EditEstimateComponent implements OnInit {
+  control = new FormControl();
+  allMenuItemsNames: any[] = [];
+  allMenuItems: any[] = [];
+  filteredOptions!: Observable<string[]>;
   lstEstimates!: string[];
   public editEstimateForm!: FormGroup;
   public routes = routes;
@@ -57,6 +64,7 @@ export class EditEstimateComponent implements OnInit {
       let id = params['id'];
       this.data.getReservationById(id).subscribe((res: any) => {
         this.reservationToEdit = res;
+        this.loadMenuItems(this.reservationToEdit.menu_items_ids);
         this.slotSelected = this.reservationToEdit.SLOT;
         const dateString = this.reservationToEdit.dashboardDate;
         const dateObj = new Date(dateString.replace(" ", "T"));
@@ -64,11 +72,11 @@ export class EditEstimateComponent implements OnInit {
         this.initDays(this.reservationToEdit.date);
         let selectedDate = this.reservationToEdit.date;
         ({ dates: this.Date, days: this.Days } = this.getWeekDatesSeparated(selectedDate, 0));
-
+        
         if (typeof this.reservationToEdit.selectedMenu === "string") {
           this.reservationToEdit.selectedMenu = JSON.parse(this.reservationToEdit.selectedMenu);
         }
-
+        
         this.data.getMenus().subscribe((res: any) => {
           this.availableMenus = res.data;
         })
@@ -204,14 +212,46 @@ export class EditEstimateComponent implements OnInit {
     });
   }
 
-  loadMenuItems(menuItemIds: number[]) {
+  loadMenuItems(menuItemIds: any) {
     this.menuItems = [];
-    menuItemIds.forEach((id) => {
+    let IDs = JSON.parse(menuItemIds);
+    IDs.forEach((id: any) => {
       this.http.get<any>(`${this.backendUrl}/menu-items/${id}`).subscribe(item => {
         item.selected = true;
         this.menuItems.push(item);
       });
     });
+
+    this.data.getAllMenuItems().subscribe((data: any) => {
+      this.allMenuItems = data.data;
+
+      this.allMenuItemsNames = this.allMenuItems.filter((item: any) => {
+        return !this.menuItems.some((menuItem: any) => menuItem.menu_item_id === item.menu_item_id);
+      });
+      this.allMenuItemsNames = this.allMenuItemsNames.map((item: any) => item.item_name);
+    });
+
+    this.filteredOptions = this.control.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value || '')),
+      );
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.allMenuItemsNames.filter((option: any) => option.toLowerCase().includes(filterValue));
+  }
+
+  onMenuItemSelect(item: any) {
+    const selectedItem = this.allMenuItems.find((menuItem: any) => menuItem.item_name === item);
+    if (selectedItem) {
+      selectedItem.selected = true;
+      this.menuItems.push(selectedItem);
+      this.allMenuItemsNames = this.allMenuItemsNames.filter((name: any) => name !== item);
+      setTimeout(() => {
+        this.control.setValue('');
+      });    }
   }
 
   loadHalls() {
@@ -234,7 +274,7 @@ export class EditEstimateComponent implements OnInit {
     } else if (this.stage === 2 && this.isStage2Valid()) {
       this.stage++;
     } else if (this.stage === 3 && this.isStage3Valid()) {
-      this.loadMenuItems(this.reservationToEdit.selectedMenu.menu_item_ids);
+      // this.loadMenuItems(this.reservationToEdit.selectedMenu.menu_item_ids);
       this.reservationToEdit.selectedMenu.finalPrice = this.reservationToEdit.selectedMenu.menu_price * this.reservationToEdit.number_of_persons;
       this.reservationToEdit.additionalPrice = 0;
       this.reservationToEdit.additionalDiscount = 0;
@@ -282,7 +322,7 @@ export class EditEstimateComponent implements OnInit {
 
   saveReservation() {
     if (this.reservationToEdit.status === "DRAFTED"){
-      this.reservationToEdit.status = "PENDING";
+      this.reservationToEdit.status = "OPEN";
     }
     this.reservationToEdit.date = new Date(); 
     this.reservationToEdit.add_service_ids = this.additionalServicesSelected.map(service => service.additional_service_id);

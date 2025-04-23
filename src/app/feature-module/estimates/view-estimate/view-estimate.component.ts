@@ -48,7 +48,6 @@ export class ViewEstimateComponent  implements OnInit {
 
   private getTableData(pageOption: pageSelection): void {
     this.data.getReservations().subscribe((apiRes: apiResultFormat) => {
-      console.log(apiRes);
       this.reservations = [];
       this.serialNumberArray = [];
       this.totalData = apiRes.totalData;
@@ -131,7 +130,7 @@ export class ViewEstimateComponent  implements OnInit {
   reservationToAddPayment: any = {};
   setReservationToAddPayment(reservation: any){
     this.reservationToAddPayment = reservation;
-    this.reservationToAddPayment.status = this.reservationToAddPayment.status ? this.reservationToAddPayment.status : 'Pending';
+    this.reservationToAddPayment.status = this.reservationToAddPayment.status ? this.reservationToAddPayment.status : 'OPEN';
   }
 
   addAmount(){
@@ -146,6 +145,7 @@ export class ViewEstimateComponent  implements OnInit {
         this.getTableData({ skip: res.skip, limit: res.limit });
         this.pageSize = res.pageSize;
         this.reservationToAddPayment = {};
+        this.control.setValue('');
       });
     });
   }

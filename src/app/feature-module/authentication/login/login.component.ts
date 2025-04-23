@@ -31,8 +31,9 @@ export class LoginComponent {
       this.auth.login(this.form.value.email, this.form.value.password).subscribe({
         next: (res: any) => {      
           if (res.status === 'Active' || res.status === 'active') {
+            sessionStorage.setItem('authenticated', 'true');
             localStorage.setItem('authenticated', 'true');
-            localStorage.setItem('timeOut', Date());
+            // localStorage.setItem('timeOut', Date());
             localStorage.setItem('user', JSON.stringify(res));
             localStorage.setItem('userId', res.id);
             localStorage.setItem('layoutPosition', '1');

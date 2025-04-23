@@ -3,12 +3,19 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataService, routes, ToasterService } from 'src/app/core/core.index';
 import { HttpClient } from '@angular/common/http';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 @Component({
   selector: 'app-add-estimates',
   templateUrl: './add-estimates.component.html',
   styleUrls: ['./add-estimates.component.scss'],
 })
 export class AddEstimatesComponent implements OnInit {
+  control = new FormControl();
+  allMenuItemsNames: any[] = [];
+  allMenuItems: any[] = [];
+  filteredOptions!: Observable<string[]>;
   public routes = routes;
   backendUrl: string = 'http://localhost:3000';
   days: string[] = [];
@@ -177,8 +184,6 @@ export class AddEstimatesComponent implements OnInit {
     this.month = this.days.map(date => date.split(' ')[1]);
     this.year = this.days.map(date => date.split(' ')[3])[0];
     
-    console.log(this.days_cal);
-    console.log(this.month);
   }
 
   loadReservations() {
@@ -209,15 +214,44 @@ export class AddEstimatesComponent implements OnInit {
         this.menuItems.push(item);
       });
     });
+
+    this.data.getAllMenuItems().subscribe((data: any) => {
+      this.allMenuItems = data.data;
+
+      this.allMenuItemsNames = this.allMenuItems.filter((item: any) => {
+        return !this.menuItems.some((menuItem: any) => menuItem.menu_item_id === item.menu_item_id);
+      });
+      this.allMenuItemsNames = this.allMenuItemsNames.map((item: any) => item.item_name);
+    });
+
+    this.filteredOptions = this.control.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value || '')),
+      );
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.allMenuItemsNames.filter((option: any) => option.toLowerCase().includes(filterValue));
+  }
+
+  onMenuItemSelect(item: any) {
+    const selectedItem = this.allMenuItems.find((menuItem: any) => menuItem.item_name === item);
+    if (selectedItem) {
+      selectedItem.selected = true;
+      this.menuItems.push(selectedItem);
+      this.allMenuItemsNames = this.allMenuItemsNames.filter((name: any) => name !== item);
+      setTimeout(() => {
+        this.control.setValue('');
+      });    }
   }
 
   loadHalls() {
     // Fetch halls from API (replace with your real endpoint)
     this.http.get<any[]>(`${this.backendUrl}/halls`).subscribe(data => {
       this.halls = data;
-      // console.log('Halls:', this.halls);
       this.slotTypes = this.halls.map(hall => hall.hall_name);
-      console.log('Slot Types:', this.slotTypes);
     });
   }
 
@@ -291,11 +325,10 @@ export class AddEstimatesComponent implements OnInit {
     this.reservation.grandTotal = this.reservation.selectedMenu.finalPrice + this.reservation.additionalPrice;
     this.reservation.total_price = this.getGrandTotal();
     this.reservation.SLOT = this.slotSelected;
-    this.reservation.status = 'PENDING'
+    this.reservation.status = 'OPEN'
     this.reservation.total_remaining = parseFloat(this.reservation.grandTotal) - parseFloat(this.reservation.discount)
     
     this.data.addReservation(this.reservation).subscribe((res: any) => {
-      console.log('Reservation saved:', res);
       this.router.navigate(['/reservations/reservationList']);
     });
   }
@@ -332,7 +365,6 @@ export class AddEstimatesComponent implements OnInit {
   }
 
   updateAdditionalServices(service: any) {
-    console.log('Service:', service);
     if (service.selected) {
       this.reservation.additional_services.push(service);
     } else {
@@ -417,9 +449,6 @@ export class AddEstimatesComponent implements OnInit {
   saveDraft(){
     this.reservation.status = 'DRAFTED';
     this.reservation.SLOT = this.slotSelected;
-    console.log("=========================================");
-    console.log(this.reservation);
-    console.log("=========================================");
     try{
       this.http.post(`${this.backendUrl}/bookings`, this.reservation).subscribe(() => {
         alert('Reservation saved!');

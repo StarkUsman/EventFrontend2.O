@@ -198,9 +198,9 @@ export class ListComponent implements OnInit {
     this.tableData = structuredClone(this.unfilteredData);
     this.tableData = this.tableData.filter((vendor) => {
       return (
-        vendor.name.toLowerCase().includes(this.queryString.toLowerCase()) ||
-        vendor.email.toLowerCase().includes(this.queryString.toLowerCase()) ||
-        vendor.phone.toLowerCase().includes(this.queryString.toLowerCase())
+        vendor.name?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        vendor.email?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        vendor.phone?.toLowerCase().includes(this.queryString.toLowerCase())
       );
     });
   }

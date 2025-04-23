@@ -117,7 +117,7 @@
                   </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-12">
-                  <div class="input-block mb-3"> 
+                  <div class="input-block"> 
                     <label htmlFor="label">Transaction Amount <span class="text-danger">*</span></label>
                     <input
                       id="label"
@@ -128,6 +128,8 @@
                       (input)="calculateRemainingAmount()"
                       />
                     </div>
+                    <span class="text-danger" *ngIf="(newTransaction.debitAccount?.id != null)&&(newTransaction.debitAccount?.id === newTransaction.creditAccount?.id)" >
+                      Debit and Credit Account cannot be same</span>
                 </div>
                 <!-- ############################################################ -->
 
@@ -155,7 +157,7 @@
                                 </div>
                                 <div class="col-lg-12">
                                   <div class="input-block mb-3">
-                                    <label htmlFor="label">Additional Notes</label>
+                                    <label htmlFor="label">Reference <span class="text-danger">*</span></label>
                                     <textarea
                                       id="label"
                                       class="form-control"
@@ -192,7 +194,7 @@
                           </div>
                           <div class="text-end">
                             <button [routerLink]="routes.transactionList" type="reset" class="btn btn-primary me-2">Cancel</button>
-                            <button [disabled]="(!newTransaction.voucher || !newTransaction.creditAccount || !newTransaction.debitAccount || !newTransaction.amount ||(newTransaction.voucher === 'BPV' && !newTransaction.checkNumber))" type="submit" class="btn btn-primary" (click)="addTransaction()">Save</button>
+                            <button [disabled]="(!newTransaction.notes ||!newTransaction.voucher || !newTransaction.creditAccount || !newTransaction.debitAccount || !newTransaction.amount ||(newTransaction.voucher === 'BPV' && !newTransaction.checkNumber) || ((newTransaction.debitAccount?.id === newTransaction.creditAccount?.id)))" type="submit" class="btn btn-primary" (click)="addTransaction()">Save</button>
                           </div>
                         </div>
                       </div>

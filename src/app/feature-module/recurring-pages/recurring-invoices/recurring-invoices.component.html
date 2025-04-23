@@ -93,7 +93,7 @@
               </div>
               <div class="col-lg-12 col-sm-12">
                 <div class="input-block mb-3">
-                  <label for="name">Fixed Salay <span class="text-danger">*</span></label>
+                  <label for="name">Fixed Salay</label>
                   <input type="number" class="form-control" placeholder="Enter Fixed Salary" [(ngModel)]="newSalary.amount">
                 </div>
               </div>
@@ -158,7 +158,7 @@
           </div>
           <div class="modal-footer">
             <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</a>
-            <button [disabled]="((!newSalary.vendor || !newSalary.amount) || (menuItemsSelected.length !=0 && !newSalary.variableAmount))" href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn" (click)="addSalary()">Add Salary</button>
+            <button [disabled]="((!newSalary.vendor) || (menuItemsSelected.length !=0 && !newSalary.variableAmount))" href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn" (click)="addSalary()">Add Salary</button>
           </div>
         </div>
       </div>
@@ -201,7 +201,7 @@
               </div>
               <div class="col-lg-12 col-sm-12">
                 <div class="input-block mb-3">
-                  <label for="name">Fixed Salay <span class="text-danger">*</span></label>
+                  <label for="name">Fixed Salay</label>
                   <input type="number" class="form-control" placeholder="Enter Fixed Salary" [(ngModel)]="salaryToEdit.amount">
                 </div>
               </div>
@@ -266,7 +266,7 @@
           </div>
           <div class="modal-footer">
             <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</a>
-            <button [disabled]="((!salaryToEdit.vendor || !salaryToEdit.amount) || (menuItemsSelected.length !=0 && !salaryToEdit.variableAmount))" href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn" (click)="updateSalary()">Update</button>
+            <button [disabled]="((!salaryToEdit.vendor) || (menuItemsSelected.length !=0 && !salaryToEdit.variableAmount))" href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn" (click)="updateSalary()">Update</button>
           </div>
         </div>
       </div>

@@ -74,7 +74,7 @@ export class EditPurchasesComponent implements OnInit {
     });
     this.route.queryParams.subscribe(params => {
       let id = params['id'];
-      this.data.getPurchaseById(id).subscribe((res: any) => {
+      this.data.getPurchaseReturnById(id).subscribe((res: any) => {
         this.purchaseToEdit = res;
         this.purchaseDateValue = new Date(this.purchaseToEdit.purchase_date);
         this.dueDateValue = new Date(this.purchaseToEdit.due_date);
@@ -266,16 +266,15 @@ export class EditPurchasesComponent implements OnInit {
   }
 
   updateLedger() {
-    this.data.getLedgerByPID(this.purchaseToEdit.vendor.id, this.purchaseToEdit.purch_id).subscribe((res: any) => {
+    this.data.getLedgerByPRID(this.purchaseToEdit.vendor.id, this.purchaseToEdit.purch_id).subscribe((res: any) => {
       let ledger = res.ledger[0];
-      console.log(ledger);
       this.ledgerToUpdate = {
         id: ledger.id,
         name: ledger.name,
         purch_id: this.purchaseToEdit.purch_id,
         vendor_id: this.purchaseToEdit.vendor.id,
-        amountDebit: this.purchaseToEdit.total_amount,
-        amountCredit: 0,
+        amountCredit: this.purchaseToEdit.total_amount,
+        amountDebit: 0,
       };
       this.data.updateLedgerById(this.ledgerToUpdate).subscribe((res) => { });
     });
@@ -283,7 +282,7 @@ export class EditPurchasesComponent implements OnInit {
 
   updateInventoryLedger() {
     this.selectedProducts.forEach((p: any) => {
-      this.data.getInventoryLedgerByPUID(p.id, this.purchaseToEdit.purch_id).subscribe((res: any) => {
+      this.data.getInventoryLedgerByPRUID(p.id, this.purchaseToEdit.purch_id).subscribe((res: any) => {
         let ledger = res.ledger[0];
         this.ledgerToUpdate = {
           id: ledger.id,
@@ -292,8 +291,8 @@ export class EditPurchasesComponent implements OnInit {
           user: JSON.parse(localStorage.getItem('user') || '{}'),
           voucher: this.purchaseToEdit.purch_id,
           product_id: p.id,
-          stockOut: 0,
-          stockIn: p.quantity,
+          stockIn: 0,
+          stockOut: p.quantity,
         };
         this.data.updateInventoryLedgerByID(this.ledgerToUpdate).subscribe((res) => { });
       });
@@ -317,7 +316,7 @@ export class EditPurchasesComponent implements OnInit {
     this.updateLedger();
 
     this.updateInventoryLedger();
-    this.data.editPurchase(this.purchaseToEdit).subscribe((res) => {
+    this.data.editPurchaseReturn(this.purchaseToEdit).subscribe((res) => {
     });
   }
 }

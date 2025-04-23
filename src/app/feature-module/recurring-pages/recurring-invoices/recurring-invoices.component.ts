@@ -59,6 +59,8 @@ export class RecurringInvoicesComponent implements OnInit {
   }
 
   loadMenuItems(){
+    this.allMenuItems = [];
+    this.menuItemNames = [];
     this.data.getAllMenuItems().subscribe((res: any) => {
       this.allMenuItems = res.data;
       for (let i = 0; i < res.data.length; i++) {
@@ -197,6 +199,7 @@ export class RecurringInvoicesComponent implements OnInit {
     this.newSalary.menuItems = this.menuItemsSelected;
     this.data.addSalary(this.newSalary).subscribe((res: any) => {
       this.getTableData({ skip: 0, limit: this.pageSize });
+      this.loadMenuItems();
       this.newSalary = {};
       this.menuItemsSelected = [];
       this.accountControl.setValue('');
@@ -208,6 +211,7 @@ export class RecurringInvoicesComponent implements OnInit {
     this.salaryToEdit.menuItems = this.menuItemsSelected;
     this.data.updateSalary(this.salaryToEdit).subscribe((res: any) => {
       this.getTableData({ skip: 0, limit: this.pageSize });
+      this.loadMenuItems();
       this.salaryToEdit = {};
       this.menuItemsSelected = [];
       this.accountControl.setValue('');

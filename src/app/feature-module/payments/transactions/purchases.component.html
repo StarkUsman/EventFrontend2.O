@@ -98,6 +98,7 @@
                     <th mat-sort-header="id">Transaction ID</th>
                     <th mat-sort-header="person">Voucher</th>
                     <th mat-sort-header="totalamount">Amount</th>
+                    <th mat-sort-header="reference">Reference</th>
                     <th mat-sort-header="date">Date</th>
                     <th>Action</th>
                   </tr>
@@ -116,7 +117,7 @@
                           {{ data.voucher }}
                           </td>
                           <td>PKR{{ data.amount }}</td>
-                          <!-- <td>{{ data.paymentmode }}</td> -->
+                          <td>{{ data.notes || "N/A" }}</td>
                           <td>{{ data.date }}</td>
                           <!-- <td>
                             <span

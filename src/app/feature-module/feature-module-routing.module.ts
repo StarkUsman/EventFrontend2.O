@@ -219,6 +219,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'edit-purchase-return',
+        loadChildren: () =>
+          import('./edit-purchase-return/edit-purchases.module').then(
+            (m) => m.EditPurchasesModule
+          ),
+      },
+      {
         path: 'debit-notes',
         loadChildren: () =>
           import('./debit-notes/debit-notes.module').then(

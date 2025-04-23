@@ -89,7 +89,7 @@ export class AddPurchasesComponent implements OnInit {
 
     this.data.getpurchase().subscribe((res) => {
       // set newPurchase.purch_id to last purch_id + 1 and make it 6 digit
-      let purch_id = res.data[0] ? res.data[0].purch_id : 100;
+      let purch_id = res.data[res.data.length-1] ? res.data[res.data.length-1].purch_id : 100;
       purch_id = parseInt(purch_id) + 1;
       purch_id = purch_id.toString();
       while (purch_id.length < 6) {
@@ -233,8 +233,7 @@ export class AddPurchasesComponent implements OnInit {
     const product = this.allProducts.find((p: any) => p.item === productName);
     if (product) {
       product.quantity = 1;
-      let price = product.purchasePrice.replace(/[^0-9.]/g, '');
-      price = parseFloat(price);
+      let price = parseFloat(product.purchasePrice);
       product.amount = price * product.quantity;
       this.selectedProducts.push(product);
 
@@ -258,14 +257,14 @@ export class AddPurchasesComponent implements OnInit {
   }
 
   setEditProduct(product: any) {
-    product.price = parseFloat(product.purchasePrice.replace(/[^0-9.]/g, ''));
+    product.price = parseFloat(product.purchasePrice);
     product.discount = 0;
     product.tax = "0";
     this.selectedProductEdit = product;
   }
 
   updateProduct() {
-    this.selectedProductEdit.purchasePrice = "PKR" + this.selectedProductEdit.price;
+    this.selectedProductEdit.purchasePrice = this.selectedProductEdit.price;
     this.selectedProductEdit.amount = (this.selectedProductEdit.price * this.selectedProductEdit.quantity) - this.selectedProductEdit.discount;
     this.selectedProductEdit.amount = this.selectedProductEdit.amount + (this.selectedProductEdit.amount * (parseFloat(this.selectedProductEdit.tax) / 100));
     this.selectedProducts = this.selectedProducts.map((p: any) => {
@@ -274,6 +273,7 @@ export class AddPurchasesComponent implements OnInit {
       }
       return p;
     });
+    this.data.updateProductPrice(this.selectedProductEdit).subscribe((res: any) => {});
   }
 
   calculateTotalAmount() {
@@ -287,7 +287,7 @@ export class AddPurchasesComponent implements OnInit {
   // ledger function
   addLedger(purch_id: any, vendor_id: any, amountDebit: any) {
     let ledger = {
-      name: "SRV",
+      name: "SRV", //Stock Received Voucher
       purch_id: purch_id,
       vendor_id: vendor_id,
       amountDebit: amountDebit,
@@ -300,9 +300,9 @@ export class AddPurchasesComponent implements OnInit {
   addInventoryLedger(newPurchase: any, product: any) {
 
     let inventoryLedger = {
-      name: "PSV",
+      name: "SIV", //Stock In Voucher
       user: JSON.parse(localStorage.getItem('user') || '{}'),
-      purchasePrice: parseFloat(product.purchasePrice.replace(/[^0-9.]/g, '')),
+      purchasePrice: parseFloat(product.purchasePrice),
       voucher: newPurchase.purch_id,
       product_id: product.id,
       stockOut: 0,
