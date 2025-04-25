@@ -18,6 +18,11 @@ const routes: Routes = [
           import('./add-transection/add-purchases.module').then((m) => m.AddPurchasesModule),
       },
       {
+        path: 'edit-transaction',
+        loadChildren: () =>
+          import('./edit-transection/add-purchases.module').then((m) => m.AddPurchasesModule),
+      },
+      {
         path: 'transaction-details',
         loadChildren: () =>
           import('./transaction-details/purchases-details.module').then((m) => m.PurchasesDetailsModule),

@@ -9,8 +9,19 @@ import { SideBar, SideBarData, SideBarMenu, apiResultFormat, vendor } from '../.
   providedIn: 'root',
 })
 export class DataService {
-  backendUrl: string = 'http://localhost:3000';
-  constructor(private http: HttpClient) {}
+  backendUrl: string;
+  constructor(private http: HttpClient) {
+    this.backendUrl = (window as any)['env'].backendUrl;
+    console.log('Using backend URL:', this.backendUrl);
+    // this.loadConfig();
+  }
+
+  // private loadConfig(): void {
+  //   this.http.get<any>('assets/env.json').subscribe(config => {
+  //     this.backendUrl = config.backendUrl;
+  //     console.log('Backend URL loaded:', this.backendUrl);
+  //   });
+  // }
 
   public getEvents() {
     return this.http
@@ -965,6 +976,10 @@ export class DataService {
   public getTransactionById(id: number) {
     return this.http.get(this.backendUrl+`/transaction/${id}`);
   }
+  public updateTransaction(transaction: any) {
+    return this.http.put(this.backendUrl+`/transaction/${transaction.id}`, transaction);
+  }
+
   public getrole() {
     return this.http.get<apiResultFormat>('assets/JSON/role.json').pipe(
       map((res: apiResultFormat) => {

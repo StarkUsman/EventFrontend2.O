@@ -8,6 +8,7 @@ import {
   editcreditnotes,
   pageSelection,
 } from 'src/app/core/models/models';
+import { ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
@@ -59,8 +60,10 @@ export class AddPurchasesComponent implements OnInit {
 
   filteredCreditOptions!: Observable<string[]>;
   filteredDebitOptions!: Observable<string[]>;
+  creditLedgerID: any = 0;
+  debitLedgerID: any = 0;
 
-  constructor(private router: Router, private data: DataService) {
+  constructor(private route: ActivatedRoute, private router: Router, private data: DataService) {
     this.newTransaction.date = this.purchaseDateValue;
   }
 
@@ -87,18 +90,27 @@ export class AddPurchasesComponent implements OnInit {
       this.allVouchers = res.data;
     });
 
-    this.data.getVendors().subscribe((res) => {
-      this.allAccounts = res.data;
-    });
+    this.route.queryParams.subscribe(params => {
+      let id = params['id'];
+      this.data.getTransactionById(id).subscribe((res: any) => {
+        this.newTransaction = res;
+        this.newTransaction.date = new Date(this.newTransaction.date);
+        this.creditLedgerID = this.newTransaction.creditAccount.ledgerId;
+        this.debitLedgerID = this.newTransaction.debitAccount.ledgerId;
+        this.newTransaction.debitAccountName = this.newTransaction.debitAccount.name;
+        this.newTransaction.creditAccountName = this.newTransaction.creditAccount.name;
+        this.newTransaction.creditAccount = this.allAccounts.find((account: any) => account.name === this.newTransaction.creditAccountName);
+        this.newTransaction.debitAccount = this.allAccounts.find((account: any) => account.name === this.newTransaction.debitAccountName);
 
-    this.data.getTransaction().subscribe((res) => {
-      let purch_id = res.data[res.data.length-1] ? res.data[res.data.length-1].trans_id : 100;
-      purch_id = parseInt(purch_id) + 1;
-      purch_id = purch_id.toString();
-      while (purch_id.length < 6) {
-        purch_id = "0" + purch_id;
-      }
-      this.newTransaction.trans_id = purch_id;
+        if (this.newTransaction?.img) {
+          const file = this.base64ToFile(
+            this.newTransaction.img,
+            'signature.png'
+          );
+          this.files.push(file);
+        }
+
+      });
     });
   }
 
@@ -118,6 +130,18 @@ export class AddPurchasesComponent implements OnInit {
     reader.onload = () => {
       this.newTransaction.img = reader.result;
     };
+  }
+
+  base64ToFile(data: any, filename: string) {
+    const arr = data.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
   }
 
   onRemove(event: File) {
@@ -145,44 +169,44 @@ export class AddPurchasesComponent implements OnInit {
   }
 
   // ledger function
-  addCreditLedger() {
-    let ledger = {
+  updateCreditLedger() {
+    let ledgerToUpdate = {
+      id: this.creditLedgerID,
       name: this.newTransaction.voucher,
       purch_id: this.newTransaction.trans_id,
       vendor_id: this.newTransaction.creditAccount.id,
       amountDebit: 0,
       amountCredit: this.newTransaction.amount,
     };
-
-    this.data.addLedger(ledger).subscribe((res: any) => { 
-      this.newTransaction.creditAccount.ledgerId = res.id;
-      this.addDebitLedger();
+    this.data.updateLedgerById(ledgerToUpdate).subscribe((res: any) => {
+      this.newTransaction.creditAccount.ledgerId = this.creditLedgerID;
+      this.updateDebitLedger();
     });
   }
 
-  addDebitLedger() {
-      let ledger = {
-        name: this.newTransaction.voucher,
-        purch_id: this.newTransaction.trans_id,
-        vendor_id: this.newTransaction.debitAccount.id,
-        amountDebit: this.newTransaction.amount,
-        amountCredit: 0,
-      };
-      
-      this.data.addLedger(ledger).subscribe((res: any) => {
-        this.newTransaction.debitAccount.ledgerId = res.id;
-        this.data.addTransaction(this.newTransaction).subscribe((res: any) => {
-          this.newTransaction = {};
-          const transId = res.id;
-          this.router.navigate([routes.transactionDetails], {
-            queryParams: { id: transId }
-          });
+  updateDebitLedger() {
+    let ledgerToUpdate = {
+      id: this.debitLedgerID,
+      name: this.newTransaction.voucher,
+      purch_id: this.newTransaction.trans_id,
+      vendor_id: this.newTransaction.debitAccount.id,
+      amountDebit: this.newTransaction.amount,
+      amountCredit: 0,
+    };
+
+    this.data.updateLedgerById(ledgerToUpdate).subscribe((res: any) => {
+      this.newTransaction.debitAccount.ledgerId = this.debitLedgerID;
+      this.data.updateTransaction(this.newTransaction).subscribe((res: any) => {
+        this.router.navigate([routes.transactionDetails], {
+          queryParams: { id: this.newTransaction.id }
         });
-       });
+        this.newTransaction = {};
+      });
+    });
   }
 
 
   addTransaction() {
-    this.addCreditLedger();
+    this.updateCreditLedger();
   }
 }

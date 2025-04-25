@@ -403,6 +403,9 @@ export class routes {
   public static get transactionDetails(): string {
     return this.payments + '/transaction-details';
   }
+  public static get editTransaction(): string {
+    return this.payments + '/edit-transaction';
+  }
 
 
   public static get voucherList(): string {

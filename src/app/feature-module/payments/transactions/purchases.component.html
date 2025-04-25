@@ -147,16 +147,8 @@
                                   <ul>
                                     <!-- <li>
                                       <a
-                                        class="dropdown-item"
-                                        [routerLink]="routes.editpurchases"
-                                        [queryParams]="{ id: data.id }"
-                                        ><i class="far fa-edit me-2"></i>Edit</a
-                                        >
-                                      </li> -->
-                                      <!-- <li>
-                                        <a
-                                          class="dropdown-item"
-                                          href="javascript:void(0);"
+                                      class="dropdown-item"
+                                      href="javascript:void(0);"
                                           data-bs-toggle="modal"
                                           data-bs-target="#delete_modal"
                                           (click)="setItemToDelete(data)"
@@ -171,6 +163,14 @@
                                             ><i class="far fa-eye me-2"></i>View</a
                                             >
                                           </li>
+                                          <li>
+                                            <a
+                                              class="dropdown-item"
+                                              [routerLink]="routes.editTransaction"
+                                              [queryParams]="{ id: data.id }"
+                                              ><i class="far fa-edit me-2"></i>Edit</a
+                                              >
+                                            </li>
                                           <!-- <li>
                                             <a
                                               class="dropdown-item"

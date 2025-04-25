@@ -1,0 +1,252 @@
+<div class="card mb-0">
+  <div class="card-body">
+    <div class="content-page-header">
+      <h5>Add Transaction</h5>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group-item border-0 mb-0">
+          <div class="row align-item-center">
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="input-block mb-3">
+                <label htmlFor="label">Transaction Voucher#</label>
+                <input
+                  id="label"
+                  type="text"
+                  class="form-control"
+                  disabled="true"
+                  [(ngModel)]="newTransaction.trans_id"
+                  />
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="input-block mb-3">
+                  <label htmlFor="label">Voucher Type <span class="text-danger">*</span></label>
+                      <mat-select
+                        [(ngModel)]="newTransaction.voucher"
+                        [ngModelOptions]="{ standalone: true }"
+                        class="select custom-mat-select"
+                        >
+                        <mat-option *ngFor="let voucher of allVouchers" [value]="voucher.symbol">
+                          {{ voucher.symbol }}
+                        </mat-option>
+                      </mat-select>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="input-block mb-3">
+                  <label htmlFor="label">Transaction Date</label>
+                  <input
+                    id="label"
+                    type="text"
+                    class="datetimepicker form-control"
+                    placeholder="Select Date"
+                    [(ngModel)]="newTransaction.date"
+                    bsDatepicker [bsConfig]="{ adaptivePosition: true }"
+                    [(bsValue)]="purchaseDateValue"
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-12 col-md-6 col-sm-12" *ngIf="newTransaction.voucher === 'BPV'">
+                  <div class="input-block mb-3">
+                    <label htmlFor="label">Check Number <span class="text-danger">*</span></label>
+                    <input
+                      id="label"
+                      type="text"
+                      class="form-control"
+                      placeholder="Enter Check Number"
+                      [(ngModel)]="newTransaction.checkNumber"
+                      />
+                    </div>
+                  </div>
+
+                <!-- ############################################################ -->
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                  <div class="input-block mb-3">
+                      <mat-form-field class="w-100">
+                        <mat-label>Credit Account <span class="text-danger">*</span></mat-label>
+                        <input type="text"
+                          [disabled]="true"
+                          placeholder="Select Credit Account"
+                          aria-label="Credit Account"
+                          matInput
+                          [(ngModel)]="newTransaction.creditAccountName"
+                          [matAutocomplete]="creditAuto">
+                        <mat-autocomplete #creditAuto="matAutocomplete" (optionSelected)="onCreditAccountSelected($event.option.value)">
+                          @for (option of filteredCreditOptions | async; track option) {
+                            <mat-option [value]="option"
+                            >{{option}}</mat-option>
+                          }
+                        </mat-autocomplete>
+                      </mat-form-field>
+                      <div class="mt-1" *ngIf="newTransaction.creditAccount" [ngClass]="{'text-danger': newTransaction.creditAccount.balanceNumber < 0, 'text-success-light': newTransaction.creditAccount.balanceNumber >= 0}">
+                        Current Balance : {{ newTransaction.creditAccount.balance }}
+                      </div>
+                  </div>
+                </div>
+                <div class="col-lg-1 col-md-6 col-sm-12">
+                  <div class="input-block mt-4 arrowbox"> 
+                    <span class="fa fa-arrow-left fa-2x"></span>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                  <div class="input-block mb-3">
+                    <!-- <div class="spaceBetween"><span *ngIf="newTransaction.amount" [ngClass]="{'text-danger': remainingAmount < 0, 'text-success-light': remainingAmount >= 0}"
+                      >Remaining Balance: PKR{{remainingAmount}}</span></div> -->
+                      <mat-form-field class="w-100">
+                        <mat-label>Debit Account <span class="text-danger">*</span></mat-label>
+                        <input type="text"
+                          [disabled]="true"
+                          placeholder="Select Debit Account"
+                          aria-label="Debit Account"
+                          matInput
+                          [(ngModel)]="newTransaction.debitAccountName"
+                          [matAutocomplete]="debitAuto">
+                        <mat-autocomplete #debitAuto="matAutocomplete" (optionSelected)="onDebitAccountSelected($event.option.value)">
+                          @for (option of filteredDebitOptions | async; track option) {
+                            <mat-option [value]="option"
+                            >{{option}}</mat-option>
+                          }
+                        </mat-autocomplete>
+                      </mat-form-field>
+                        <div class="spaceBetween" *ngIf="newTransaction.debitAccount" [ngClass]="{'text-danger': newTransaction.debitAccount.balanceNumber < 0, 'text-success-light': newTransaction.debitAccount.balanceNumber >= 0}">
+                          <span>Current Balance : {{ newTransaction.debitAccount.balance }}</span>
+                          <span *ngIf="newTransaction.amount" [ngClass]="{'text-danger': remainingAmount < 0, 'text-success-light': remainingAmount >= 0}"
+                            >Remaining Balance: PKR{{remainingAmount}}</span>
+                        </div>
+                  </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <div class="input-block"> 
+                    <label htmlFor="label">Transaction Amount <span class="text-danger">*</span></label>
+                    <input
+                      id="label"
+                      type="number"
+                      class="form-control"
+                      placeholder="Enter Transaction Amount"                      
+                      [(ngModel)]="newTransaction.amount"
+                      (input)="calculateRemainingAmount()"
+                      />
+                    </div>
+                    <span class="text-danger" *ngIf="(newTransaction.debitAccount?.id != null)&&(newTransaction.debitAccount?.id === newTransaction.creditAccount?.id)" >
+                      Debit and Credit Account cannot be same</span>
+                </div>
+                <!-- ############################################################ -->
+
+                    <!-- <div class="col-lg-4 col-md-6 col-sm-12">
+                      <div class="input-block mb-3">
+                        <label for="Supplier">Supplier Invoice Serial No</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          placeholder="Enter Supplier Invoice Serial No"
+                          [(ngModel)]="newTransaction.invoice_sr_no"
+                          />
+                        </div>
+                      </div> -->
+                    </div>
+                  </div>
+                  <div class="form-group-item border-0 p-0">
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12">
+                          <div class="form-group-bank">
+                            <div class="invoice-total-box">
+                                  <div class="invoice-total-footer">
+                                    <h4>Total Transaction Amount: <span>PKR:{{newTransaction.amount}}</span></h4>
+                                  </div>
+                                </div>
+                                <div class="col-lg-12">
+                                  <div class="input-block mb-3">
+                                    <label htmlFor="label">Reference <span class="text-danger">*</span></label>
+                                    <textarea
+                                      id="label"
+                                      class="form-control"
+                                      placeholder="Enter Additional Notes"
+                                      [(ngModel)]="newTransaction.notes"
+                                      ></textarea>
+                                  </div>
+                                </div>
+                                  <div class="col-md-12">
+                                    <div class="input-block mb-3 mb-0 pb-0">
+                                      <label for="Signature">Add Attachment</label>
+                                      <ngx-dropzone
+                                        (change)="onSelect($event)"
+                                        class="service-upload add-credit"
+                                        >
+                                        <ngx-dropzone-label class="drop-browse align-center">
+                                          <span><i class="feather icon-upload-cloud me-2"></i>Upload Attachment</span>
+                                        </ngx-dropzone-label>
+                                        @for (f of files; track f) {
+                                          <ngx-dropzone-image-preview
+                                            ngProjectAs="ngx-dropzone-preview"
+                                            [file]="f"
+                                            [removable]="true"
+                                            (removed)="onRemove(f)"
+                                            >
+                                          </ngx-dropzone-image-preview>
+                                        }
+                                      </ngx-dropzone>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="text-end">
+                            <button [routerLink]="routes.transactionList" type="reset" class="btn btn-primary me-2">Cancel</button>
+                            <button [disabled]="(!newTransaction.notes ||!newTransaction.voucher || !newTransaction.creditAccount || !newTransaction.debitAccount || !newTransaction.amount ||(newTransaction.voucher === 'BPV' && !newTransaction.checkNumber) || ((newTransaction.debitAccount?.id === newTransaction.creditAccount?.id)))" type="submit" class="btn btn-primary" (click)="addTransaction()">Save</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                            <!-- Add Bank Details Modal -->
+                            <div class="modal custom-modal fade" id="bank_details" role="dialog">
+                              <div class="modal-dialog modal-dialog-centered modal-md">
+                                <div class="modal-content">
+                                  <div class="modal-header border-0 pb-0">
+                                    <div class="form-header modal-header-title text-start mb-0">
+                                      <h4 class="mb-0">Add Bank Details</h4>
+                                    </div>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <div class="row">
+                                      <div class="col-lg-12 col-md-12">
+                                        <div class="input-block mb-3">
+                                          <label for="Bank">Bank Name <span class="text-danger">*</span></label>
+                                          <input type="text" class="form-control" placeholder="Enter Bank Name">
+                                        </div>
+                                      </div>
+                                      <div class="col-lg-12 col-md-12">
+                                        <div class="input-block mb-3">
+                                          <label for=">Account">Account Number <span class="text-danger">*</span></label>
+                                          <input type="number" class="form-control" placeholder="Enter Account Number">
+                                        </div>
+                                      </div>
+                                      <div class="col-lg-12 col-md-12">
+                                        <div class="input-block mb-3">
+                                          <label for="Branch">Branch Name <span class="text-danger">*</span></label>
+                                          <input type="text" class="form-control" placeholder="Enter Branch Name">
+                                        </div>
+                                      </div>
+                                      <div class="col-lg-12 col-md-12">
+                                        <div class="input-block mb-0">
+                                          <label for="IFSC">IFSC Code <span class="text-danger">*</span></label>
+                                          <input type="number" class="form-control" placeholder="Enter IFSC COde">
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Back</a>
+                                    <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn">Save</a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- /Add Bank Details Modal -->
