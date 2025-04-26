@@ -318,6 +318,7 @@ export class AddEstimatesComponent implements OnInit {
   }
 
   saveReservation() {
+    this.reservation.user = JSON.parse(localStorage.getItem('user') || '{}'),
     this.reservation.date = new Date(); 
     this.reservation.add_service_ids = this.additionalServicesSelected.map(service => service.additional_service_id);
     this.reservation.menu_items_ids = this.menuItems.filter(item => item.selected).map(item => item.menu_item_id);
@@ -447,16 +448,12 @@ export class AddEstimatesComponent implements OnInit {
   }
 
   saveDraft(){
+    this.reservation.user = JSON.parse(localStorage.getItem('user') || '{}'),
     this.reservation.status = 'DRAFTED';
     this.reservation.SLOT = this.slotSelected;
-    try{
-      this.http.post(`${this.backendUrl}/bookings`, this.reservation).subscribe(() => {
-        alert('Reservation saved!');
-  
-        this.router.navigate(['/reservations/reservationList']);
-      });
-    } catch(error){
-      console.log(error);
-    }
+
+    this.data.addReservation(this.reservation).subscribe((res: any) => {
+      this.router.navigate(['/reservations/reservationList']);
+    });
   }
 }

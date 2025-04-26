@@ -85,30 +85,23 @@
                           />
                         </div>
                       </div>
-                      <div class="col-lg-12">
+                      <div class="col-lg-12 col-md-6 col-sm-12">
                         <div class="input-block mb-3">
-                          <label htmlFor="label">Products</label>
-                          <ul class="form-group-plus css-equal-heights">
-                            <li>
-                              <mat-select
-                                [(ngModel)]="selectedProduct"
-                                [ngModelOptions]="{ standalone: true }"
-                                (selectionChange)="onProductSelect($event.value)"
-                                class="select custom-mat-select"
-                                >
-                                <mat-option *ngFor="let product of allProducts" [value]="product">
-                                  {{ product.item }}
-                                </mat-option>
-                              </mat-select>
-                            </li>
-                            <li>
-                              <a
-                                class="btn btn-primary form-plus-btn"
-                                [routerLink]="routes.addproducts"
-                                ><i class="fas fa-plus-circle"></i
-                              ></a>
-                            </li>
-                          </ul>
+                          <mat-form-field class="w-100">
+                            <mat-label>Products <span class="text-danger">*</span></mat-label>
+                            <input type="text"
+                            placeholder="Select Products"
+                            aria-label="Product"
+                            matInput
+                            [formControl]="control"
+                            [matAutocomplete]="auto">
+                            <mat-autocomplete #auto="matAutocomplete">
+                              @for (option of filteredOptions | async; track option) {
+                                <mat-option [value]="option" (onSelectionChange)="onProductSelect(option)"
+                                >{{option}}</mat-option>
+                              }
+                            </mat-autocomplete>
+                          </mat-form-field>
                         </div>
                       </div>
                     </div>

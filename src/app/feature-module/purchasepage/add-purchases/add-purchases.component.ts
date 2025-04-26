@@ -61,6 +61,8 @@ export class AddPurchasesComponent implements OnInit {
   filteredOptions!: Observable<string[]>;
   products: any = [];
   newProduct: any = {};
+  categories: any = [];
+  units: any = [];
 
   constructor(private data: DataService) {
     this.newPurchase.purchase_date = this.purchaseDateValue;
@@ -73,6 +75,12 @@ export class AddPurchasesComponent implements OnInit {
     this.getTableData();
     this.data.getVendors().subscribe((res) => {
       this.allVendors = res.data;
+    });
+    this.data.getCategory().subscribe((res) => {
+      this.categories = res.data;
+    });
+    this.data.getUnits().subscribe((res) => {
+      this.units = res.data;
     });
 
     this.data.getProductlist().subscribe((res) => {
@@ -211,7 +219,7 @@ export class AddPurchasesComponent implements OnInit {
 
   initNewProduct(){
     this.data.getProductlist().subscribe((res) => {
-      this.newProduct.code = res.data[0]?.code ? parseFloat(res.data[0].code) + 1 : 101;
+      this.newProduct.code = res.data[res.data.length-1]?.code ? parseFloat(res.data[res.data.length-1].code) + 1 : 101;
       this.newProduct.code = String(this.newProduct.code).padStart(6, '0');
     });
   }

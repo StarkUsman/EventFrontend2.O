@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { EditPurchasesRoutingModule } from './edit-purchases-routing.module';
 import { EditPurchasesComponent } from './edit-purchases.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
   imports: [
     CommonModule,
     EditPurchasesRoutingModule,
-    SharedModule
+    SharedModule,
+    MatAutocompleteModule
   ]
 })
 export class EditPurchasesModule { }

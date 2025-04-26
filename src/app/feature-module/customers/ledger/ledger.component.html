@@ -1,8 +1,13 @@
 <!-- Page Header -->
 <div class="page-header">
     <div class="content-page-header">
-        <h5>Account Ledger</h5>
-        <!-- <div class="list-btn">
+        <!-- go back button with left arrow icon -->
+         
+         <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+         <h5>
+            <button [routerLink]="routes.customerList" class="btn btn-back-custom" type="button">&#8592;</button>
+            Account Ledger
+          </h5>        <!-- <div class="list-btn">
             <ul class="filter-list">
                 <li>
                     <a class="btn btn-primary" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#add_ledger"><i

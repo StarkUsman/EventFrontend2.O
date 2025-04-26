@@ -444,6 +444,9 @@ export class routes {
   public static get editReservation(): string {
     return this.reservations + '/edit-reservation';
   }
+  public static get reservationDetails(): string {
+    return this.reservations + '/reservationDetails';
+  }
   public static get invoice(): string {
     return this.baseUrl + '/invoices';
   }

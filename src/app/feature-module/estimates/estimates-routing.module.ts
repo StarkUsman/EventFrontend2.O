@@ -29,6 +29,13 @@ const routes: Routes = [
             (m) => m.ViewEstimateModule
           ),
       },
+      {
+        path: 'reservationDetails',
+        loadChildren: () =>
+          import('./purchases-details/purchases-details.module').then(
+            (m) => m.PurchasesDetailsModule
+          ),
+      }
     ],
   },
 ];

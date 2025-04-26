@@ -133,11 +133,38 @@ export class ViewEstimateComponent  implements OnInit {
     this.reservationToAddPayment.status = this.reservationToAddPayment.status ? this.reservationToAddPayment.status : 'OPEN';
   }
 
+  addLedger() {
+    let ledger = {
+      name: "RES:"+this.reservationToAddPayment.reservation_name,
+      purch_id: this.reservationToAddPayment.booking_id,
+      vendor_id: this.reservationToAddPayment.account.id,
+      amountDebit: 0,
+      amountCredit: this.reservationToAddPayment.paymentToAdd,
+    };
+
+    this.data.addLedger(ledger).subscribe((res) => { });
+  }
+
+  addReservationLedger() {
+    let ledger = {
+      booking_id: this.reservationToAddPayment.booking_id,
+      user: JSON.parse(localStorage.getItem('user') || '{}').firstName + ' ' + JSON.parse(localStorage.getItem('user') || '{}').lastName,
+      amount: this.reservationToAddPayment.paymentToAdd,
+      account: this.reservationToAddPayment.account.name,
+    };
+
+    this.data.addReservationLedger(ledger).subscribe((res) => { });
+  }
+
   addAmount(){
+
+    this.addLedger();
+
+    this.addReservationLedger();
+
     let requestBody = {
       id: this.reservationToAddPayment.booking_id,
       paymentToAdd: this.reservationToAddPayment.paymentToAdd,
-      account_id: this.reservationToAddPayment.account.id,
     }
 
     this.data.addReservationPayment(requestBody).subscribe((res: any) => {

@@ -8,8 +8,9 @@ import {
   pageSelection,
 } from 'src/app/core/models/models';
 import { ActivatedRoute } from '@angular/router';
-import { S } from '@angular/cdk/keycodes';
-import { co } from '@fullcalendar/core/internal-common';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 
 interface Food {
   value: string;
@@ -22,6 +23,7 @@ interface Food {
   styleUrls: ['./edit-purchases.component.scss'],
 })
 export class EditPurchasesComponent implements OnInit {
+  control = new FormControl();
   purchaseDateValue: Date = new Date();
   dueDateValue: Date = new Date();
   selectbank = 'Bank1';
@@ -61,6 +63,8 @@ export class EditPurchasesComponent implements OnInit {
   total_purch_amount: any = 0;
   product_to_remove: any = {};
   ledgerToUpdate: any = {};
+  filteredOptions!: Observable<string[]>;
+  productNames: any = [];
 
   constructor(private route: ActivatedRoute, private data: DataService) {}
 
@@ -95,8 +99,29 @@ export class EditPurchasesComponent implements OnInit {
           this.files.push(file);
         }
 
+        this.data.getProductlist().subscribe((res: any) => {
+          for (let i = 0; i < res.data.length; i++) {
+            this.productNames.push(res.data[i].item);
+          }
+          this.productNames = this.productNames.filter((name: any) => {
+            // Filter out the names that are not in the selected products
+            return !this.selectedProducts.some((product: any) => product.item === name);
+          });
+    
+          this.filteredOptions = this.control.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value || '')),
+          );
+        });
+
       });
     });
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.productNames.filter((option: any) => option.toLowerCase().includes(filterValue));
   }
 
   base64ToFile(data: any, filename: string) {
@@ -216,7 +241,21 @@ export class EditPurchasesComponent implements OnInit {
     this.files.splice(this.files.indexOf(event), 1);
   }
 
-  onProductSelect(product: any) {
+  // onProductSelect(product: any) {
+  //   if (product) {
+  //     product.quantity = 1;
+  //     let price = parseFloat(product.purchasePrice);
+  //     product.amount = price * product.quantity;
+  //     this.selectedProducts.push(product);
+
+  //     this.allProducts = this.allProducts.filter((p: any) => p.id !== product.id);
+
+  //     this.selectedProduct = null;
+  //   }
+  // }
+
+  onProductSelect(productName: any) {
+    const product = this.allProducts.find((p: any) => p.item === productName);
     if (product) {
       product.quantity = 1;
       let price = parseFloat(product.purchasePrice);
@@ -224,8 +263,12 @@ export class EditPurchasesComponent implements OnInit {
       this.selectedProducts.push(product);
 
       this.allProducts = this.allProducts.filter((p: any) => p.id !== product.id);
+      this.productNames = this.productNames.filter((p: any) => p !== productName);
 
       this.selectedProduct = null;
+      setTimeout(() => {
+        this.control.setValue('');
+      });
     }
   }
 

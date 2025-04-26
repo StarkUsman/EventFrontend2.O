@@ -557,6 +557,14 @@ export class DataService {
     return this.http.post(this.backendUrl+'/ledger', ledger);
   }
 
+  public addReservationLedger(ledger: any){
+    return this.http.post(this.backendUrl+'/bookingledger', ledger);
+  }
+
+  public getReservationLedgerById(id: number) {
+    return this.http.get(this.backendUrl+`/bookingledger/${id}`);
+  }
+
   public addInventoryLedger(ledger: any){
     return this.http.post(this.backendUrl+'/inventoryLedger', ledger);
   }
@@ -1866,7 +1874,7 @@ public sideBar: any[] = [
     ],
   },
   {
-    tittle: 'User Management',
+    tittle: 'Management',
     active: false,
     icon: 'airplay',
     showAsTab: false,
@@ -1882,14 +1890,23 @@ public sideBar: any[] = [
         subMenus: [],
       },
       {
-        menuValue: 'Roles & Permission',
-        route: routes.rolespermission,
+        menuValue: 'Settings',
+        route: routes.companysettings,
         hasSubRoute: false,
         showSubRoute: false,
-        icon: 'clipboard',
-        base: 'roles-permission',
+        icon: 'settings',
+        base: 'settings',
         subMenus: [],
       },
+      // {
+      //   menuValue: 'Roles & Permission',
+      //   route: routes.rolespermission,
+      //   hasSubRoute: false,
+      //   showSubRoute: false,
+      //   icon: 'clipboard',
+      //   base: 'roles-permission',
+      //   subMenus: [],
+      // },
       // {
       //   menuValue: 'Delete Account Request',
       //   route: routes.deleteaccountrequest,
@@ -2456,33 +2473,33 @@ public sideBar: any[] = [
   //     },
   //   ],
   // },
-  {
-    tittle: 'Settings',
-    active: false,
-    icon: 'airplay',
-    showAsTab: false,
-    separateRoute: false,
-    menu: [
-      {
-        menuValue: 'Settings',
-        route: routes.companysettings,
-        hasSubRoute: false,
-        showSubRoute: false,
-        icon: 'settings',
-        base: 'settings',
-        subMenus: [],
-      },
-      // {
-      //   menuValue: 'Logout',
-      //   route: routes.login,
-      //   hasSubRoute: false,
-      //   showSubRoute: false,
-      //   icon: 'power',
-      //   base: 'power',
-      //   subMenus: [],
-      // },
-    ],
-  },
+  // {
+  //   tittle: 'Settings',
+  //   active: false,
+  //   icon: 'airplay',
+  //   showAsTab: false,
+  //   separateRoute: false,
+  //   menu: [
+  //     {
+  //       menuValue: 'Settings',
+  //       route: routes.companysettings,
+  //       hasSubRoute: false,
+  //       showSubRoute: false,
+  //       icon: 'settings',
+  //       base: 'settings',
+  //       subMenus: [],
+  //     },
+  //     {
+  //       menuValue: 'Logout',
+  //       route: routes.login,
+  //       hasSubRoute: false,
+  //       showSubRoute: false,
+  //       icon: 'power',
+  //       base: 'power',
+  //       subMenus: [],
+  //     },
+  //   ],
+  // },
   // {
   //   tittle: 'Extras',
   //   active: false,

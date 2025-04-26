@@ -82,6 +82,14 @@
                                     <div class="dropdown-menu dropdown-menu-right">
                                       <ul>
                                         <li>
+                                          <a
+                                            class="dropdown-item"
+                                            [routerLink]="routes.reservationDetails"
+                                            [queryParams]="{ id: reservation.booking_id }"
+                                            ><i class="far fa-eye me-2"></i>View</a
+                                            >
+                                          </li>
+                                        <li>
                                         <a
                                           class="dropdown-item"
                                           [routerLink]="routes.editReservation"
