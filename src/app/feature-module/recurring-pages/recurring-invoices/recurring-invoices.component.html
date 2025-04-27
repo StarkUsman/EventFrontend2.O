@@ -5,6 +5,10 @@
     <div class="list-btn">
       <ul class="filter-list">
         <li>
+          <a class="btn btn-primary" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#calculate_salary"><i
+          class="fas fa-money-bill-alt me-2" aria-hidden="true"></i>Calculate Salary</a>
+        </li>
+        <li>
           <a class="btn btn-primary" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#add_salary"><i
           class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add Salary</a>
         </li>
@@ -93,7 +97,7 @@
               </div>
               <div class="col-lg-12 col-sm-12">
                 <div class="input-block mb-3">
-                  <label for="name">Fixed Salay</label>
+                  <label for="name">Fixed Salary</label>
                   <input type="number" class="form-control" placeholder="Enter Fixed Salary" [(ngModel)]="newSalary.amount">
                 </div>
               </div>
@@ -299,3 +303,60 @@
       </div>
     </div>
     <!-- /Delete Items Modal -->
+
+    <div class="modal custom-modal fade" id="calculate_salary" role="dialog" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header border-0 pb-0">
+            <div class="form-header modal-header-title text-start mb-0">
+              <h4 class="mb-0">Calculated Salaries</h4>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            </button>
+          </div>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="card">
+                <div class="card-body">
+                  <div class="">
+                    <table matSort class="table table-striped mb-0 table-hover datatable">
+                      <thead class="thead-light">
+                        <tr>
+                          <th>#</th>
+                          <th>Account Name</th>
+                          <th>Last Payment Date</th>
+                          <th>Total Saraly Calulated</th>
+                          <!-- <th mat-sort-header="category">Total Expense</th> -->
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (data of allSalaries; track data; let i = $index) {
+                          <tr>
+                            <td>{{data.id}}</td>
+                            <td>{{data.vendor.name}}</td>
+                            <td>{{data.lastSalaryPaidDate}}</td>
+                            <td>PKR:{{data.totalSalaryCalculated}}</td>
+                            <!-- <td>PKR:{{data.totalExpense}}</td> -->
+                          </tr>
+                        }
+                        <tr>
+                          <td colspan="3">
+                              <p>Total Salaries since {{lastSalaryPaidDate}}</p>
+                          </td>
+                          <td><span class="text-primary fw-600">PKR:{{totalSalary}}</span></td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- <app-custom-pagination></app-custom-pagination> -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</a>
+            <button [disabled]="(totalSalary === 0)" href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn" (click)="paySalary()">Pay Salary</button>
+          </div>
+        </div>
+      </div>
+    </div>

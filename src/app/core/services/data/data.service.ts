@@ -412,6 +412,10 @@ export class DataService {
     );
   }
 
+  public getAllCalculatedSalaries() {
+    return this.http.get(this.backendUrl+`/salary/calculate`);
+  }
+
   public addSalary(salary: any) {
     return this.http.post(this.backendUrl+'/salary', salary);
   }

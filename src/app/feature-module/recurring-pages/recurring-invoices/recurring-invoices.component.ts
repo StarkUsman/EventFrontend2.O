@@ -44,6 +44,7 @@ export class RecurringInvoicesComponent implements OnInit {
   salaryToEdit: any = {};
   salaryToDelete: any = {};
   menuItemsSelected: any = [];
+  allSalaries: any = [];
 
   constructor(private data: DataService, private pagination: PaginationService , private router: Router) {
     this.pagination.tablePageSize.subscribe((res: tablePageSize) => {
@@ -56,6 +57,7 @@ export class RecurringInvoicesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadMenuItems();
+    this.getAllCalculatedSalaries();
   }
 
   loadMenuItems(){
@@ -227,6 +229,52 @@ export class RecurringInvoicesComponent implements OnInit {
       this.accountControl.setValue('');
       this.menuItemControl.setValue('');
     });
+  }
+
+  lastSalaryPaidDate: any = new Date();
+  totalSalary: any = 0;
+  getAllCalculatedSalaries() {
+    this.data.getAllCalculatedSalaries().subscribe((res: any) => {
+      this.allSalaries = res;
+      this.allSalaries = this.allSalaries.filter((salary: any) => salary.totalSalaryCalculated > 0);
+
+      this.lastSalaryPaidDate = this.allSalaries[0]?.lastSalaryPaidDate;
+      this.allSalaries.forEach((salary: any) => {
+        this.totalSalary += salary.totalSalaryCalculated;
+      });
+    });
+  }
+
+  addLedger(salary: any) {
+
+    let ledger = {
+      name: "Salary",
+      purch_id: salary.id,
+      vendor_id: salary.vendor.id,
+      amountDebit: salary.totalSalaryCalculated,
+      amountCredit: 0
+    };
+
+    this.data.addLedger(ledger).subscribe((res) => { });
+  }
+
+  paySalary() {
+    this.allSalaries.forEach((salary: any) => {
+      console.log(salary);
+      this.addLedger(salary);
+    });
+
+    let salariesToUpdate = this.salaries.map((salary: any) => {
+      return this.allSalaries.find((s: any) => s.id === salary.id) ? salary : null;
+    });
+
+    this.salaries.forEach((salary: any) => {
+      salary.lastSalaryPaidDate = new Date();
+      console.log(salariesToUpdate);
+      this.data.updateSalary(salary).subscribe((res: any) => {});
+    });
+
+    window.location.reload();
   }
 
 }
