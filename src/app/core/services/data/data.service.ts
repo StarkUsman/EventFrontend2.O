@@ -24,13 +24,11 @@ export class DataService {
   // }
 
   public getEvents() {
-    return this.http
-      .get<apiResultFormat>('assets/JSON/scheduleevents.json')
-      .pipe(
-        map((res: apiResultFormat) => {
-          return res;
-        })
-      );
+    return this.http.get<apiResultFormat>(this.backendUrl+'/bookings/all').pipe(
+      map((res: apiResultFormat) => {
+        return res;
+      })
+    );
   }
 
   public getCustomers() {
@@ -360,6 +358,22 @@ export class DataService {
     return this.http.delete(this.backendUrl+`/bookings/${id}`);
   }
 
+
+  public getCompanySettings() {
+    return this.http.get<apiResultFormat>(this.backendUrl+'/settings').pipe(
+      map((res: apiResultFormat) => {
+        return res;
+      })
+    );
+  }
+
+  public saveCompanySettings(settings: any) {
+    return this.http.post(this.backendUrl+'/settings', settings);
+  }
+
+  public updateCompanySettings(settings: any) {
+    return this.http.put(this.backendUrl+`/settings/${settings.id}`, settings);
+  }
 
   public getVendors() {
     return this.http.get<apiResultFormat>(this.backendUrl+'/vendors').pipe(
@@ -1241,6 +1255,15 @@ public sideBar: any[] = [
             route: routes.dashboard,
             base: routes.dashboard,
             icon: 'home',
+            showAsTab: false,
+          },
+          {
+            separateRoute: true,
+            menuValue: 'Calendar',
+            tittle: 'Calendar',
+            route: routes.calender,
+            base: routes.calender,
+            icon: 'calendar',
             showAsTab: false,
           },
         ],

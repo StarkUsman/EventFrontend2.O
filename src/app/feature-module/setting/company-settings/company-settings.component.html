@@ -12,6 +12,9 @@
               type="text"
               class="form-control"
               placeholder="Enter Company Name"
+              name="companyName"
+              [(ngModel)]="companySettings.name"
+              [disabled]="!isBeingEdited"
               />
             </div>
           </div>
@@ -22,76 +25,58 @@
                 type="text"
                 class="form-control"
                 placeholder="Enter Company Address"
+                name="companyAddress"
+                [(ngModel)]="companySettings.address1"
+                [disabled]="!isBeingEdited"
                 />
               </div>
             </div>
             <div class="col-lg-6 col-12">
               <div class="input-block mb-3">
                 <label for="Phone">Phone Number</label>
-                <input type="text" class="form-control" placeholder="Enter Phone Number">
+                <input type="text" class="form-control" placeholder="Enter Phone Number" [(ngModel)]="companySettings.phone" name="companyPhone" [disabled]="!isBeingEdited">
               </div>
             </div>
             <div class="col-lg-6 col-12">
               <div class="input-block mb-3">
                 <label for="Company">Company Email</label>
-                <input type="text" class="form-control" placeholder="Enter Company Email">
+                <input type="text" class="form-control" placeholder="Enter Company Email" [(ngModel)]="companySettings.email" name="companyEmail" [disabled]="!isBeingEdited">
               </div>
             </div>
             <div class="col-lg-6 col-12">
               <div class="input-block mb-3">
-                <label for="Line1">Address Line 1</label>
-                <input type="text" class="form-control" placeholder="Enter Address Line 1">
-              </div>
-            </div>
-            <div class="col-lg-6 col-12">
-              <div class="input-block mb-3">
-                <label for="Line2">Address Line 2</label>
-                <input type="text" class="form-control" placeholder="Enter Address Line 2">
+                <label for="Line1">Secondary Address</label>
+                <input type="text" class="form-control" placeholder="Enter Secondary Address" [(ngModel)]="companySettings.address2" name="companyAddress2" [disabled]="!isBeingEdited">
               </div>
             </div>
             <div class="col-lg-6 col-12">
               <div class="input-block mb-3">
                 <label for="Country">Country</label>
-                <input type="text" class="form-control" placeholder="Enter Country">
+                <input type="text" class="form-control" placeholder="Enter Country" [(ngModel)]="companySettings.country" name="companyCountry" [disabled]="!isBeingEdited">
               </div>
             </div>
             <div class="col-lg-6 col-12">
               <div class="input-block mb-3">
                 <label for="State">State</label>
-                <input type="text" class="form-control" placeholder="Enter State">
+                <input type="text" class="form-control" placeholder="Enter State" [(ngModel)]="companySettings.state" name="companyState" [disabled]="!isBeingEdited">
               </div>
             </div>
             <div class="col-lg-6 col-12">
               <div class="input-block mb-3">
                 <label for="City">City</label>
-                <input type="text" class="form-control" placeholder="Enter City">
+                <input type="text" class="form-control" placeholder="Enter City" [(ngModel)]="companySettings.city" name="companyCity" [disabled]="!isBeingEdited">
               </div>
             </div>
             <div class="col-lg-6 col-12">
               <div class="input-block mb-3">
                 <label for="Pincode">Pincode</label>
-                <input type="text" class="form-control" placeholder="Enter Pincode">
+                <input type="text" class="form-control" placeholder="Enter Pincode" [(ngModel)]="companySettings.zip" name="companyPincode" [disabled]="!isBeingEdited">
               </div>
             </div>
             <div class="col-lg-12 col-12">
-              <div class="input-block mb-3">
-                <label for="Site">Site Logo</label>
-                <div class="input-block service-upload logo-upload mb-0">
-                  <div class="drag-drop">
-                    <h6 class="drop-browse align-center">
-                      <span class="text-info me-1">Click To Replace</span> or Drag and Drop
-                    </h6>
-                    <p class="text-muted">SVG, PNG, JPG (Max 800*400px)</p>
-                    <input type="file" multiple="">
-                  </div>
-                  <span class="sites-logo"><img src="assets/img/settings-logo1.png" alt="upload"></span>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-6 col-lg-12 col-md-6 col-12">
               <div class="input-block mb-3 mb-0 pb-0">
-                <label for="Favicon">Favicon</label>
-                <ngx-dropzone (change)="onSelect($event)" class="service-upload">
+                <label for="Favicon">Company Logo</label>
+                <ngx-dropzone (change)="onSelect($event)" class="service-upload" [disabled]="!isBeingEdited" >
                   <ngx-dropzone-label class="drop-browse align-center">
                     <span
                       ><img src="assets/img/icons/img-drop.svg" alt="upload"
@@ -117,7 +102,7 @@
                 </ngx-dropzone>
               </div>
             </div>
-            <div class="col-xl-6 col-lg-12 col-md-6 col-12">
+            <!-- <div class="col-xl-6 col-lg-12 col-md-6 col-12">
               <div class="input-block mb-3 mb-0 pb-0">
                 <label for="Company">Company icon</label>
                 <ngx-dropzone (change)="onSelect($event)" class="service-upload">
@@ -145,15 +130,18 @@
                   }
                 </ngx-dropzone>
               </div>
-            </div>
+            </div> -->
             <div class="col-lg-12">
               <div class="btn-path text-end">
-                <a
+                <button
+                  *ngIf="isBeingEdited"
+                  (click)="cancelEdit()"
                   href="javascript:void(0);"
                   class="btn btn-cancel bg-primary-light me-3"
-                  >Cancel</a
+                  >Cancel</button
                   >
-                  <a href="javascript:void(0);" class="btn btn-primary">Save Changes</a>
+                  <button *ngIf="isBeingEdited" (click)="saveSettings()" class="btn btn-primary">Save Changes</button>
+                  <button *ngIf="!isBeingEdited" (click)="enableEditSettings()" class="btn btn-primary">Edit Settings</button>
                 </div>
               </div>
             </div>
