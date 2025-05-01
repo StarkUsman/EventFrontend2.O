@@ -155,14 +155,14 @@
                     'slotBooked': !isSlotSelected(slotType, day, Date[j], 'Morning') && isSlotBooked(slotType, day, Date[j], 'Morning')}"
                   [disabled]= "isSlotBooked(slotType, day, Date[j], 'Morning') && (!isSlotDrafted(slotType, day, Date[j], 'Morning'))"
                   (click)="markSlotSelected(slotType, day, Date[j], 'Morning')"
-                  >Morning</button>
+                  >Day</button>
                   <button class="btn specialBtnEVN" 
                   [ngClass]="{'btnSelected': isSlotSelected(slotType, day, Date[j], 'Evening'),
                     'slotDrafted': !isSlotSelected(slotType, day, Date[j], 'Evening') && isSlotDrafted(slotType, day, Date[j], 'Evening'),
                     'slotBooked': !isSlotSelected(slotType, day, Date[j], 'Evening') && isSlotBooked(slotType, day, Date[j], 'Evening')}"
                   [disabled]= "isSlotBooked(slotType, day, Date[j], 'Evening') && (!isSlotDrafted(slotType, day, Date[j], 'Evening'))"
                   (click)="markSlotSelected(slotType, day, Date[j], 'Evening')"
-                  >Evening</button>
+                  >Night</button>
                 </div>
               </td>
             </tr>
@@ -194,7 +194,6 @@
       <div class="row">
         <div class="col-md-4" *ngFor="let menu of availableMenus">
           <div class="card menu-card"
-            (click)="selectMenu(menu)"
             [ngClass]="{'selected-menu': reservationToEdit?.selectedMenu?.menu_id == menu.menu_id}"
             style="cursor: pointer; transition: 0.3s; border: 2px solid transparent; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
 
@@ -205,20 +204,11 @@
                 name="selectedMenu"
                 [value]="menu"
                 [(ngModel)]="reservationToEdit.menu_id"
-                (change)="selectMenu(menu)"
                 style="display: none;">
 
               <h5 class="card-title">{{ menu.menu_name }}</h5>
               <p class="card-text"><strong>Description:</strong> {{
                 menu.description }}</p>
-              <p class="card-text"><strong>Price:</strong> PKR:{{ menu.menu_price }}</p>
-
-              <ul style="padding-left: 15px;">
-                <li *ngFor="let item of menu.menu_items"
-                  style="font-size: 14px;">
-                  <span>{{ item.item_name }}  PKR:{{ item.price }}</span>
-                </li>
-              </ul>
             </div>
           </div>
         </div>
@@ -294,7 +284,7 @@
             <div *ngFor="let item of menuItems" class="menu-item-card">
               <div class="menu-item-details">
                 <label class="menuItemLabel">{{ item.item_name }}</label>
-                <label class="menuItemLabel">PKR:{{ item.price || 'N/A' }}</label>
+                <!-- <label class="menuItemLabel">PKR:{{ item.price || 'N/A' }}</label> -->
                 <button *ngIf="item.selected"
                   class="btn btn-danger"
                   (click)="removeMenuItem(item)">
@@ -324,7 +314,7 @@
             id="service-{{ service.additional_service_id }}"
             [(ngModel)]="service.selected">
           <label class="menuItemLabel">
-            {{ service.additional_service_name }}  PKR:{{ service.price }}
+            {{ service.additional_service_name }}
           </label>
         </div>
       </div>

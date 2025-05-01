@@ -1,6 +1,7 @@
 <!-- Page Header -->
 <div class="card">
-    <div class="card-body">
+  <div class="card-body">
+      <button [routerLink]="routes.reservationList" class="btn btn-back-custom" type="button"><i class="fa fa-arrow-left"></i></button>
       <div class="page-header">
         <div class="content-invoice-header">
           <div class="invoice-item invoice-item-one">
@@ -70,7 +71,7 @@
                             <thead class="thead-light">
                               <tr>
                                 <th>Item</th>
-                                <th>Description</th>
+                                <!-- <th>Description</th> -->
                                 <th>Hall</th>
                                 <th>Session</th>
                                 <th>Unit</th>
@@ -81,16 +82,16 @@
                             <tbody>
                               <tr>
                                 <td>Hall</td>
-                                <td></td>
                                 <td>{{reservationToView.SLOT?.hall}}</td>
-                                <td>{{reservationToView.SLOT?.slot}}</td>
+                                <!-- <td>{{reservationToView.SLOT?.slot}}</td> -->
+                                <td>{{reservationToView.SLOT?.slot === 'Evening' ? 'Night' : 'Day'}}</td>
                                 <td>1</td>
                                 <td></td>
                                 <td></td>
                               </tr>
                               <tr>
                                 <td>{{reservationToView.selectedMenu?.menu_name}}</td>
-                                <td>{{ reservationToView.selectedMenu?.description | slice:0:20 }}{{ reservationToView.selectedMenu?.description.length > 20 ? '...' : '' }}</td>
+                                <!-- <td>{{ reservationToView.selectedMenu?.description ? (reservationToView.selectedMenu?.description | slice:0:20) + (reservationToView.selectedMenu?.description.length > 20 ? '...' : '') : 'N/A' }}</td> -->
                                 <td></td>
                                 <td></td>
                                 <td>{{reservationToView.number_of_persons}}</td>
@@ -99,16 +100,16 @@
                               </tr>
                               <tr *ngFor="let item of menuItems">
                                 <td>{{item.item_name}}</td>
-                                <td>{{ item.description | slice:0:20 }}{{ item.description.length > 20 ? '...' : '' }}</td>
+                                <!-- <td>{{ item.description ? (item.description | slice:0:20) + (item.description.length > 20 ? '...' : '') : 'N/A' }}</td> -->
                                 <td></td>
                                 <td></td>
-                                <td>1</td>
-                                <td>PKR{{item.price}}</td>
-                                <td>PKR0.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                               </tr>
                               <tr *ngFor="let service of reservationToView.additional_services">
                                 <td>{{service.additional_service_name}}</td>
-                                <td>{{ service.description | slice:0:20 }}{{ service.description.length > 20 ? '...' : '' }}</td>
+                                <!-- <td>{{ service.description ? (service.description | slice:0:20) + (service.description.length > 20 ? '...' : '') : 'N/A' }}</td> -->
                                 <td></td>
                                 <td></td>
                                 <td>{{service.quantity}}</td>
@@ -116,27 +117,27 @@
                                 <td>PKR{{service.totalPrice}}</td>
                               </tr>
                               <tr>
-                                <td colspan="5"></td>
+                                <td colspan="4"></td>
                                 <td>SubTotal:</td>
                                 <td>{{reservationToView.grandTotal}}</td>
                               </tr>
                               <tr>
-                                <td colspan="5"></td>
+                                <td colspan="4"></td>
                                 <td>Discount:</td>
                                 <td>-{{reservationToView.discount}}</td>
                               </tr>
                               <tr>
-                                <td colspan="5"></td>
+                                <td colspan="4"></td>
                                 <td><strong>Total:</strong></td>
                                 <td>{{reservationToView.total_price}}</td>
                               </tr>
                               <tr>
-                                <td colspan="5"></td>
+                                <td colspan="4"></td>
                                 <td><strong>Deposit Balance:</strong></td>
                                 <td>{{reservationToView.payment_received}}</td>
                               </tr>
                               <tr>
-                                <td colspan="5"></td>
+                                <td colspan="4"></td>
                                 <td><strong>Balance Due:</strong></td>
                                 <td>{{reservationToView.total_remaining}}</td>
                               </tr>

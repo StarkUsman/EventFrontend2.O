@@ -21,7 +21,6 @@ import { PaginationService, tablePageSize } from 'src/app/shared/sharedIndex';
 export class ViewEstimateComponent  implements OnInit {
   control = new FormControl();
   public routes = routes;
-  backendUrl = 'http://localhost:3000';
   menus: any[] = [];
   additionalServices: any[] = [];
   filteredOptions!: Observable<string[]>;

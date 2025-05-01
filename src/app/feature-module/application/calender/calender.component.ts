@@ -47,12 +47,18 @@ export class CalenderComponent  {
         let borderColor = '#3788d8';
         let textColor = '#fff';
   
-        if (event.time === 'Morning') {
+        if (event.status === 'OPEN') {
+          backgroundColor = '#3788d8'; // blue
+          borderColor = '#3788d8';
+          textColor = '#fff';
+        } else if (event.status === 'DRAFTED') {
+          backgroundColor = '#ffb300'; // yellow
+          borderColor = '#ffb300';
+          textColor = '#fff';
+        } else if (event.status === 'FULLFILLED') {
           backgroundColor = '#4caf50'; // green
           borderColor = '#4caf50';
-        } else if (event.time === 'Evening') {
-          backgroundColor = '#ff9800'; // orange
-          borderColor = '#ff9800';
+          textColor = '#fff';
         }
   
         return {

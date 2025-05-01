@@ -228,6 +228,18 @@ export class DataService {
     );
   }
 
+  public getServicesUF(){
+    return this.http.get(this.backendUrl+'/additional-services');
+  }
+
+  public getHalls(){
+    return this.http.get(this.backendUrl+'/halls');
+  }
+
+  public getBookingEvents(){
+    return this.http.get(this.backendUrl+'/events');
+  }
+
   public addService(service: any){
     return this.http.post(this.backendUrl+'/additional-services', service);
   }
@@ -321,6 +333,10 @@ export class DataService {
   public updateMenuItem(menuItem: any) {
     return this.http.put(this.backendUrl+`/menu-items/${menuItem.menu_item_id}`, menuItem);
   }
+  
+  public getMenuItemByID(id: any){
+    return this.http.get(this.backendUrl+`/menu-items/${id}`);
+  }
 
   public addMenuItem(menuItem: any) {
     return this.http.post(this.backendUrl+'/menu-items', menuItem);
@@ -329,6 +345,11 @@ export class DataService {
   public deleteMenuItem(menuItem: any) {
     return this.http.delete(this.backendUrl+`/menu-items/${menuItem.menu_item_id}`);
   }
+  
+  public getReservationsUF() {
+    return this.http.get(this.backendUrl+'/bookings');
+  }
+  
 
   public getReservations() {
     return this.http.get<apiResultFormat>(this.backendUrl+'/bookings/formatted').pipe(

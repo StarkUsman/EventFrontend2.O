@@ -29,7 +29,6 @@ export class EditEstimateComponent implements OnInit {
     private data: DataService
   ) { }
 
-  backendUrl: string = 'http://localhost:3000';
   days: string[] = [];
   days_cal: string[] = [];
   month: string[] = [];
@@ -56,7 +55,6 @@ export class EditEstimateComponent implements OnInit {
 
   async ngOnInit() {
     this.loadHalls();
-    this.loadAdditionalServices();
     this.loadReservations();
     this.loadEvents();
 
@@ -64,6 +62,7 @@ export class EditEstimateComponent implements OnInit {
       let id = params['id'];
       this.data.getReservationById(id).subscribe((res: any) => {
         this.reservationToEdit = res;
+        this.loadAdditionalServices();
         this.loadMenuItems(this.reservationToEdit.menu_items_ids);
         this.slotSelected = this.reservationToEdit.SLOT;
         const dateString = this.reservationToEdit.dashboardDate;
@@ -207,16 +206,30 @@ export class EditEstimateComponent implements OnInit {
   }
 
   loadAdditionalServices() {
-    this.http.get<any[]>(`${this.backendUrl}/additional-services`).subscribe(data => {
+    this.data.getServicesUF().subscribe((data:any) => {
       this.additionalServices = data;
-    });
+      // if additional_service_id from reservationToEdit.additional_services array matches with any of additional_service_id of this.additionalServices array, then push that service to this.additionalServicesSelected array and set the selected property to true in that service object.
+      this.reservationToEdit.additional_services.forEach((service: any) => {
+        this.additionalServices.forEach((additionalService: any) => {
+          if (service.additional_service_id === additionalService.additional_service_id) {
+            additionalService.selected = true;
+            additionalService.quantity = service.quantity;
+            additionalService.price = service.price;
+            additionalService.totalPrice = service.price * service.quantity;
+            this.additionalServicesSelected.push(additionalService);
+
+            this.calculateAdditionalPrice();
+          }
+        });
+      })
+  });
   }
 
   loadMenuItems(menuItemIds: any) {
     this.menuItems = [];
-    let IDs = JSON.parse(menuItemIds);
-    IDs.forEach((id: any) => {
-      this.http.get<any>(`${this.backendUrl}/menu-items/${id}`).subscribe(item => {
+    let selectedIDs = JSON.parse(menuItemIds);
+    selectedIDs.forEach((id: any) => {
+      this.data.getMenuItemByID(id).subscribe((item:any) => {
         item.selected = true;
         this.menuItems.push(item);
       });
@@ -224,17 +237,16 @@ export class EditEstimateComponent implements OnInit {
 
     this.data.getAllMenuItems().subscribe((data: any) => {
       this.allMenuItems = data.data;
-
       this.allMenuItemsNames = this.allMenuItems.filter((item: any) => {
         return !this.menuItems.some((menuItem: any) => menuItem.menu_item_id === item.menu_item_id);
       });
       this.allMenuItemsNames = this.allMenuItemsNames.map((item: any) => item.item_name);
-    });
-
-    this.filteredOptions = this.control.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value || '')),
+      
+      this.filteredOptions = this.control.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value || '')),
       );
+    });
   }
 
   private _filter(value: string): string[] {
@@ -255,7 +267,7 @@ export class EditEstimateComponent implements OnInit {
   }
 
   loadHalls() {
-    this.http.get<any[]>(`${this.backendUrl}/halls`).subscribe(data => {
+    this.data.getHalls().subscribe((data:any) => {
       this.halls = data;
       this.slotTypes = this.halls.map(hall => hall.hall_name);
     });
@@ -263,7 +275,7 @@ export class EditEstimateComponent implements OnInit {
 
   loadEvents() {
     // Fetch events from API (replace with your real endpoint)
-    this.http.get<any[]>(`${this.backendUrl}/events`).subscribe(data => {
+    this.data.getBookingEvents().subscribe((data:any) => {
       this.events = data;
     });
   }
@@ -274,10 +286,8 @@ export class EditEstimateComponent implements OnInit {
     } else if (this.stage === 2 && this.isStage2Valid()) {
       this.stage++;
     } else if (this.stage === 3 && this.isStage3Valid()) {
-      // this.loadMenuItems(this.reservationToEdit.selectedMenu.menu_item_ids);
+      this.reservationToEdit.selectedMenu.menu_price = this.reservationToEdit.selectedMenu.price ? this.reservationToEdit.selectedMenu.price : this.reservationToEdit.selectedMenu.menu_price;
       this.reservationToEdit.selectedMenu.finalPrice = this.reservationToEdit.selectedMenu.menu_price * this.reservationToEdit.number_of_persons;
-      this.reservationToEdit.additionalPrice = 0;
-      this.reservationToEdit.additionalDiscount = 0;
       this.stage++;
     }
   }
@@ -331,7 +341,7 @@ export class EditEstimateComponent implements OnInit {
     this.reservationToEdit.grandTotal = this.reservationToEdit.selectedMenu.finalPrice + this.reservationToEdit.additionalPrice;
     this.reservationToEdit.total_price = this.getGrandTotal();
     this.reservationToEdit.SLOT = this.slotSelected;
-    this.reservationToEdit.total_remaining = parseFloat(this.reservationToEdit.grandTotal) - parseFloat(this.reservationToEdit.discount);
+    this.reservationToEdit.total_remaining = parseFloat(this.reservationToEdit.grandTotal) - parseFloat(this.reservationToEdit.discount) - parseFloat(this.reservationToEdit.payment_received);
     
     this.data.updateReservation(this.reservationToEdit).subscribe((res: any) => {
       this.router.navigate([routes.reservationList]);
@@ -362,7 +372,7 @@ export class EditEstimateComponent implements OnInit {
   selectMenu(menu: any) {
     this.reservationToEdit.menu_id = menu.menu_id;
     this.reservationToEdit.selectedMenu = menu;
-    this.loadMenuItems(menu.menu_item_ids);
+    // this.loadMenuItems(menu.menu_item_ids);
   }
 
   updateMenuSelection(item: any) {
@@ -378,6 +388,11 @@ export class EditEstimateComponent implements OnInit {
 
   removeMenuItem(item: any) {
     item.selected = false;
+    this.menuItems = this.menuItems.filter((menuItem: any) => menuItem.menu_item_id !== item.menu_item_id);
+    this.allMenuItemsNames.push(item.item_name);
+    setTimeout(() => {
+      this.control.setValue('');
+    });
   }
 
   addMenuItem(item: any) {

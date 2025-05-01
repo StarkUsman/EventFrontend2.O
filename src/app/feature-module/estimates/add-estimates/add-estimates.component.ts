@@ -17,7 +17,6 @@ export class AddEstimatesComponent implements OnInit {
   allMenuItems: any[] = [];
   filteredOptions!: Observable<string[]>;
   public routes = routes;
-  backendUrl: string = 'http://localhost:3000';
   days: string[] = [];
   days_cal: string[] = [];
   month: string[] = [];
@@ -209,20 +208,20 @@ export class AddEstimatesComponent implements OnInit {
 
   loadReservations() {
     // Fetch reservations from API (replace with your real endpoint)
-    this.http.get<any[]>(`${this.backendUrl}/bookings`).subscribe(data => {
+    this.data.getReservationsUF().subscribe((data: any) => {
       this.bookings = data;
     });
   }
 
   loadMenus() {
     // Fetch menus from API (replace with your real endpoint)
-    this.http.get<any[]>(`${this.backendUrl}/menus`).subscribe((data: any) => {
+    this.data.getMenus().subscribe((data: any) => {
       this.availableMenus = data.data;
     });
   }
 
   loadAdditionalServices() {
-    this.http.get<any[]>(`${this.backendUrl}/additional-services`).subscribe(data => {
+    this.data.getServicesUF().subscribe((data:any) => {
       this.additionalServices = data;
     });
   }
@@ -230,7 +229,7 @@ export class AddEstimatesComponent implements OnInit {
   loadMenuItems(menuItemIds: number[]) {
     this.menuItems = []; // Reset the menu items before loading
     menuItemIds.forEach((id) => {
-      this.http.get<any>(`${this.backendUrl}/menu-items/${id}`).subscribe(item => {
+      this.data.getMenuItemByID(id).subscribe((item:any) => {
         item.selected = true;
         this.menuItems.push(item);
       });
@@ -271,7 +270,7 @@ export class AddEstimatesComponent implements OnInit {
 
   loadHalls() {
     // Fetch halls from API (replace with your real endpoint)
-    this.http.get<any[]>(`${this.backendUrl}/halls`).subscribe(data => {
+    this.data.getHalls().subscribe((data:any) => {
       this.halls = data;
       this.slotTypes = this.halls.map(hall => hall.hall_name);
     });
@@ -279,7 +278,7 @@ export class AddEstimatesComponent implements OnInit {
 
   loadEvents() {
     // Fetch events from API (replace with your real endpoint)
-    this.http.get<any[]>(`${this.backendUrl}/events`).subscribe(data => {
+    this.data.getBookingEvents().subscribe((data:any) => {
       this.events = data;
     });
   }
@@ -381,6 +380,11 @@ export class AddEstimatesComponent implements OnInit {
 
   removeMenuItem(item: any) {
     item.selected = false;
+    this.menuItems = this.menuItems.filter((menuItem: any) => menuItem.menu_item_id !== item.menu_item_id);
+    this.allMenuItemsNames.push(item.item_name);
+    setTimeout(() => {
+      this.control.setValue('');
+    });
   }
 
   addMenuItem(item: any) {

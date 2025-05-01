@@ -33,6 +33,7 @@ export class UsersComponent {
   };
   userToEdit: any = {};
   userToDelete: number = 0;
+  show_password: boolean = true;
   //** / pagination variables
   constructor(
     private data: DataService,

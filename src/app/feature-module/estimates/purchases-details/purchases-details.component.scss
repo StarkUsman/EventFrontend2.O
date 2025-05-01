@@ -1,0 +1,16 @@
+
+.btn-back-custom {
+    background: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    padding: 0;
+    font-size: 20px; /* size of the arrow */
+    color: #1B2559; /* or any color you want */
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  
+  .btn-back-custom:hover {
+    color: #5A5A89; /* optional hover effect */
+  }

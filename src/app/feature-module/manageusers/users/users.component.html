@@ -252,22 +252,6 @@
           <div class="col-md-12">
             <div class="card-body">
               <div class="form-groups-item">
-                <!-- <h5 class="form-title">Profile Picture</h5>
-                <div class="profile-picture">
-                  <div class="upload-profile">
-                    <div class="profile-img">
-                      <img id="blah" class="avatar" src="assets/img/profiles/avatar-10.jpg" alt="profile-img">
-                    </div>
-                    <div class="add-profile">
-                      <h5>Upload a New Photo</h5>
-                      <span>Profile-pic.jpg</span>
-                    </div>
-                  </div>
-                  <div class="img-upload">
-                    <a class="btn btn-primary me-2">Upload</a>
-                    <a class="btn btn-remove">Remove</a>
-                  </div>
-                </div> -->
                 <div class="row">
                   <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
@@ -314,8 +298,15 @@
                     <div class="pass-group" id="3">
                       <div class="input-block">
                         <label for="Password">Password<span class="text-danger">*</span></label>
-                        <input type="password" class="form-control pass-input" placeholder="" [(ngModel)]="userToAdd.password" name="password">
-                        <span class="toggle-password feather icon-eye"></span>
+                        <input [type]="show_password ? 'password' : 'text'" class="form-control pass-input" placeholder="" [(ngModel)]="userToAdd.password" name="password">
+                        <a  href="javascript:void(0);" (click)="show_password = !show_password">
+                          <span
+                      [ngClass]="
+                        show_password === true
+                          ? 'fas toggle-password fa-eye-slash'
+                          : 'fas toggle-password fa-eye'
+                      "></span>
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -323,8 +314,15 @@
                     <div class="pass-group" id="passwordInput2">
                       <div class="input-block">
                         <label for="Confirm">Confirm Password<span class="text-danger">*</span></label>
-                        <input type="password" class="form-control pass-input" placeholder="" [(ngModel)]="userToAdd.confirmPassword" name="confirmPassword">
-                        <span class="toggle-password feather icon-eye"></span>
+                        <input [type]="show_password ? 'password' : 'text'" class="form-control pass-input" placeholder="" [(ngModel)]="userToAdd.confirmPassword" name="confirmPassword">
+                        <a  href="javascript:void(0);" (click)="show_password = !show_password">
+                          <span
+                      [ngClass]="
+                        show_password === true
+                          ? 'fas toggle-password fa-eye-slash'
+                          : 'fas toggle-password fa-eye'
+                      "></span>
+                        </a>
                       </div>
                     </div>
                     <span class="text-danger" *ngIf="userToAdd.password != userToAdd.confirmPassword">Password does not match</span>
@@ -371,24 +369,6 @@
           <div class="col-md-12">
             <div class="card-body">
               <div class="form-groups-item">
-                <!-- <h5 class="form-title">Profile Picture</h5>
-                <div class="profile-picture">
-                  <div class="upload-profile">
-                    <div class="profile-img">
-                      <img id="blah2" class="avatar" src="assets/img/profiles/avatar-10.jpg" alt="profile-img">
-                    </div>
-                    <div class="add-profile">
-                      <h5>Upload a New Photo</h5>
-                      <span>Profile-pic.jpg</span>
-                    </div>
-                  </div>
-                  <div class="img-upload">
-                    <label class="btn btn-primary">
-                      Upload <input type="file">
-                    </label>
-                    <a class="btn btn-remove">Remove</a>
-                  </div>
-                </div> -->
                 <div class="row">
                   <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="input-block mb-3">
@@ -435,8 +415,15 @@
                     <div class="pass-group" id="passwordInput1">
                       <div class="input-block">
                         <label for="Password">Password</label>
-                        <input type="password" class="form-control pass-input" placeholder="" [(ngModel)]="userToEdit.password" name="password">
-                        <span class="toggle-password feather icon-eye"></span>
+                        <input [type]="show_password ? 'password' : 'text'" class="form-control pass-input" placeholder="" [(ngModel)]="userToEdit.password" name="password">
+                        <a  href="javascript:void(0);" (click)="show_password = !show_password">
+                          <span
+                      [ngClass]="
+                        show_password === true
+                          ? 'fas toggle-password fa-eye-slash'
+                          : 'fas toggle-password fa-eye'
+                      "></span>
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -444,9 +431,16 @@
                     <div class="pass-group" id="passwordInput4">
                       <div class="input-block">
                         <label for="Password">Confirm Password</label>
-                        <input type="password" class="form-control pass-input" placeholder="" [(ngModel)]="userToEdit.confirmPassword" name="confirmPassword">
+                        <input [type]="show_password ? 'password' : 'text'" class="form-control pass-input" placeholder="" [(ngModel)]="userToEdit.confirmPassword" name="confirmPassword">
                         <span class="text-danger" *ngIf="userToEdit.password != userToEdit.confirmPassword">Password does not match</span>
-                        <span class="toggle-password feather icon-eye"></span>
+                        <a  href="javascript:void(0);" (click)="show_password = !show_password">
+                          <span
+                      [ngClass]="
+                        show_password === true
+                          ? 'fas toggle-password fa-eye-slash'
+                          : 'fas toggle-password fa-eye'
+                      "></span>
+                        </a>
                       </div>
                     </div>
                   </div>
