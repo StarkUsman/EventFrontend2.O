@@ -971,6 +971,9 @@ export class routes {
   public static get expenseReport(): string {
     return this.report + '/expense-report';
   }
+  public static get expenseReportAll(): string {
+    return this.report + '/expense-report-expense';
+  }
   public static get eventexpenseReport(): string {
     return this.report + '/event-expense-report';
   }
@@ -980,11 +983,20 @@ export class routes {
   public static get purchaseReport(): string {
     return this.baseUrl + '/report/purchase-report';
   }
+  public static get sumpurchaseReport(): string {
+    return this.baseUrl + '/report/summary-purchase-report';
+  }
   public static get purchaseReturnReport(): string {
     return this.baseUrl + '/report/purchase-return-report';
   }
   public static get salesReport(): string {
     return this.baseUrl + '/report/sales-report';
+  }
+  public static get liabilityReport(): string {
+    return this.baseUrl + '/report/liability-report';
+  }
+  public static get receivableReport(): string {
+    return this.baseUrl + '/report/receivable-report';
   }
   public static get salesReturnReport(): string {
     return this.baseUrl + '/report/sales-return-report';

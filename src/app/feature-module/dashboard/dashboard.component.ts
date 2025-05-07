@@ -167,14 +167,12 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.data.getDashboardData().subscribe((res: any) => {
       this.people_to_be_served = res.people_to_be_served;
-      this.pct_people_to_be_served_last_month = res.pct_people_to_be_served_last_month
+      this.pct_people_to_be_served_last_month = res.pct_people_to_be_served_last_month.toFixed(1);
       this.total_people_served = res.total_people_served;
-      this.pct_total_people_served_last_month = res.pct_total_people_served_last_month
+      this.pct_total_people_served_last_month = res.pct_total_people_served_last_month.toFixed(1);
       this.reservations_this_month = res.reservations_this_month;
-      this.pct_reservations_last_month = res.pct_reservations_last_month
-      // this.reservations_last_month = res.reservations_last_month;
+      this.pct_reservations_last_month = res.pct_reservations_last_month.toFixed(1);
       this.total_reservations_completed = res.total_reservations_completed;
-      // this.pct_total_due_balance_last_month = res.pct_total_due_balance_last_month
     });
 
     this.data.getUCReservations().subscribe((res: any) => {

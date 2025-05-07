@@ -87,6 +87,7 @@
                                     <th>Name</th>
                                     <th>Voucher #</th>
                                     <th>Created</th>
+                                    <th>Reference</th>
                                     <th>Credit</th>
                                     <th>Debit</th>
                                     <th>Remaining Balance</th>
@@ -101,6 +102,9 @@
                                         </td>
                                         <td>#{{data.purch_id}} </td>
                                         <td> {{data.createdAt}} </td>
+                                        <td>
+                                            {{ data.reference ? (data.reference.length > 40 ? (data.reference | slice:0:40) + '...' : data.reference) : '' }}
+                                        </td>
                                         <td><span class="badge bg-success-light">{{data.amountCredit > 0 ? data.amountCredit : ''}}</span></td>
                                         <td><span class="badge bg-danger-light">{{data.amountDebit > 0 ? data.amountDebit : ''}}</span></td>
                                         <td><span class="badge " [ngClass]="(data.balance<0) ? 'text-danger-light' : 'bg-success-light'">
@@ -110,7 +114,7 @@
                                     </tr>
                                     }
                                 <tr>
-                                    <td colspan="5">
+                                    <td colspan="6">
                                         <p>Closing Balance as on {{closingBalanceDate}}</p>
                                     </td>
                                     <td><span class="badge" [ngClass]="isBalanceNegative ? 'text-danger-light' : 'bg-success-light'">

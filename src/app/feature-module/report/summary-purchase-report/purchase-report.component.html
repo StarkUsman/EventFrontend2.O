@@ -1,7 +1,7 @@
 <!-- Page Header -->
 <div class="page-header">
   <div class="content-page-header ">
-    <h5>Food Expense Report</h5>
+    <h5>Summary Purchase Report</h5>
     <div class="list-btn">
       <ul class="filter-list">
           <li class="top-nav-search mx-2">
@@ -15,13 +15,13 @@
                 
                 <div class="dropdown">
                   <button class="btn btn-import me-2 dropdown-toggle" type="button" id="multiSelectDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    Select Products
+                    Select Vendors
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="multiSelectDropdown">
-                    @for (product of unfilteredData; track product) {
+                    @for (purchase of unfilteredData; track purchase) {
                       <li>
                         <label class="dropdown-item">
-                          <input type="checkbox" name="subcategory" [(ngModel)]="product.checked" (change)="filterData()"> {{ product.item }}
+                          <input type="checkbox" name="subcategory" [(ngModel)]="purchase.checked" (change)="filterData()"> {{ purchase.vendor?.name }}
                         </label>
                       </li>
                     }
@@ -75,25 +75,23 @@
             <table matSort (matSortChange)="sortData($event)" class="table table-striped mb-0 table-hover datatable">
               <thead class="thead-light">
                 <tr>
-                  <th mat-sort-header="sno">#</th>
-                  <th mat-sort-header="companyname">Product Name</th>
-                  <th mat-sort-header="payment">Purchase Price</th>
-                  <th mat-sort-header="amount">ExpenseQuantity</th>
-                  <th>Total Expense</th>
+                  <th mat-sort-header="date">Date</th>
+                  <th mat-sort-header="voucher">Voucher#</th>
+                  <th mat-sort-header="vendor">Vendor</th>
+                  <th>Total Price</th>
                 </tr>
               </thead>
               <tbody>
                 @for (data of expensereport; track data; let i = $index) {
                   <tr>
-                    <td>{{data.sNo}}</td>
-                    <td>{{data.item}}</td>
-                    <td>PKR:{{data.purchasePrice}}</td>
-                    <td>{{data.totalQuantity}}</td>
-                    <td>PKR:{{data.totalExpense}}</td>
+                    <td>{{data.dateOnly}}</td>
+                    <td>{{data.purch_id}}</td>
+                    <td>{{data.vendor?.name}}</td>
+                    <td>PKR:{{data.total_amount}}</td>
                   </tr>
                 }
                 <tr>
-                  <td colspan="3">
+                  <td colspan="2">
                       <p>Total Expense as on {{closingExpenseDate()}}</p>
                   </td>
                   <td></td>

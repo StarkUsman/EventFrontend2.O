@@ -152,6 +152,7 @@ export class AddPurchasesComponent implements OnInit {
       vendor_id: this.newTransaction.creditAccount.id,
       amountDebit: 0,
       amountCredit: this.newTransaction.amount,
+      reference: this.newTransaction.notes,
     };
 
     this.data.addLedger(ledger).subscribe((res: any) => { 
@@ -167,6 +168,7 @@ export class AddPurchasesComponent implements OnInit {
         vendor_id: this.newTransaction.debitAccount.id,
         amountDebit: this.newTransaction.amount,
         amountCredit: 0,
+        reference: this.newTransaction.notes,
       };
       
       this.data.addLedger(ledger).subscribe((res: any) => {

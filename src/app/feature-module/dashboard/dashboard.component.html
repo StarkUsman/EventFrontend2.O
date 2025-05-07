@@ -18,7 +18,7 @@
           <div
             class="progress-bar bg-6"
             role="progressbar"
-            style="width: 65%"
+            [style.width.%]="pct_total_people_served_last_month"
             aria-valuenow="75"
             aria-valuemin="0"
             aria-valuemax="100"
@@ -31,7 +31,7 @@
             [ngClass]="pct_total_people_served_last_month >= 0 ? 'fas fa-arrow-up' : 'fas fa-arrow-down'" 
             ></i>{{pct_total_people_served_last_month}}%</span
           >
-          since last week
+          since last month
         </p>
       </div>
     </div>
@@ -54,7 +54,7 @@
           <div
             class="progress-bar bg-7"
             role="progressbar"
-            style="width: 85%"
+            [style.width.%]="-pct_people_to_be_served_last_month"
             aria-valuenow="75"
             aria-valuemin="0"
             aria-valuemax="100"
@@ -65,7 +65,7 @@
             ><i [ngClass]="pct_people_to_be_served_last_month >= 0 ? 'fas fa-arrow-up' : 'fas fa-arrow-down'" class="me-1"
             ></i>{{pct_people_to_be_served_last_month}}%</span
           >
-          since last week
+          since last month
         </p>
       </div>
     </div>
@@ -100,7 +100,7 @@
           <span class="text-danger me-1"
             ><i class="fas fa-arrow-down me-1"></i>1.15%</span
           >
-          since last week
+          since last month
         </p>
       </div>
     </div>
@@ -123,7 +123,7 @@
           <div
             class="progress-bar bg-8"
             role="progressbar"
-            style="width: 45%"
+            [style.width.%]="pct_reservations_last_month"
             aria-valuenow="75"
             aria-valuemin="0"
             aria-valuemax="100"
@@ -134,7 +134,7 @@
             ><i [ngClass]="pct_reservations_last_month >= 0 ? 'fas fa-arrow-up' : 'fas fa-arrow-down'" class="me-1"
             ></i>{{pct_reservations_last_month}}%</span
           >
-          since last week
+          since last month
         </p>
       </div>
     </div>

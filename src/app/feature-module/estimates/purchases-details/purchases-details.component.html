@@ -163,6 +163,7 @@
                                 <th>Payment Receiver</th>
                                 <th>Amount</th>
                                 <th>Account</th>
+                                <th></th>
                               </tr>
                             </thead>
                             <tbody>
@@ -170,8 +171,31 @@
                                 <td>{{ledger.date}}</td>
                                 <!-- <td></td> -->
                                 <td>{{ledger.user}}</td>
-                                <td>{{ledger.amount}}</td>
+                                <!-- <td>{{ledger.amount}}</td> -->
+                                <td>
+                                  <ng-container *ngIf="editedLedger !== ledger; else editAmount">
+                                    {{ ledger.amount }}
+                                  </ng-container>
+                                  <ng-template #editAmount>
+                                    <input type="number" class="form-control w-25" [(ngModel)]="editedAmount" />
+                                  </ng-template>
+                                </td>
                                 <td>{{ledger.account}}</td>
+                                <td class="d-flex align-items-center">
+                                  <ng-container *ngIf="editedLedger !== ledger">
+                                    <a class="btn-action-icon me-2" href="javascript:void(0);" (click)="setLedgerToEdit(ledger)">
+                                      <i class="feather icon-edit"></i>
+                                    </a>
+                                  </ng-container>
+                                  <ng-container *ngIf="editedLedger === ledger">
+                                    <a class="btn-action-icon me-2" href="javascript:void(0);" (click)="saveEdit()">
+                                      <i class="feather icon-save"></i>
+                                    </a>
+                                    <a class="btn-action-icon" href="javascript:void(0);" (click)="cancelEdit()">
+                                      <i class="feather icon-x"></i>
+                                    </a>
+                                  </ng-container>
+                                </td>
                               </tr>
                             </tbody>
                           </table>

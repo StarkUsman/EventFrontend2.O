@@ -19,8 +19,6 @@ export class AddEstimatesComponent implements OnInit {
   public routes = routes;
   days: string[] = [];
   days_cal: string[] = [];
-  month: string[] = [];
-  year: string = "";
   startDate: number = 15;
   stage: number = 1;
   halls: any[] = [];
@@ -99,6 +97,11 @@ export class AddEstimatesComponent implements OnInit {
   slotSelected: any = null;
 
   markSlotSelected(slotType: any, day: any, date: any, slot: any) {
+    console.log("Slot Type:", slotType);
+    console.log("Day:", day);
+    console.log("Date:", date);
+    console.log("Slot:", slot);
+
     this.monthSelected = structuredClone(this.monthSelectedOrg);
     let year = day.split(" ")[1];
     //if date dateSelected is in last week of the month and the date is less than 15, then set the monthSelected to the next month
@@ -199,11 +202,9 @@ export class AddEstimatesComponent implements OnInit {
       day.setDate(tempDate.getDate() + i);
       this.days.push(day.toDateString());
     }
-
-    this.days_cal = this.days.map(date => date.split(' ')[2]);
-    this.month = this.days.map(date => date.split(' ')[1]);
-    this.year = this.days.map(date => date.split(' ')[3])[0];
-
+    console.log("-----------------------------------------");
+    console.log(this.days);
+    console.log("-----------------------------------------");
   }
 
   loadReservations() {

@@ -51,4 +51,27 @@ export class PurchasesDetailsComponent implements OnInit {
     });
   }
 
+  // In your component.ts file
+  editedLedger: any = null;
+  editedAmount: number | null = null;
+
+  setLedgerToEdit(ledger: any) {
+    this.editedLedger = ledger;
+    this.editedAmount = ledger.amount;
+  }
+
+  cancelEdit() {
+    this.editedLedger = null;
+    this.editedAmount = null;
+  }
+
+  saveEdit() {
+    if (this.editedLedger) {
+      this.editedLedger.amount = this.editedAmount;
+      console.log('Updated ledger:', this.editedLedger);
+      this.cancelEdit();
+    }
+  }
+
+
 }

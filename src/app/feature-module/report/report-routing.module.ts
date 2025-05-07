@@ -15,6 +15,27 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'expense-report-expense',
+        loadChildren: () =>
+          import('./expense-report-expense/expense-report.module').then(
+            (m) => m.ExpenseReportModule
+          ),
+      },
+      {
+        path: 'liability-report',
+        loadChildren: () =>
+          import('./liability-report/sales-report.module').then(
+            (m) => m.SalesReportModule
+          ),
+      },
+      {
+        path: 'receivable-report',
+        loadChildren: () =>
+          import('./receivable-report/purchase-report.module').then(
+            (m) => m.PurchaseReportModule
+          ),
+      },
+      {
         path: 'event-expense-report',
         loadChildren: () =>
           import('./event-expense-report/expense-report.module').then(
@@ -32,6 +53,13 @@ const routes: Routes = [
         path: 'purchase-report',
         loadChildren: () =>
           import('./purchase-report/purchase-report.module').then(
+            (m) => m.PurchaseReportModule
+          ),
+      },
+      {
+        path: 'summary-purchase-report',
+        loadChildren: () =>
+          import('./summary-purchase-report/purchase-report.module').then(
             (m) => m.PurchaseReportModule
           ),
       },

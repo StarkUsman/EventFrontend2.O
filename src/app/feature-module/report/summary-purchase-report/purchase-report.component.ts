@@ -1,3 +1,4 @@
+import { S } from '@angular/cdk/keycodes';
 import { Component, OnInit } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -39,7 +40,7 @@ export class PurchaseReportComponent implements OnInit {
     private router: Router,
   ) {
     this.pagination.tablePageSize.subscribe((res: tablePageSize) => {
-      if (this.router.url == this.routes.purchaseReport) {
+      if (this.router.url == this.routes.sumpurchaseReport) {
         this.getTableData({ skip: res.skip, limit: res.limit });
         this.pageSize = res.pageSize;
       }
@@ -56,7 +57,7 @@ export class PurchaseReportComponent implements OnInit {
   }
 
   private getTableData(pageOption: pageSelection): void {
-    this.data.getInventoryPurchase().subscribe((apiRes: apiResultFormat) => {
+    this.data.getpurchase().subscribe((apiRes: apiResultFormat) => {
       this.expensereport = [];
       this.serialNumberArray = [];
       this.totalData = apiRes.totalData;
@@ -67,15 +68,20 @@ export class PurchaseReportComponent implements OnInit {
           res.checked = true;
           this.expensereport.push(res);
           this.serialNumberArray.push(serialNumber);
-          res.totalExpense = 0;
-          res.totalQuantity = 0;
-          for (const ledger of res.ledger) {
-            res.totalQuantity += ledger.quantity;
-            ledger.expense = ledger.quantity * ledger.purchasePrice;
-            res.totalExpense += ledger.quantity * ledger.purchasePrice;
-          }
-          res.totalExpense = res.totalExpense.toFixed(2);
         }
+        const date = new Date(res.purchase_date);
+
+        // Format to "YYYY-MM-DD HH:mm:ss"
+        res.purchase_date = date.getFullYear() + "-" +
+          String(date.getMonth() + 1).padStart(2, '0') + "-" +
+          String(date.getDate()).padStart(2, '0') + " " +
+          String(date.getHours()).padStart(2, '0') + ":" +
+          String(date.getMinutes()).padStart(2, '0') + ":" +
+          String(date.getSeconds()).padStart(2, '0');
+
+        res.dateOnly = date.getFullYear() + "-" +
+          String(date.getMonth() + 1).padStart(2, '0') + "-" +
+          String(date.getDate()).padStart(2, '0');
       });
       this.dataSource = new MatTableDataSource<any>(
         this.expensereport,
@@ -152,8 +158,8 @@ export class PurchaseReportComponent implements OnInit {
 
   totalDebit() {
     let total = 0;
-    for (const vendor of this.expensereport) {
-      total += parseFloat(vendor.totalExpense);
+    for (const purchase of this.expensereport) {
+      total += parseFloat(purchase.total_amount);
     }
     return total.toFixed(2);
   }
@@ -168,36 +174,18 @@ export class PurchaseReportComponent implements OnInit {
   filterData() {
     this.expensereport = structuredClone(this.unfilteredData);
     
-    //filter the products and get the products where product.checked is true
-    this.expensereport = this.expensereport.filter((product: any) => 
-      product.checked
+    this.expensereport = this.expensereport.filter((purchase: any) => 
+      purchase.checked
     );
 
     if (this.startDate && this.endDate) {
       const [start, end] = this.getDateRange(this.startDate, this.endDate);
       
-        const filteredProducts = this.expensereport.map((product: any)=>{
-          const filteredLedger = product.ledger.filter((entry: any)=>{
-            const entryDate = new Date(entry.createdAt);
-            return entryDate >= start && entryDate <= end;
-          })
-          
-            const totalExpense = filteredLedger.reduce(
-              (sum: number, entry: any) => sum + entry.expense,
-              0
-            );
-            const totalQuantity = filteredLedger.reduce(
-              (sum: number, entry: any) => sum + entry.quantity,
-              0
-            );
-            return{
-              ...product,
-              ledger: filteredLedger,
-              totalQuantity,
-              totalExpense,
-            }
+        const filteredPurchase = this.expensereport.filter((purchase: any) => {
+          const purchaseDate = new Date(purchase.purchase_date);
+          return purchaseDate >= start && purchaseDate <= end;
         });
-        this.expensereport = filteredProducts;
+        this.expensereport = filteredPurchase;
     }
   }
 }

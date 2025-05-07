@@ -1144,6 +1144,14 @@ export class DataService {
       })
     );
   }
+
+  public getInventoryPurchase() {
+    return this.http.get<apiResultFormat>(this.backendUrl+'/reports/PURCHASE').pipe(
+      map((res: apiResultFormat) => {
+        return res;
+      })
+    );
+  }
   public getSubscription() {
     return this.http.get<apiResultFormat>('assets/JSON/subscription.json').pipe(
       map((res: apiResultFormat) => {
@@ -1853,6 +1861,11 @@ public sideBar: any[] = [
             base: routes.expenseReport,
           },
           {
+            menuValue: 'All Expense Report',
+            route: routes.expenseReportAll,
+            base: routes.expenseReportAll,
+          },
+          {
             menuValue: 'Event Expense Report',
             route: routes.eventexpenseReport,
             base: routes.eventexpenseReport,
@@ -1868,14 +1881,29 @@ public sideBar: any[] = [
             base: routes.purchaseReport,
           },
           {
-            menuValue: 'Purchase Return Report',
-            route: routes.purchaseReturnReport,
-            base: routes.purchaseReturnReport,
+            menuValue: 'Summary Purchase Report',
+            route: routes.sumpurchaseReport,
+            base: routes.sumpurchaseReport,
+          },
+          // {
+          //   menuValue: 'Purchase Return Report',
+          //   route: routes.purchaseReturnReport,
+          //   base: routes.purchaseReturnReport,
+          // },
+          // {
+          //   menuValue: 'Sales Report',
+          //   route: routes.salesReport,
+          //   base: routes.salesReport,
+          // },
+          {
+            menuValue: 'Liability Report',
+            route: routes.liabilityReport,
+            base: routes.liabilityReport,
           },
           {
-            menuValue: 'Sales Report',
-            route: routes.salesReport,
-            base: routes.salesReport,
+            menuValue: 'Receivable Report',
+            route: routes.receivableReport,
+            base: routes.receivableReport,
           },
           {
             menuValue: 'Sales Return Report',

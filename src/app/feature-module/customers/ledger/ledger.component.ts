@@ -34,6 +34,7 @@ export class LedgerComponent implements OnInit {
         this.ledgerToView = res.data;
         this.ledgerToView.forEach((ledger: any, index: number) => {
           ledger.purch_id = ('000000' + ledger.purch_id).slice(-6);
+          ledger.createdAt = new Date(ledger.createdAt).toISOString().split('T')[0];
           if (index === 0) {
             ledger.balance = -ledger.amountDebit || ledger.amountCredit;
           } else {

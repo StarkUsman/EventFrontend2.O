@@ -141,39 +141,39 @@ export class ViewEstimateComponent  implements OnInit {
       amountCredit: this.reservationToAddPayment.paymentToAdd,
     };
 
-    this.data.addLedger(ledger).subscribe((res) => { });
+    this.data.addLedger(ledger).subscribe((res) => {
+      this.addReservationLedger(res);
+    });
   }
 
-  addReservationLedger() {
+  addReservationLedger(res: any) {
     let ledger = {
       booking_id: this.reservationToAddPayment.booking_id,
       user: JSON.parse(localStorage.getItem('user') || '{}').firstName + ' ' + JSON.parse(localStorage.getItem('user') || '{}').lastName,
       amount: this.reservationToAddPayment.paymentToAdd,
       account: this.reservationToAddPayment.account.name,
+      ledgerId: res.id,
     };
 
-    this.data.addReservationLedger(ledger).subscribe((res) => { });
+    this.data.addReservationLedger(ledger).subscribe((res) => {
+      let requestBody = {
+        id: this.reservationToAddPayment.booking_id,
+        paymentToAdd: this.reservationToAddPayment.paymentToAdd,
+      }
+  
+      this.data.addReservationPayment(requestBody).subscribe((res: any) => {
+        this.pagination.tablePageSize.subscribe((res: tablePageSize) => {
+          this.getTableData({ skip: res.skip, limit: res.limit });
+          this.pageSize = res.pageSize;
+          this.reservationToAddPayment = {};
+          this.control.setValue('');
+        });
+      });
+    });
   }
 
   addAmount(){
-
     this.addLedger();
-
-    this.addReservationLedger();
-
-    let requestBody = {
-      id: this.reservationToAddPayment.booking_id,
-      paymentToAdd: this.reservationToAddPayment.paymentToAdd,
-    }
-
-    this.data.addReservationPayment(requestBody).subscribe((res: any) => {
-      this.pagination.tablePageSize.subscribe((res: tablePageSize) => {
-        this.getTableData({ skip: res.skip, limit: res.limit });
-        this.pageSize = res.pageSize;
-        this.reservationToAddPayment = {};
-        this.control.setValue('');
-      });
-    });
   }
 
   queryString: string = '';
