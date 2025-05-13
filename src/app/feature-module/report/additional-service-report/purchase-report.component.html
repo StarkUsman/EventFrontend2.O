@@ -1,7 +1,7 @@
 <!-- Page Header -->
 <div class="page-header">
   <div class="content-page-header ">
-    <h6>Customer Income Report</h6>
+    <h5>Additional Service Report</h5>
     <div class="list-btn">
       <ul class="filter-list">
           <li class="top-nav-search mx-2">
@@ -15,27 +15,13 @@
                 
                 <div class="dropdown">
                   <button class="btn btn-import me-2 dropdown-toggle" type="button" id="multiSelectDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    Select Customers
+                    Select Services
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="multiSelectDropdown">
-                    @for (customer of allCustomers; track customer) {
+                    @for (service of allServices; track service) {
                       <li>
                         <label class="dropdown-item">
-                          <input type="checkbox" name="subcategory" [(ngModel)]="customer.checked" (change)="filterData()"> {{ customer.name }}
-                        </label>
-                      </li>
-                    }
-                  </ul>
-                </div>
-                <div class="dropdown">
-                  <button class="btn btn-import me-2 dropdown-toggle" type="button" id="multiSelectDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    Select Accounts
-                  </button>
-                  <ul class="dropdown-menu" aria-labelledby="multiSelectDropdown">
-                    @for (account of allAccounts; track account) {
-                      <li>
-                        <label class="dropdown-item">
-                          <input type="checkbox" name="subcategory" [(ngModel)]="account.checked" (change)="filterData()"> {{ account.name }}
+                          <input type="checkbox" name="subcategory" [(ngModel)]="service.checked" (change)="filterData()"> {{ service.name }}
                         </label>
                       </li>
                     }
@@ -63,33 +49,35 @@
             <table matSort (matSortChange)="sortData($event)" class="table table-striped mb-0 table-hover datatable">
               <thead class="thead-light">
                 <tr>
-                  <th mat-sort-header="voucher">Voucher#</th>
-                  <th mat-sort-header="name">Customer Name</th>
-                  <th mat-sort-header="amount">Amount</th>
-                  <th mat-sort-header="date">Date</th>
-                  <th mat-sort-header="account">Account</th>
-                  <th mat-sort-header="user">User</th>
+                  <th >#</th>
+                  <th >Service Name</th>
+                  <th >Amount</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
                 @for (data of reportData; track data; let i = $index) {
                   <tr>
-                    <td>#{{data.voucher}}</td>
                     <td>{{data.customerName}}</td>
-                    <td>{{data.amount}}</td>
-                    <td>{{data.date}}</td>
-                    <td>{{data.account}}</td>
-                    <td>{{data.user}}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                   </tr>
+                  @for (service of data.services; track service; let j = $index) {
+                    <tr>
+                      <td>{{j+1}}</td>
+                      <td>{{service.additional_service_name}}</td>
+                      <td>PKR:{{service.totalPrice}}</td>
+                      <td></td>
+                    </tr>
+                  }
                 }
                 <tr>
                   <td colspan="2">
-                      <p>Total Income as on {{closingDate()}}</p>
+                      <p>Total Expense as on {{closingDate()}}</p>
                   </td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td><span class="text-primary fw-600">PKR:{{totalAmount()}}</span></td>
+                  <!-- <td></td> -->
+                  <td><span class="text-primary fw-600">PKR:{{totalDebit()}}</span></td>
               </tr>
               </tbody>
             </table>

@@ -49,8 +49,8 @@
                                         download><i class="far fa-file-pdf me-2"></i>PDF</a>
                                 </li>
                                 <li>
-                                    <a class="d-flex align-items-center download-item" href="javascript:void(0);"
-                                        download><i class="far fa-file-text me-2"></i>CVS</a>
+                                    <button (click)="downloadCSV()" class="d-flex align-items-center download-item" href="javascript:void(0);"
+                                        download><i class="far fa-file-text me-2"></i>CVS</button>
                                 </li>
                             </ul>
                         </div>
@@ -81,7 +81,7 @@
             <div class="card-table">
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-stripped table-hover">
+                        <table #ledgerTable id="ledger-table" class="table table-stripped table-hover">
                             <thead class="thead-light">
                                 <tr>
                                     <th>Name</th>
@@ -118,7 +118,7 @@
                                         <p>Closing Balance as on {{closingBalanceDate}}</p>
                                     </td>
                                     <td><span class="badge" [ngClass]="isBalanceNegative ? 'text-danger-light' : 'bg-success-light'">
-                                        {{ isBalanceNegative ? '-PKR' : 'PKR' }}{{ closingBalanceAmount }}
+                                        {{ closingBalanceAmount }}
                                      </span></td>
                                 </tr>
                             </tbody>

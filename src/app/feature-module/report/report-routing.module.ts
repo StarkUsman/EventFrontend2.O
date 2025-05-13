@@ -57,6 +57,27 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'additional-service-report',
+        loadChildren: () =>
+          import('./additional-service-report/purchase-report.module').then(
+            (m) => m.PurchaseReportModule
+          ),
+      },
+      {
+        path: 'inflow-outflow-report',
+        loadChildren: () =>
+          import('./inflow-outflow-report/purchase-report.module').then(
+            (m) => m.PurchaseReportModule
+          ),
+      },
+      {
+        path: 'profit-loss-report',
+        loadChildren: () =>
+          import('./profit-loss-report/purchase-report.module').then(
+            (m) => m.PurchaseReportModule
+          ),
+      },
+      {
         path: 'summary-purchase-report',
         loadChildren: () =>
           import('./summary-purchase-report/purchase-report.module').then(

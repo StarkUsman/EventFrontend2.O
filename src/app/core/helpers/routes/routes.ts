@@ -986,6 +986,9 @@ export class routes {
   public static get sumpurchaseReport(): string {
     return this.baseUrl + '/report/summary-purchase-report';
   }
+  public static get serviceReport(): string {
+    return this.baseUrl + '/report/additional-service-report';
+  }
   public static get purchaseReturnReport(): string {
     return this.baseUrl + '/report/purchase-return-report';
   }
@@ -1016,10 +1019,16 @@ export class routes {
   public static get incomeReport(): string {
     return this.report + '/income-report';
   }
+  public static get inOutReport(): string {
+    return this.report + '/inflow-outflow-report';
+  }
+  public static get profitLoss(): string {
+    return this.report + '/profit-loss-report';
+  }
   public static get taxReport(): string {
     return this.baseUrl + '/report/tax-report';
   }
-  public static get profitLoss(): string {
+  public static get pLReport(): string {
     return this.baseUrl + '/report/profit-loss-list';
   }
   public static get formSelect2(): string {

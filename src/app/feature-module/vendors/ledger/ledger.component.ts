@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { routes, DataService } from 'src/app/core/core.index';
 import { ActivatedRoute } from '@angular/router';
 
@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./ledger.component.scss']
 })
 export class LedgerComponent implements OnInit {
+  @ViewChild('ledgerTable') ledgerTable!: ElementRef<HTMLTableElement>;
   public routes = routes;
   public Toggledata = false;
   ledgerToView: any = [];
@@ -172,5 +173,28 @@ export class LedgerComponent implements OnInit {
     } else {
       this.ledgerToView = null;
     }
+  }
+
+  downloadCSV(): void {
+    const table = this.ledgerTable.nativeElement;
+    const rows = Array.from(table.querySelectorAll('tr'));
+
+    const csv = rows.map(row => {
+      const cols = Array.from(row.querySelectorAll('th, td')).map(cell => {
+        let text = cell.textContent?.trim() ?? '';
+        text = text.replace(/"/g, '""'); // Escape quotes
+        return `"${text}"`;
+      });
+      return cols.join(',');
+    }).join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const anchor = document.createElement('a');
+    anchor.setAttribute('href', url);
+    anchor.setAttribute('download', 'ledger_export.csv');
+    anchor.click();
+    URL.revokeObjectURL(url);
   }
 }

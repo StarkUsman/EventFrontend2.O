@@ -349,10 +349,17 @@ export class DataService {
   public getReservationsUF() {
     return this.http.get(this.backendUrl+'/bookings');
   }
-  
 
   public getReservations() {
     return this.http.get<apiResultFormat>(this.backendUrl+'/bookings/formatted').pipe(
+      map((res: apiResultFormat) => {
+        return res;
+      })
+    );
+  }
+
+  public getReservationsByMonth(month: string) {
+    return this.http.get<apiResultFormat>(this.backendUrl+`/bookings/month/${month}`).pipe(
       map((res: apiResultFormat) => {
         return res;
       })
@@ -514,6 +521,14 @@ export class DataService {
   public getVendorByName(name: any) {
     return this.http.get(this.backendUrl+`/vendors/name/${name}`);
   }
+  
+  public getVendorFoodCategory() {
+    return this.http.get(this.backendUrl+`/vendors/foodCategory`);
+  }
+
+  public getVendorMonthlyExpense() {
+    return this.http.get(this.backendUrl+`/vendors/monthlyExpense`);
+  }
 
   public deleteVendor(sNo: number) {
     return this.http.delete(this.backendUrl+`/vendors/${sNo}`);
@@ -541,6 +556,10 @@ export class DataService {
 
   public getLedgerByEVID(id: number, purch_id: any) {
     return this.http.get(this.backendUrl+`/ledger/${id}/expense/${purch_id}`);
+  }
+
+  public getLedgerByName(name: any){
+    return this.http.get(this.backendUrl+`/ledger/name/${name}`);
   }
   
   public getInventoryLedgerByPID(id: number) {
@@ -1019,6 +1038,9 @@ export class DataService {
   }
   public addTransaction(transaction: any) {
     return this.http.post(this.backendUrl+'/transaction', transaction);
+  }
+  public getTransactionByName(name: any) {
+    return this.http.get(this.backendUrl+`/transaction/name/${name}`);
   }
   public getTransactionById(id: number) {
     return this.http.get(this.backendUrl+`/transaction/${id}`);
@@ -1881,9 +1903,19 @@ public sideBar: any[] = [
             base: routes.purchaseReport,
           },
           {
+            menuValue: 'Low Stock Report',
+            route: routes.lowStockReport,
+            base: routes.lowStockReport,
+          },
+          {
             menuValue: 'Summary Purchase Report',
             route: routes.sumpurchaseReport,
             base: routes.sumpurchaseReport,
+          },
+          {
+            menuValue: 'AdditionalService Report',
+            route: routes.serviceReport,
+            base: routes.serviceReport,
           },
           // {
           //   menuValue: 'Purchase Return Report',
@@ -1906,45 +1938,50 @@ public sideBar: any[] = [
             base: routes.receivableReport,
           },
           {
-            menuValue: 'Sales Return Report',
-            route: routes.salesReturnReport,
-            base: routes.salesReturnReport,
-          },
-          {
-            menuValue: 'Quotation Report',
-            route: routes.quotationReport,
-            base: routes.quotationReport,
-          },
-          {
-            menuValue: 'Payment Report',
-            route: routes.paymentReport,
-            base: routes.paymentReport,
-          },
-          {
-            menuValue: 'Stock Report',
-            route: routes.stockReport,
-            base: routes.stockReport,
-          },
-          {
-            menuValue: 'Low Stock Report',
-            route: routes.lowStockReport,
-            base: routes.lowStockReport,
-          },
-          {
-            menuValue: 'Income Report',
+            menuValue: 'Customer Income Report',
             route: routes.incomeReport,
             base: routes.incomeReport,
           },
           {
-            menuValue: 'Tax Report',
-            route: routes.taxPurchase,
-            base: routes.taxPurchase,
+            menuValue: 'Inflow/Outflow Report',
+            route: routes.inOutReport,
+            base: routes.inOutReport,
           },
           {
             menuValue: 'Profit & Loss',
             route: routes.profitLoss,
             base: routes.profitLoss,
           },
+          // {
+          //   menuValue: 'Sales Return Report',
+          //   route: routes.salesReturnReport,
+          //   base: routes.salesReturnReport,
+          // },
+          // {
+          //   menuValue: 'Quotation Report',
+          //   route: routes.quotationReport,
+          //   base: routes.quotationReport,
+          // },
+          // {
+          //   menuValue: 'Payment Report',
+          //   route: routes.paymentReport,
+          //   base: routes.paymentReport,
+          // },
+          // {
+          //   menuValue: 'Stock Report',
+          //   route: routes.stockReport,
+          //   base: routes.stockReport,
+          // },
+          // {
+          //   menuValue: 'Tax Report',
+          //   route: routes.taxPurchase,
+          //   base: routes.taxPurchase,
+          // },
+          // {
+          //   menuValue: 'Profit & Loss',
+          //   route: routes.pLReport,
+          //   base: routes.pLReport,
+          // },
         ],
       },
     ],
