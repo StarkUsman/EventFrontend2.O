@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectorRef } from '@angular/core';
 
 import {
   ChartComponent,
@@ -45,8 +45,8 @@ export type ChartOptions = {
 })
 export class DashboardComponent implements OnInit {
   @ViewChild('chart') chart!: ChartComponent;
-  public chartOptions: Partial<ChartOptions>;
-  public chartOptions2: Partial<ChartOptions>;
+  public chartOptions!: Partial<ChartOptions>;
+  public chartOptions2!: Partial<ChartOptions>;
   public layoutPosition = '1';
   public routes = routes;
   people_to_be_served: number = 0;
@@ -59,103 +59,128 @@ export class DashboardComponent implements OnInit {
   pct_total_due_balance_last_month: number = 0;
   upcominReservations: any = [];
 
-  constructor(private sideBar: SideBarService, private data: DataService) {
-    this.chartOptions = {
-      series: [
-        {
-          name: 'Received',
-          data: [70, 150, 80, 180, 150, 175, 201, 60, 200, 120, 190, 160, 50],
-          colors: ['#7539FF'],
-        },
+  totalIncome: number = 0;
+  totalExpense: number = 0;
+  profit: number = 0;
 
-        {
-          name: 'Pending',
-          data: [23, 42, 35, 27, 43, 22, 17, 31, 22, 22, 12, 16, 80],
-          colors: ['#fda600'],
-        },
-      ],
+  incomeData: any = [];
+  expenseData: any = [];
+  profitData: any = [];
+  monthArray: any = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  monthcategories: any = [];
 
-      chart: {
-        type: 'bar',
-        height: 350,
-      },
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: '60%',
-          borderRadius: 5,
-          borderRadiusOnAllStackedSeries: true,
-          borderRadiusApplication: 'end',
-          endingShape: 'rounded',
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      legend: {
-        show: true,
-        markers: {
-          fillColors: ['#7638ff', '#fda600'],
-        },
-      },
-      stroke: {
-        show: true,
-        width: 2,
-        colors: ['transparent'],
-      },
-      xaxis: {
-        categories: [
-          'Feb',
-          'Mar',
-          'Apr',
-          'May',
-          'Jun',
-          'Jul',
-          'Aug',
-          'Sep',
-          'Oct',
+  constructor(private sideBar: SideBarService, private data: DataService, private cdr: ChangeDetectorRef) {
+    this.data.getProfitLoss().subscribe((res: any) => {
+      res.data.sort((a: any, b: any) => parseInt(a.monthName) - parseInt(b.monthName));
+      res.data.forEach((item: any) => {
+        this.incomeData.push(item.totalIncome);
+        this.expenseData.push(item.totalExpense);
+        this.profitData.push(item.profitLoss);
+        item.monthName = parseFloat(item.monthName);
+        this.monthcategories.push(this.monthArray[item.monthName - 1]);
+
+        this.totalIncome += item.totalIncome;
+        this.totalExpense += item.totalExpense;
+        this.profit += item.profitLoss;
+
+      });
+      this.chartOptions = {
+        series: [
+          {
+            name: 'Income',
+            data: this.incomeData,
+          },
+
+          {
+            name: 'Expense',
+            data: this.expenseData,
+          },
+
+          {
+            name: 'Profit',
+            data: this.profitData,
+          },
         ],
-      },
-      yaxis: {
-        title: {
-          text: '$ (thousands)',
+
+        chart: {
+          type: 'bar',
+          height: 350,
+          width: '100%',
+          toolbar: { show: false },
+          animations: { enabled: false },
+          // optional tighter layout
+          parentHeightOffset: 0,
         },
-      },
-      fill: {
-        opacity: 1,
-        colors: ['#7638ff', '#fda600'],
-      },
-      tooltip: {
-        y: {
-          formatter: function (val: string) {
-            return '$ ' + val + ' thousands';
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            columnWidth: '60%',
+            borderRadius: 5,
+            borderRadiusOnAllStackedSeries: true,
+            borderRadiusApplication: 'end',
+            endingShape: 'rounded',
           },
         },
-      },
-    };
-    this.chartOptions2 = {
-      colors: ['#7638ff', '#ff737b', 'rgb(118, 56, 255)', '#1ec1b0'],
-      series: [55, 40, 20, 10],
-      chart: {
-        type: 'donut',
-        fontFamily: 'Poppins, sans-serif',
-        height: 320,
-      },
-      labels: ['Paid', 'Unpaid', 'Overdue', 'Draft'],
-      legend: { show: false },
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 300,
-              height: 200,
+        dataLabels: {
+          enabled: false,
+        },
+        legend: {
+          show: true,
+          markers: {
+            fillColors: ['#22CC62', '#FF0000', '#7539FF'],
+          },
+        },
+        stroke: {
+          show: true,
+          width: 2,
+          colors: ['transparent'],
+        },
+        xaxis: {
+          categories: this.monthcategories,
+        },
+        yaxis: {
+          title: {
+            text: 'PKR (Rupees)',
+          },
+        },
+        fill: {
+          opacity: 1,
+          colors: ['#22CC62', '#FF0000', '#7539FF'],
+        },
+        tooltip: {
+          y: {
+            formatter: function (val: string) {
+              return '$ ' + val + ' thousands';
             },
-            legend: { position: 'bottom' },
           },
         },
-      ],
-    };
+      };
+
+      this.chartOptions2 = {
+        // colors: ['#7638ff', '#ff737b', 'rgb(118, 56, 255)', '#1ec1b0'],
+        series: [this.profit, this.totalIncome, 0, this.totalExpense],
+        chart: {
+          type: 'donut',
+          fontFamily: 'Poppins, sans-serif',
+          height: 320,
+        },
+        labels: ['Profit', 'Income', 'Total Income', 'Expense'],
+        legend: { show: false },
+        responsive: [
+          {
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 300,
+                height: 200,
+              },
+              legend: { position: 'bottom' },
+            },
+          },
+        ],
+      };
+      this.cdr.detectChanges();
+    });
 
     // <* to check layout position *>
     this.sideBar.layoutPosition.subscribe((res) => {

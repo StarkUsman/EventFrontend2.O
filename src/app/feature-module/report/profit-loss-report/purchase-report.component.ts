@@ -38,6 +38,9 @@ export class PurchaseReportComponent implements OnInit {
         const now = new Date();
         this.yearMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
         this.getTableData();
+        setTimeout(() => {
+          this.saveProfitLoss();
+        }, 10000); 
       }
     });
   }
@@ -161,8 +164,28 @@ export class PurchaseReportComponent implements OnInit {
   netProfit(){
     return this.grossProfit() - this.monthlyDevExpense();
   }
+  
+  prevMonth: string = '';
+  saveProfitLoss() {
+    if (this.prevMonth === '' || this.prevMonth !== this.yearMonth) {
+      this.prevMonth = this.yearMonth;
+      let profitLoss = {
+        totalExpense: this.totalExpense() + this.monthlyDevExpense() + this.totalDiscount(),
+        totalIncome: this.grandInflow(),
+        profitLoss: this.grandInflow() - (this.totalExpense() + this.monthlyDevExpense() + this.totalDiscount()),
+        monthName: this.yearMonth.split('-')[1]
+      }
+      this.data.saveProfitLoss(profitLoss).subscribe((res: any) => {});
+    }
+
+  }
+
 
   filterData() {
     this.getTableData();
+
+    setTimeout(() => {
+      this.saveProfitLoss();
+    }, 10000); 
   }
 }

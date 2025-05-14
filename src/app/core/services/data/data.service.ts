@@ -438,6 +438,18 @@ export class DataService {
     );
   }
 
+  public getProfitLoss() {
+    return this.http.get<apiResultFormat>(this.backendUrl+'/profitLoss').pipe(
+      map((res: apiResultFormat) => {
+        return res;
+      })
+    );
+  }
+
+  public saveProfitLoss(profitLoss: any) {
+    return this.http.put(this.backendUrl+`/profitLoss/update/${profitLoss.monthName}`, profitLoss);
+  }
+
   public deleteVoucher(sNo: number) {
     return this.http.delete(this.backendUrl+`/vouchers/${sNo}`);
   }

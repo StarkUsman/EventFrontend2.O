@@ -342,7 +342,7 @@ export class EditEstimateComponent implements OnInit {
     this.reservationToEdit.total_price = this.getGrandTotal();
     this.reservationToEdit.SLOT = this.slotSelected;
     this.reservationToEdit.total_remaining = parseFloat(this.reservationToEdit.grandTotal) - parseFloat(this.reservationToEdit.discount) - parseFloat(this.reservationToEdit.payment_received);
-    
+    this.reservationToEdit.additional_services = this.additionalServicesSelected;
     this.data.updateReservation(this.reservationToEdit).subscribe((res: any) => {
       this.router.navigate([routes.reservationList]);
     });
