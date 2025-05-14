@@ -378,6 +378,10 @@ export class DataService {
     return this.http.put(this.backendUrl+`/bookings/${reservation.booking_id}`, reservation);
   }
 
+  public cancelReservation(reservation: any) {
+    return this.http.put(this.backendUrl+`/bookings/cancel/${reservation.id}`, reservation);
+  }
+
   public addReservationPayment(body: any) {
     return this.http.put(this.backendUrl+`/bookings/payment/${body.id}`, body);
   }

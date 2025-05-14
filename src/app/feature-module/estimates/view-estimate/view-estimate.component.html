@@ -102,6 +102,16 @@
                                             class="dropdown-item"
                                             href="javascript:void(0);"
                                             data-bs-toggle="modal"
+                                            data-bs-target="#cancel_modal"
+                                            (click)="setReservationToCancel(reservation)"
+                                            ><i class="far fa-times-circle me-2"></i>Cancel</a
+                                            >
+                                          </li>
+                                        <li>
+                                          <a
+                                            class="dropdown-item"
+                                            href="javascript:void(0);"
+                                            data-bs-toggle="modal"
                                             data-bs-target="#delete_modal"
                                             (click)="setReservationToDelete(reservation)"
                                             ><i class="far fa-trash-alt me-2"></i>Delete</a
@@ -148,6 +158,29 @@
             </div>
             <div class="col-6">
               <button type="submit" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-continue-btn">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal custom-modal fade" id="cancel_modal" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="form-header">
+          <h3>Cancel Reservation</h3>
+          <p>Are you sure want to Cancel?</p>
+        </div>
+        <div class="modal-btn delete-action">
+          <div class="row">
+            <div class="col-6">
+              <button data-bs-dismiss="modal" class="w-100 btn btn-primary paid-continue-btn" (click)="cancelReservation()">Yes</button>
+            </div>
+            <div class="col-6">
+              <button type="submit" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-continue-btn">No</button>
             </div>
           </div>
         </div>

@@ -35,10 +35,10 @@
                 <tr>
                   <th >#</th>
                   <th colspan="2">Cash Inflow (Cash Account) </th>
-                  <th colspan="2">Cash Outflow (Cash Account)</th>
+                  <th class="vertical-separator-minimal" colspan="2">Cash Outflow (Cash Account)</th>
 
-                  <th colspan="2">Bank Inflow (Bank Account)</th>
-                  <th colspan="2">Bank Outflow (Bank Account)</th>
+                  <th class="vertical-separator" colspan="2">Bank Inflow (Bank Account)</th>
+                  <th class="vertical-separator-minimal" colspan="2">Bank Outflow (Bank Account)</th>
                 </tr>
               </thead>
               <tbody>
@@ -48,7 +48,7 @@
                   <td>{{lastCashClosingBalance()}}</td>
                   <td></td>
                   <td></td>
-                  <td><strong>Last Day Closing Balance </strong></td>
+                  <td class="vertical-separator"><strong>Last Day Closing Balance </strong></td>
                   <td>{{lastBankClosingBalance()}}</td>
                   <td></td>
                   <td></td>
@@ -59,14 +59,14 @@
                     <td>{{ cashInflow[idx]?.debitAccount?.name || '' }}{{ cashInflow[idx]?.trans_id ? ' #' + cashInflow[idx]?.trans_id : '' }}</td>
                     <td>{{ cashInflow[idx]?.amount || '' }}</td>
                     
-                    <td>{{ cashOutflow[idx]?.creditAccount?.name || '' }}{{ cashOutflow[idx]?.trans_id ? ' #' + cashOutflow[idx]?.trans_id : '' }}</td>
+                    <td class="vertical-separator-minimal">{{ cashOutflow[idx]?.creditAccount?.name || '' }}{{ cashOutflow[idx]?.trans_id ? ' #' + cashOutflow[idx]?.trans_id : '' }}</td>
                     <td>{{ cashOutflow[idx]?.amount || '' }}</td>
                     
                     
-                    <td>{{ bankInflow[idx]?.debitAccount?.name || '' }}{{ bankInflow[idx]?.trans_id ? ' #' + bankInflow[idx]?.trans_id : '' }}</td>
+                    <td class="vertical-separator">{{ bankInflow[idx]?.debitAccount?.name || '' }}{{ bankInflow[idx]?.trans_id ? ' #' + bankInflow[idx]?.trans_id : '' }}</td>
                     <td>{{ bankInflow[idx]?.amount || '' }}</td>
                     
-                    <td>{{ bankOutflow[idx]?.creditAccount?.name || '' }}{{ bankOutflow[idx]?.trans_id ? ' #' + bankOutflow[idx]?.trans_id : '' }}</td>
+                    <td class="vertical-separator-minimal">{{ bankOutflow[idx]?.creditAccount?.name || '' }}{{ bankOutflow[idx]?.trans_id ? ' #' + bankOutflow[idx]?.trans_id : '' }}</td>
                     <td>{{ bankOutflow[idx]?.amount || '' }}</td>
                   </tr>
                 <tr>
@@ -74,13 +74,13 @@
                   <td>Total Cash Income</td>
                   <td>{{totalCashInflow()}}</td>
 
-                  <td>Total Cash Expense</td>
+                  <td class="vertical-separator-minimal">Total Cash Expense</td>
                   <td>{{totalCashOutflow()}}</td>
 
-                  <td>Total Bank Income</td>
+                  <td class="vertical-separator">Total Bank Income</td>
                   <td>{{totalBankInflow()}}</td>
 
-                  <td>Total Bank Expense</td>
+                  <td class="vertical-separator-minimal">Total Bank Expense</td>
                   <td>{{totalBankOutflow()}}</td>
                 </tr>
                 <tr>
@@ -88,7 +88,7 @@
                   <td colspan="2">Closing Balance of Cash Account</td>
                   <td>{{cashClosingBalance()}}</td>
                   <td></td>
-                  <td colspan="2">Closing Balance of Bank Account</td>
+                  <td class="vertical-separator" colspan="2">Closing Balance of Bank Account</td>
                   <td>{{bankClosingBalance()}}</td>
                   <td></td>
                 </tr>

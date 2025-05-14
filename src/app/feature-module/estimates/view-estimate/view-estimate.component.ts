@@ -125,6 +125,28 @@ export class ViewEstimateComponent  implements OnInit {
       });
     });
   }
+  
+  reservationToCancel: any = {};
+
+  setReservationToCancel(reservation: any) {
+    this.reservationToCancel = reservation;
+  }
+
+  cancelReservation() {
+    let requestBody = {
+      id: this.reservationToCancel.booking_id,
+      status: 'CANCELLED',
+      SLOT: {}
+    };
+
+    this.data.cancelReservation(requestBody).subscribe((res: any) => {
+      this.pagination.tablePageSize.subscribe((res: tablePageSize) => {
+        this.getTableData({ skip: res.skip, limit: res.limit });
+        this.pageSize = res.pageSize;
+        this.reservationToCancel = null;
+      });
+    });
+  }
 
   reservationToAddPayment: any = {};
   setReservationToAddPayment(reservation: any){
