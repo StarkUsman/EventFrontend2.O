@@ -562,6 +562,10 @@ export class DataService {
     return this.http.get(this.backendUrl+`/ledger/${id}`);
   }
 
+  public getLedgerByID(id: number) {
+    return this.http.get(this.backendUrl+`/ledger/ledger/${id}`);
+  }
+
   public getLedgerByPID(id: number, purch_id: any) {
     return this.http.get(this.backendUrl+`/ledger/${id}/purch/${purch_id}`);
   }
@@ -637,6 +641,10 @@ export class DataService {
 
   public getReservationLedgerById(id: number) {
     return this.http.get(this.backendUrl+`/bookingledger/${id}`);
+  }
+
+  public updateReservationLedgerById(ledger: any){
+    return this.http.put(this.backendUrl+`/bookingledger/${ledger.id}`, ledger);
   }
 
   public addInventoryLedger(ledger: any){

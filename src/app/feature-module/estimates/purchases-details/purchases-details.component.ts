@@ -51,7 +51,6 @@ export class PurchasesDetailsComponent implements OnInit {
     });
   }
 
-  // In your component.ts file
   editedLedger: any = null;
   editedAmount: number | null = null;
 
@@ -65,11 +64,38 @@ export class PurchasesDetailsComponent implements OnInit {
     this.editedAmount = null;
   }
 
+  ledgerToEdit: any = {}
+  updateLedger() {
+    this.data.getLedgerByID(this.editedLedger.ledgerId).subscribe((res: any) => {
+      this.ledgerToEdit = res;
+      this.ledgerToEdit.amountCredit = this.editedLedger.amount;
+      
+      this.data.updateLedgerById(this.ledgerToEdit).subscribe((res) => {
+        this.updateReservationLedger(res);
+      });
+    });
+  }
+
+  updateReservationLedger(res: any) {  
+      this.data.updateReservationLedgerById(this.editedLedger).subscribe((res) => {
+        let requestBody = {
+          id: this.editedLedger.booking_id,
+          paymentToAdd: this.editedLedger.amount - this.originalAmount,
+        }
+    
+        this.data.addReservationPayment(requestBody).subscribe((res: any) => {
+          window.location.reload();
+          });
+        });
+    }
+
+  originalAmount: number = 0;
+
   saveEdit() {
     if (this.editedLedger) {
+      this.originalAmount = this.editedLedger.amount;
       this.editedLedger.amount = this.editedAmount;
-      console.log('Updated ledger:', this.editedLedger);
-      this.cancelEdit();
+      this.updateLedger();
     }
   }
 
