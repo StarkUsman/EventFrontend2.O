@@ -94,36 +94,40 @@ export class AddEstimatesComponent implements OnInit {
     return { dates, days };
   }
 
-  slotSelected: any = null;
-
+  slotSelected: any = [];
+  private nextSlotIndex: number = 0;
   markSlotSelected(slotType: any, day: any, date: any, slot: any) {
-    console.log("Slot Type:", slotType);
-    console.log("Day:", day);
-    console.log("Date:", date);
-    console.log("Slot:", slot);
 
     this.monthSelected = structuredClone(this.monthSelectedOrg);
     let year = day.split(" ")[1];
     //if date dateSelected is in last week of the month and the date is less than 15, then set the monthSelected to the next month
-    if (date < this.dateSelected && date < 15) {
-      switch (this.monthSelected) {
-        case 'Jan': this.monthSelected = 'Feb'; break;
-        case 'Feb': this.monthSelected = 'Mar'; break;
-        case 'Mar': this.monthSelected = 'Apr'; break;
-        case 'Apr': this.monthSelected = 'May'; break;
-        case 'May': this.monthSelected = 'Jun'; break;
-        case 'Jun': this.monthSelected = 'Jul'; break;
-        case 'Jul': this.monthSelected = 'Aug'; break;
-        case 'Aug': this.monthSelected = 'Sep'; break;
-        case 'Sep': this.monthSelected = 'Oct'; break;
-        case 'Oct': this.monthSelected = 'Nov'; break;
-        case 'Nov': this.monthSelected = 'Dec'; break;
-        case 'Dec': this.monthSelected = 'Jan'; break;
-      }
-    }
+    // if (date < this.dateSelected && date < 15) {
+    //   switch (this.monthSelected) {
+    //     case 'Jan': this.monthSelected = 'Feb'; break;
+    //     case 'Feb': this.monthSelected = 'Mar'; break;
+    //     case 'Mar': this.monthSelected = 'Apr'; break;
+    //     case 'Apr': this.monthSelected = 'May'; break;
+    //     case 'May': this.monthSelected = 'Jun'; break;
+    //     case 'Jun': this.monthSelected = 'Jul'; break;
+    //     case 'Jul': this.monthSelected = 'Aug'; break;
+    //     case 'Aug': this.monthSelected = 'Sep'; break;
+    //     case 'Sep': this.monthSelected = 'Oct'; break;
+    //     case 'Oct': this.monthSelected = 'Nov'; break;
+    //     case 'Nov': this.monthSelected = 'Dec'; break;
+    //     case 'Dec': this.monthSelected = 'Jan'; break;
+    //   }
+    // }
 
     let formattedDate = date + '_' + this.monthSelected + '_' + year;
-    this.slotSelected = { hall: slotType, date: formattedDate, slot: slot };
+    // this.slotSelected = { hall: slotType, date: formattedDate, slot: slot };
+    if(this.nextSlotIndex === 0) {
+      this.slotSelected[0] = { hall: slotType, date: formattedDate, slot: slot };
+      this.nextSlotIndex++;
+    } else {
+      this.slotSelected[1] = { hall: slotType, date: formattedDate, slot: slot };
+      this.nextSlotIndex = 0;
+    }
+
   }
 
   isSlotSelected(slotType: any, day: any, date: any, slot: any) {
@@ -131,7 +135,16 @@ export class AddEstimatesComponent implements OnInit {
     const year = day.split(" ")[1];
     let formattedDate = date + '_' + this.monthSelected + '_' + year;
 
-    return this.slotSelected && this.slotSelected.hall === slotType && this.slotSelected.date === formattedDate && this.slotSelected.slot === slot;
+    // return this.slotSelected && this.slotSelected.hall === slotType && this.slotSelected.date === formattedDate && this.slotSelected.slot === slot;
+    for (let i = 0; i < this.slotSelected.length; i++) {
+      return this.slotSelected.some((s:any) =>
+        s &&
+        s.hall === slotType &&
+        s.date === formattedDate &&
+        s.slot === slot
+      );
+      // return this.slotSelected[i] && this.slotSelected[i].hall === slotType && this.slotSelected[i].date === formattedDate && this.slotSelected[i].slot === slot;
+    }
   }
 
   updateCalendar() {
@@ -151,8 +164,13 @@ export class AddEstimatesComponent implements OnInit {
       for (let i = 0; i < this.bookings.length; i++) {
         const booking = this.bookings[i];
 
-        if (slotToCompare.hall === booking.SLOT.hall && slotToCompare.date === booking.SLOT.date && slotToCompare.slot === booking.SLOT.slot) {
-          return true;
+        // if (slotToCompare.hall === booking.SLOT[0].hall && slotToCompare.date === booking.SLOT[0].date && slotToCompare.slot === booking.SLOT[0].slot) {
+        //   return true;
+        // }
+        for (let j = 0; j < booking.SLOT.length; j++) {
+          if (slotToCompare.hall === booking.SLOT[j].hall && slotToCompare.date === booking.SLOT[j].date && slotToCompare.slot === booking.SLOT[j].slot) {
+            return true;
+          }
         }
       }
     }
@@ -170,8 +188,13 @@ export class AddEstimatesComponent implements OnInit {
       for (let i = 0; i < this.bookings.length; i++) {
         const booking = this.bookings[i];
 
-        if (slotToCompare.hall === booking.SLOT.hall && slotToCompare.date === booking.SLOT.date && slotToCompare.slot === booking.SLOT.slot && booking.status === 'DRAFTED') {
-          return true;
+        // if (slotToCompare.hall === booking.SLOT.hall && slotToCompare.date === booking.SLOT.date && slotToCompare.slot === booking.SLOT.slot && booking.status === 'DRAFTED') {
+        //   return true;
+        // }
+        for (let j = 0; j < booking.SLOT.length; j++) {
+          if (slotToCompare.hall === booking.SLOT[j].hall && slotToCompare.date === booking.SLOT[j].date && slotToCompare.slot === booking.SLOT[j].slot && booking.status === 'DRAFTED') {
+            return true;
+          }
         }
       }
     }
@@ -202,9 +225,6 @@ export class AddEstimatesComponent implements OnInit {
       day.setDate(tempDate.getDate() + i);
       this.days.push(day.toDateString());
     }
-    console.log("-----------------------------------------");
-    console.log(this.days);
-    console.log("-----------------------------------------");
   }
 
   loadReservations() {
@@ -341,7 +361,7 @@ export class AddEstimatesComponent implements OnInit {
 
   saveReservation() {
     this.reservation.user = JSON.parse(localStorage.getItem('user') || '{}'),
-      this.reservation.date = new Date();
+    this.reservation.date = new Date();
     this.reservation.add_service_ids = this.additionalServicesSelected.map(service => service.additional_service_id);
     this.reservation.menu_items_ids = this.menuItems.filter(item => item.selected).map(item => item.menu_item_id);
     this.reservation.total_menu_price = this.reservation.selectedMenu.finalPrice;

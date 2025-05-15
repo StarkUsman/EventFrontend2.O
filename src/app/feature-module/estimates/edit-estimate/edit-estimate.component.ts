@@ -51,7 +51,9 @@ export class EditEstimateComponent implements OnInit {
   monthSelected: any = '';
   Date: any = [];
   Days: any = [];
-  slotSelected: any = null;
+  slotSelected: any = [];
+  private nextSlotIndex: number = 0;
+
 
   async ngOnInit() {
     this.loadHalls();
@@ -114,7 +116,14 @@ export class EditEstimateComponent implements OnInit {
   markSlotSelected(slotType: any, day: any, date: any, slot: any) {
     const year = day.split(" ")[1];
     let formattedDate = date + '_' + this.monthSelected + '_' + year;
-    this.slotSelected = { hall: slotType, date: formattedDate, slot: slot };
+    // this.slotSelected = { hall: slotType, date: formattedDate, slot: slot };
+    if(this.nextSlotIndex === 0) {
+      this.slotSelected[0] = { hall: slotType, date: formattedDate, slot: slot };
+      this.nextSlotIndex++;
+    } else {
+      this.slotSelected[1] = { hall: slotType, date: formattedDate, slot: slot };
+      this.nextSlotIndex = 0;
+    }
   }
 
   isSlotSelected(slotType: any, day: any, date: any, slot: any) {
@@ -122,7 +131,15 @@ export class EditEstimateComponent implements OnInit {
     const year = day.split(" ")[1];
     let formattedDate = date + '_' + this.monthSelected + '_' + year;
 
-    return this.slotSelected && this.slotSelected.hall === slotType && this.slotSelected.date === formattedDate && this.slotSelected.slot === slot;
+    // return this.slotSelected && this.slotSelected.hall === slotType && this.slotSelected.date === formattedDate && this.slotSelected.slot === slot;
+    for (let i = 0; i < this.slotSelected.length; i++) {
+      return this.slotSelected.some((s:any) =>
+        s &&
+        s.hall === slotType &&
+        s.date === formattedDate &&
+        s.slot === slot
+      );
+    }
   }
 
   updateCalendar() {
@@ -142,8 +159,13 @@ export class EditEstimateComponent implements OnInit {
       for (let i = 0; i < this.bookings.length; i++) {
         const booking = this.bookings[i];
 
-        if (slotToCompare.hall === booking.SLOT.hall && slotToCompare.date === booking.SLOT.date && slotToCompare.slot === booking.SLOT.slot) {
-          return true;
+        // if (slotToCompare.hall === booking.SLOT.hall && slotToCompare.date === booking.SLOT.date && slotToCompare.slot === booking.SLOT.slot) {
+        //   return true;
+        // }
+        for (let j = 0; j < booking.SLOT.length; j++) {
+          if (slotToCompare.hall === booking.SLOT[j].hall && slotToCompare.date === booking.SLOT[j].date && slotToCompare.slot === booking.SLOT[j].slot) {
+            return true;
+          }
         }
       }
     }
@@ -161,8 +183,13 @@ export class EditEstimateComponent implements OnInit {
       for (let i = 0; i < this.bookings.length; i++) {
         const booking = this.bookings[i];
 
-        if (slotToCompare.hall === booking.SLOT.hall && slotToCompare.date === booking.SLOT.date && slotToCompare.slot === booking.SLOT.slot && booking.status === 'DRAFTED') {
-          return true;
+        // if (slotToCompare.hall === booking.SLOT.hall && slotToCompare.date === booking.SLOT.date && slotToCompare.slot === booking.SLOT.slot && booking.status === 'DRAFTED') {
+        //   return true;
+        // }
+        for (let j = 0; j < booking.SLOT.length; j++) {
+          if (slotToCompare.hall === booking.SLOT[j].hall && slotToCompare.date === booking.SLOT[j].date && slotToCompare.slot === booking.SLOT[j].slot && booking.status === 'DRAFTED') {
+            return true;
+          }
         }
       }
     }
