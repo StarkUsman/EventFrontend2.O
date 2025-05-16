@@ -51,6 +51,7 @@ export class AddEstimatesComponent implements OnInit {
   Date: any = [];
   Days: any = [];
   monthSelectedOrg: any = '';
+  monthNumber: any = [];
 
 
   constructor(private data: DataService, private http: HttpClient, private router: Router) { }
@@ -61,9 +62,10 @@ export class AddEstimatesComponent implements OnInit {
     this.loadAdditionalServices();
     this.loadReservations();
     this.loadEvents();
-    this.initDays(this.reservation.date);
+    // this.initDays(this.reservation.date);
     let selectedDate = this.reservation.date;
-    ({ dates: this.Date, days: this.Days } = this.getWeekDatesSeparated(selectedDate, 0));
+    // ({ dates: this.Date, days: this.Days } = this.getWeekDatesSeparated(selectedDate, 0));
+    ({ dates: this.Date, days: this.Days, monthNumber: this.monthNumber } = this.getWeekDatesSeparated(selectedDate, 0));
   }
 
   getWeekDatesSeparated(dateSelected: Date, startDay: number = 0) {
@@ -75,12 +77,14 @@ export class AddEstimatesComponent implements OnInit {
 
     let dates: string[] = [];
     let days: string[] = [];
+    let monthNumber: string[] = [];
 
     for (let i = 0; i < 7; i++) {
       let formattedDate = date.toDateString().split(' ');
 
       dates.push(formattedDate[2]);
       days.push(`${formattedDate[0]} ${formattedDate[3]}`);
+      monthNumber.push(formattedDate[1]);
 
       date.setDate(date.getDate() + 1);
     }
@@ -91,14 +95,13 @@ export class AddEstimatesComponent implements OnInit {
     this.monthSelected = this.monthSelected.split(' ')[1];
     this.monthSelectedOrg = structuredClone(this.monthSelected);
 
-    return { dates, days };
+    return { dates, days, monthNumber };
   }
 
   slotSelected: any = [];
   private nextSlotIndex: number = 0;
-  markSlotSelected(slotType: any, day: any, date: any, slot: any) {
+  markSlotSelected(slotType: any, day: any, date: any, monthNumber:any, slot: any) {
 
-    this.monthSelected = structuredClone(this.monthSelectedOrg);
     let year = day.split(" ")[1];
     //if date dateSelected is in last week of the month and the date is less than 15, then set the monthSelected to the next month
     // if (date < this.dateSelected && date < 15) {
@@ -118,7 +121,7 @@ export class AddEstimatesComponent implements OnInit {
     //   }
     // }
 
-    let formattedDate = date + '_' + this.monthSelected + '_' + year;
+    let formattedDate = date + '_' + monthNumber + '_' + year;
     // this.slotSelected = { hall: slotType, date: formattedDate, slot: slot };
     if(this.nextSlotIndex === 0) {
       this.slotSelected[0] = { hall: slotType, date: formattedDate, slot: slot };
@@ -130,10 +133,10 @@ export class AddEstimatesComponent implements OnInit {
 
   }
 
-  isSlotSelected(slotType: any, day: any, date: any, slot: any) {
+  isSlotSelected(slotType: any, day: any, date: any, monthNumber:any, slot: any) {
 
     const year = day.split(" ")[1];
-    let formattedDate = date + '_' + this.monthSelected + '_' + year;
+    let formattedDate = date + '_' + monthNumber + '_' + year;
 
     // return this.slotSelected && this.slotSelected.hall === slotType && this.slotSelected.date === formattedDate && this.slotSelected.slot === slot;
     for (let i = 0; i < this.slotSelected.length; i++) {
@@ -148,15 +151,16 @@ export class AddEstimatesComponent implements OnInit {
   }
 
   updateCalendar() {
-    this.initDays(this.reservation.date);
+    // this.initDays(this.reservation.date);
     let selectedDate = this.reservation.date;
-    ({ dates: this.Date, days: this.Days } = this.getWeekDatesSeparated(selectedDate, 0));
+    // ({ dates: this.Date, days: this.Days } = this.getWeekDatesSeparated(selectedDate, 0));
+    ({ dates: this.Date, days: this.Days, monthNumber: this.monthNumber } = this.getWeekDatesSeparated(selectedDate, 0));
   }
 
-  isSlotBooked(slotType: any, day: any, date: any, slot: any) {
+  isSlotBooked(slotType: any, day: any, date: any, monthNumber:any, slot: any) {
 
     const year = day.split(" ")[1];
-    let formattedDate = date + '_' + this.monthSelected + '_' + year;
+    let formattedDate = date + '_' + monthNumber + '_' + year;
 
     let slotToCompare = { hall: slotType, date: formattedDate, slot: slot };
 
@@ -177,10 +181,10 @@ export class AddEstimatesComponent implements OnInit {
     return false;
   }
 
-  isSlotDrafted(slotType: any, day: any, date: any, slot: any) {
+  isSlotDrafted(slotType: any, day: any, date: any, monthNumber:any, slot: any) {
 
     const year = day.split(" ")[1];
-    let formattedDate = date + '_' + this.monthSelected + '_' + year;
+    let formattedDate = date + '_' + monthNumber + '_' + year;
 
     let slotToCompare = { hall: slotType, date: formattedDate, slot: slot };
 
@@ -199,32 +203,6 @@ export class AddEstimatesComponent implements OnInit {
       }
     }
     return false;
-  }
-
-  initDays(date: any) {
-    if (!date) {
-      console.error("Invalid date passed to initDays:", date);
-      return;
-    }
-
-    // Convert string to Date if necessary
-    if (!(date instanceof Date)) {
-      date = new Date(date);
-    }
-
-    if (isNaN(date.getTime())) {
-      console.error("Invalid date format:", date);
-      return;
-    }
-
-    this.days = [];
-    let tempDate = new Date(date.getTime() - 3 * 24 * 60 * 60 * 1000);
-
-    for (let i = 0; i < 7; i++) {
-      const day = new Date(tempDate.getTime());
-      day.setDate(tempDate.getDate() + i);
-      this.days.push(day.toDateString());
-    }
   }
 
   loadReservations() {

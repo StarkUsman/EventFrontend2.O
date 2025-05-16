@@ -53,6 +53,7 @@ export class EditEstimateComponent implements OnInit {
   Days: any = [];
   slotSelected: any = [];
   private nextSlotIndex: number = 0;
+  monthNumber: any = [];
 
 
   async ngOnInit() {
@@ -70,9 +71,8 @@ export class EditEstimateComponent implements OnInit {
         const dateString = this.reservationToEdit.dashboardDate;
         const dateObj = new Date(dateString.replace(" ", "T"));
         this.reservationToEdit.date = dateObj;
-        this.initDays(this.reservationToEdit.date);
         let selectedDate = this.reservationToEdit.date;
-        ({ dates: this.Date, days: this.Days } = this.getWeekDatesSeparated(selectedDate, 0));
+        ({ dates: this.Date, days: this.Days, monthNumber: this.monthNumber } = this.getWeekDatesSeparated(selectedDate, 0));
         
         if (typeof this.reservationToEdit.selectedMenu === "string") {
           this.reservationToEdit.selectedMenu = JSON.parse(this.reservationToEdit.selectedMenu);
@@ -95,12 +95,14 @@ export class EditEstimateComponent implements OnInit {
 
     let dates: string[] = [];
     let days: string[] = [];
+    let monthNumber: string[] = [];
 
     for (let i = 0; i < 7; i++) {
       let formattedDate = date.toDateString().split(' ');
 
       dates.push(formattedDate[2]);
       days.push(`${formattedDate[0]} ${formattedDate[3]}`);
+      monthNumber.push(formattedDate[1]);
 
       date.setDate(date.getDate() + 1);
     }
@@ -110,12 +112,12 @@ export class EditEstimateComponent implements OnInit {
     this.monthSelected = this.reservationToEdit.date.toDateString();
     this.monthSelected = this.monthSelected.split(' ')[1];
 
-    return { dates, days };
+    return { dates, days, monthNumber };
   }
 
-  markSlotSelected(slotType: any, day: any, date: any, slot: any) {
+  markSlotSelected(slotType: any, day: any, date: any, monthNumber:any, slot: any) {
     const year = day.split(" ")[1];
-    let formattedDate = date + '_' + this.monthSelected + '_' + year;
+    let formattedDate = date + '_' + monthNumber + '_' + year;
     // this.slotSelected = { hall: slotType, date: formattedDate, slot: slot };
     if(this.nextSlotIndex === 0) {
       this.slotSelected[0] = { hall: slotType, date: formattedDate, slot: slot };
@@ -126,10 +128,10 @@ export class EditEstimateComponent implements OnInit {
     }
   }
 
-  isSlotSelected(slotType: any, day: any, date: any, slot: any) {
+  isSlotSelected(slotType: any, day: any, date: any, monthNumber:any, slot: any) {
 
     const year = day.split(" ")[1];
-    let formattedDate = date + '_' + this.monthSelected + '_' + year;
+    let formattedDate = date + '_' + monthNumber + '_' + year;
 
     // return this.slotSelected && this.slotSelected.hall === slotType && this.slotSelected.date === formattedDate && this.slotSelected.slot === slot;
     for (let i = 0; i < this.slotSelected.length; i++) {
@@ -143,15 +145,15 @@ export class EditEstimateComponent implements OnInit {
   }
 
   updateCalendar() {
-    this.initDays(this.reservationToEdit.date);
     let selectedDate = this.reservationToEdit.date;
-    ({ dates: this.Date, days: this.Days } = this.getWeekDatesSeparated(selectedDate, 0));
+    // ({ dates: this.Date, days: this.Days } = this.getWeekDatesSeparated(selectedDate, 0));
+    ({ dates: this.Date, days: this.Days, monthNumber: this.monthNumber } = this.getWeekDatesSeparated(selectedDate, 0));
   }
 
-  isSlotBooked(slotType: any, day: any, date: any, slot: any) {
+  isSlotBooked(slotType: any, day: any, date: any, monthNumber:any, slot: any) {
 
     const year = day.split(" ")[1];
-    let formattedDate = date + '_' + this.monthSelected + '_' + year;
+    let formattedDate = date + '_' + monthNumber + '_' + year;
 
     let slotToCompare = { hall: slotType, date: formattedDate, slot: slot };
 
@@ -172,10 +174,10 @@ export class EditEstimateComponent implements OnInit {
     return false;
   }
 
-  isSlotDrafted(slotType: any, day: any, date: any, slot: any) {
+  isSlotDrafted(slotType: any, day: any, date: any, monthNumber:any, slot: any) {
 
     const year = day.split(" ")[1];
-    let formattedDate = date + '_' + this.monthSelected + '_' + year;
+    let formattedDate = date + '_' + monthNumber + '_' + year;
 
     let slotToCompare = { hall: slotType, date: formattedDate, slot: slot };
 
@@ -194,36 +196,6 @@ export class EditEstimateComponent implements OnInit {
       }
     }
     return false;
-  }
-
-  initDays(date: any) {
-    if (!date) {
-      console.error("Invalid date passed to initDays:", date);
-      return;
-    }
-
-    // Convert string to Date if necessary
-    if (!(date instanceof Date)) {
-      date = new Date(date);
-    }
-
-    if (isNaN(date.getTime())) {
-      console.error("Invalid date format:", date);
-      return;
-    }
-
-    this.days = [];
-    let tempDate = new Date(date.getTime() - 3 * 24 * 60 * 60 * 1000);
-
-    for (let i = 0; i < 7; i++) {
-      const day = new Date(tempDate.getTime());
-      day.setDate(tempDate.getDate() + i);
-      this.days.push(day.toDateString());
-    }
-
-    this.days_cal = this.days.map(date => date.split(' ')[2]);
-    this.month = this.days.map(date => date.split(' ')[1]);
-    this.year = this.days.map(date => date.split(' ')[3])[0];
   }
 
   loadReservations() {

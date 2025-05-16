@@ -157,18 +157,18 @@
             <td *ngFor="let day of Days; let j = index">
                 <div class="btnRow">
                   <button class="btn specialBtnMRN" 
-                  [ngClass]="{'btnSelected': isSlotSelected(slotType, day, Date[j], 'Morning'),
-                    'slotDrafted': isSlotDrafted(slotType, day, Date[j], 'Morning'),
-                    'slotBooked': isSlotBooked(slotType, day, Date[j], 'Morning')}"
-                  [disabled]= "isSlotBooked(slotType, day, Date[j], 'Morning')"
-                  (click)="markSlotSelected(slotType, day, Date[j], 'Morning')"
+                  [ngClass]="{'btnSelected': isSlotSelected(slotType, day, Date[j], monthNumber[j], 'Morning'),
+                    'slotDrafted': isSlotDrafted(slotType, day, Date[j], monthNumber[j], 'Morning'),
+                    'slotBooked': isSlotBooked(slotType, day, Date[j], monthNumber[j], 'Morning')}"
+                  [disabled]= "isSlotBooked(slotType, day, Date[j], monthNumber[j], 'Morning')"
+                  (click)="markSlotSelected(slotType, day, Date[j], monthNumber[j], 'Morning')"
                   >Day</button>
                   <button class="btn specialBtnEVN" 
-                  [ngClass]="{'btnSelected': isSlotSelected(slotType, day, Date[j], 'Evening'),
-                    'slotDrafted': isSlotDrafted(slotType, day, Date[j], 'Evening'),
-                    'slotBooked': isSlotBooked(slotType, day, Date[j], 'Evening')}"
-                  [disabled]= "isSlotBooked(slotType, day, Date[j], 'Evening')"
-                  (click)="markSlotSelected(slotType, day, Date[j], 'Evening')"
+                  [ngClass]="{'btnSelected': isSlotSelected(slotType, day, Date[j], monthNumber[j], 'Evening'),
+                    'slotDrafted': isSlotDrafted(slotType, day, Date[j], monthNumber[j], 'Evening'),
+                    'slotBooked': isSlotBooked(slotType, day, Date[j], monthNumber[j], 'Evening')}"
+                  [disabled]= "isSlotBooked(slotType, day, Date[j], monthNumber[j], 'Evening')"
+                  (click)="markSlotSelected(slotType, day, Date[j], monthNumber[j], 'Evening')"
                   >Night</button>
                 </div>
               </td>
