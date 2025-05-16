@@ -6,16 +6,16 @@
         <div class="content-invoice-header">
           <div class="invoice-item invoice-item-one">
             <div class="invoice-logo">
-              <img src="assets/img/newLogo2.png" alt="logo">
-              <!-- <img src="{{reservationToView.signature_img}}" alt="logo"> -->
+              <!-- <img src="assets/img/newLogo2.png" alt="logo"> -->
+              <img [src]="companySettings.logo ? companySettings.logo : 'assets/img/newLogo2.png'" alt="logo">
             </div>
           </div>
           <div class="text-center">
-            <h5>Paradise Castle Marquee</h5>
+            <h5>{{companySettings.name}}</h5>
             <p>
-              <span class="text-muted">Address:</span> NEAR PEER MEHR ALI SHAH UNIVERSITY<br>
-              OPPO ATTOCK PETROL PUMP NEW ROAD ATTOCK <br>
-              Contact# 0330-9589411, 0311-9589412
+              <span class="text-muted">Address:</span>{{companySettings.address1}}<br>
+              {{companySettings.address2}} <br>
+              Contact# {{companySettings.phoneNumber}} {{companySettings.phoneNumber1 ? ', ' + companySettings.phoneNumber1 : ''}}<br>
             </p>
           </div>          
           <div class="list-btn">
@@ -210,10 +210,10 @@
                     <span class="d-block">Additional Notes</span>
                     <p class="mb-0">{{reservationToView.notes}}</p>
                   </div>
-                  <div class="invoice-sign text-end">										
+                  <!-- <div class="invoice-sign text-end">										
                     <span class="d-block">Authorised Sign</span>
                     <img class="img-fluid d-inline-block" src="assets/img/signature.png" alt="sign">
-                  </div>
+                  </div> -->
                   <!-- /Terms & Conditions -->
                 </div>
               </div>

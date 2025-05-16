@@ -34,7 +34,13 @@
             <div class="col-lg-6 col-12">
               <div class="input-block mb-3">
                 <label for="Phone">Phone Number</label>
-                <input type="text" class="form-control" placeholder="Enter Phone Number" [(ngModel)]="companySettings.phone" name="companyPhone" [disabled]="!isBeingEdited">
+                <input type="text" class="form-control" placeholder="Enter Phone Number" [(ngModel)]="companySettings.phoneNumber" name="companyPhone" [disabled]="!isBeingEdited">
+              </div>
+            </div>
+            <div class="col-lg-6 col-12">
+              <div class="input-block mb-3">
+                <label for="Phone">Phone Number Alt</label>
+                <input type="text" class="form-control" placeholder="Enter Phone Number" [(ngModel)]="companySettings.phoneNumber1" name="companyPhone" [disabled]="!isBeingEdited">
               </div>
             </div>
             <div class="col-lg-6 col-12">
@@ -73,7 +79,7 @@
                 <input type="text" class="form-control" placeholder="Enter Pincode" [(ngModel)]="companySettings.zip" name="companyPincode" [disabled]="!isBeingEdited">
               </div>
             </div>
-            <div class="col-lg-12 col-12">
+            <div class="col-xl-6 col-lg-12 col-md-6 col-12">
               <div class="input-block mb-3 mb-0 pb-0">
                 <label for="Favicon">Company Logo</label>
                 <ngx-dropzone (change)="onSelect($event)" class="service-upload" [disabled]="!isBeingEdited" >
@@ -102,10 +108,10 @@
                 </ngx-dropzone>
               </div>
             </div>
-            <!-- <div class="col-xl-6 col-lg-12 col-md-6 col-12">
+            <div class="col-xl-6 col-lg-12 col-md-6 col-12">
               <div class="input-block mb-3 mb-0 pb-0">
-                <label for="Company">Company icon</label>
-                <ngx-dropzone (change)="onSelect($event)" class="service-upload">
+                <label for="Company">SideBar Icon</label>
+                <ngx-dropzone (change)="onSelect1($event)" class="service-upload" [disabled]="!isBeingEdited">
                   <ngx-dropzone-label class="drop-browse align-center">
                     <span
                       ><img src="assets/img/icons/img-drop.svg" alt="upload"
@@ -119,18 +125,18 @@
 
                     <span class="text-muted">SVG, PNG, JPG</span>
                   </ngx-dropzone-label>
-                  @for (f of files; track f) {
+                  @for (f of files1; track f) {
                     <ngx-dropzone-image-preview
                       ngProjectAs="ngx-dropzone-preview"
                       [file]="f"
                       [removable]="true"
-                      (removed)="onRemove(f)"
+                      (removed)="onRemove1(f)"
                       >
                     </ngx-dropzone-image-preview>
                   }
                 </ngx-dropzone>
               </div>
-            </div> -->
+            </div>
             <div class="col-lg-12">
               <div class="btn-path text-end">
                 <button

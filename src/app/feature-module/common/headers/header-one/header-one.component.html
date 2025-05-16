@@ -7,7 +7,7 @@
 <div class="main-logo d-inline float-start d-lg-flex align-items-center d-none d-sm-none d-md-none">
   <div class="logo-white">
     <a [routerLink]="routes.dashboard">
-      <img src="assets/img/mainLogo.png" class="img-fluid logo-blue" alt="Logo">
+      <img [src]="companySettings.icon ? companySettings.icon : 'assets/img/mainLogo.png'" class="img-fluid logo-blue" alt="Logo">
     </a>
     <a [routerLink]="routes.dashboard">
       <img src="assets/img/small.png" class="img-fluid logo-small" alt="Logo">
@@ -15,7 +15,7 @@
   </div>
   <div class="logo-color">
     <a [routerLink]="routes.dashboard">
-      <img src="assets/img/mainLogo.png" class="img-fluid logo-blue" alt="Logo">
+      <img [src]="companySettings.icon ? companySettings.icon : 'assets/img/mainLogo.png'" class="img-fluid logo-blue" alt="Logo">
     </a>
     <a [routerLink]="routes.dashboard">
       <img src="assets/img/small.png" class="img-fluid logo-small" alt="Logo">

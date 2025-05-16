@@ -9,12 +9,12 @@ import { DataService, routes } from 'src/app/core/core.index';
 export class CompanySettingsComponent {
   public routes = routes
   files: File[] = [];
+  files1: File[] = [];
   companySettings: any = {};
   isBeingEdited: boolean = false;
 
   constructor(private data: DataService) {
     this.data.getCompanySettings().subscribe((res: any) => {
-      console.log(res);
       this.companySettings = res.data[0]? res.data[0] : {};
 
       if (this.companySettings?.logo) {
@@ -23,6 +23,13 @@ export class CompanySettingsComponent {
           'signature.png'
         );
         this.files = [file];
+      }
+      if (this.companySettings?.icon) {
+        const file1 = this.base64ToFile(
+          this.companySettings.icon,
+          'signature.png'
+        );
+        this.files1 = [file1];
       }
     });
    }
@@ -51,9 +58,26 @@ export class CompanySettingsComponent {
       this.companySettings.logo = reader.result;
     };
   }
+
+  onSelect1(event: { addedFiles: File[] }) {
+    const file1 = event.addedFiles[0]; 
+    if (file1) {
+      this.files1 = [file1];
+    }
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file1);
+    reader.onload = () => {
+      this.companySettings.icon = reader.result;
+    };
+  }
   onRemove(event:File) {
   //  this.files.splice(this.files.indexOf(event), 1);
     this.files = [];
+  }
+  onRemove1(event:File) {
+  //  this.files.splice(this.files.indexOf(event), 1);
+    this.files1 = [];
   }
   ngOnDestroy(): void {
     // this.editor.destroy();
@@ -70,11 +94,15 @@ export class CompanySettingsComponent {
   saveSettings() {
     if(this.companySettings.id) {
       this.data.updateCompanySettings(this.companySettings).subscribe((res: any) => {
+        localStorage.setItem('companySettings', JSON.stringify(this.companySettings));
         this.isBeingEdited = false;
+        window.location.reload();
       });
     } else {
       this.data.saveCompanySettings(this.companySettings).subscribe((res: any) => {
+        localStorage.setItem('companySettings', JSON.stringify(this.companySettings));
         this.isBeingEdited = false;
+        window.location.reload();
       });
     }
   }

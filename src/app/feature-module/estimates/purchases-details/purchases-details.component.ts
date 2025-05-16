@@ -13,6 +13,7 @@ export class PurchasesDetailsComponent implements OnInit {
   reservationToView: any = {};
   ledgerToView: any = [];
   menuItems: any = [];
+  companySettings: any = {};
 
   constructor(private route: ActivatedRoute, private data: DataService) { }
 
@@ -23,6 +24,7 @@ export class PurchasesDetailsComponent implements OnInit {
       month: '2-digit',
       day: '2-digit',
     };
+    this.companySettings = JSON.parse(localStorage.getItem('companySettings') || '{}');
     this.route.queryParams.subscribe(params => {
       let id = params['id'];
       this.data.getReservationById(id).subscribe((res: any) => {

@@ -14,6 +14,7 @@ export class HeaderOneComponent  {
   public routes = routes;
   elem=document.documentElement
   user: any = JSON.parse(localStorage.getItem('user') || '{}');
+  companySettings: any = JSON.parse(localStorage.getItem('companySettings') || '{}');
 
   constructor(private auth: AuthService, private sideBar: SideBarService) {
     this.sideBar.toggleSideBar.subscribe((res: string) => {

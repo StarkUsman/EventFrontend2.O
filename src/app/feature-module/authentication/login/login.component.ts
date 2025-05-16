@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { J } from '@fullcalendar/core/internal-common';
 import { AuthService, routes } from 'src/app/core/core.index';
+import { DataService } from 'src/app/core/core.index';
+
 
 @Component({
   selector: 'app-login',
@@ -22,7 +25,7 @@ export class LoginComponent {
     return this.form.controls;
   }
 
-  constructor(private router: Router, private auth: AuthService) {
+  constructor(private router: Router, private auth: AuthService, private data: DataService) {
 
   }
 
@@ -38,6 +41,7 @@ export class LoginComponent {
             localStorage.setItem('userId', res.id);
             localStorage.setItem('layoutPosition', '1');
             this.auth.checkAuth.next('true');
+            this.setCompanySettings();
       
             if (res.role === 'admin' || res.role === 'accounts') {
               this.router.navigate([routes.dashboard]);
@@ -64,4 +68,13 @@ export class LoginComponent {
       });      
     }
   }
+
+
+  setCompanySettings() {
+    this.data.getCompanySettings().subscribe((res: any) => {
+      localStorage.setItem('companySettings', JSON.stringify(res.data[0]));
+      console.log('Company Settings', JSON.parse(localStorage.getItem('companySettings') || '{}'));
+    });
+  }
+  
 }
