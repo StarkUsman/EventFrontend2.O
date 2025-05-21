@@ -72,7 +72,11 @@ export class LoginComponent {
 
   setCompanySettings() {
     this.data.getCompanySettings().subscribe((res: any) => {
-      localStorage.setItem('companySettings', JSON.stringify(res.data[0]));
+      if(res.data.length > 0) {
+        localStorage.setItem('companySettings', JSON.stringify(res.data[0]));
+      } else {
+        localStorage.setItem('companySettings', JSON.stringify({}));
+      }
       console.log('Company Settings', JSON.parse(localStorage.getItem('companySettings') || '{}'));
     });
   }

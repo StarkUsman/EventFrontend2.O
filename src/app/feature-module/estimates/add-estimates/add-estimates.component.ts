@@ -1,3 +1,4 @@
+import { forkJoin } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -103,23 +104,6 @@ export class AddEstimatesComponent implements OnInit {
   markSlotSelected(slotType: any, day: any, date: any, monthNumber:any, slot: any) {
 
     let year = day.split(" ")[1];
-    //if date dateSelected is in last week of the month and the date is less than 15, then set the monthSelected to the next month
-    // if (date < this.dateSelected && date < 15) {
-    //   switch (this.monthSelected) {
-    //     case 'Jan': this.monthSelected = 'Feb'; break;
-    //     case 'Feb': this.monthSelected = 'Mar'; break;
-    //     case 'Mar': this.monthSelected = 'Apr'; break;
-    //     case 'Apr': this.monthSelected = 'May'; break;
-    //     case 'May': this.monthSelected = 'Jun'; break;
-    //     case 'Jun': this.monthSelected = 'Jul'; break;
-    //     case 'Jul': this.monthSelected = 'Aug'; break;
-    //     case 'Aug': this.monthSelected = 'Sep'; break;
-    //     case 'Sep': this.monthSelected = 'Oct'; break;
-    //     case 'Oct': this.monthSelected = 'Nov'; break;
-    //     case 'Nov': this.monthSelected = 'Dec'; break;
-    //     case 'Dec': this.monthSelected = 'Jan'; break;
-    //   }
-    // }
 
     let formattedDate = date + '_' + monthNumber + '_' + year;
     // this.slotSelected = { hall: slotType, date: formattedDate, slot: slot };
@@ -227,10 +211,22 @@ export class AddEstimatesComponent implements OnInit {
 
   loadMenuItems(menuItemIds: number[]) {
     this.menuItems = []; // Reset the menu items before loading
-    menuItemIds.forEach((id) => {
-      this.data.getMenuItemByID(id).subscribe((item:any) => {
+    // menuItemIds.forEach((id) => {
+    //   this.data.getMenuItemByID(id).subscribe((item:any) => {
+    //     item.selected = true;
+    //     this.menuItems.push(item);
+    //   });
+    // });
+
+    const requests = menuItemIds.map((id) =>
+      this.data.getMenuItemByID(id)
+    );
+
+    forkJoin(requests).subscribe((items: any[]) => {
+      // Add `selected = true` and preserve order
+      this.menuItems = items.map(item => {
         item.selected = true;
-        this.menuItems.push(item);
+        return item;
       });
     });
 

@@ -61,7 +61,7 @@
       <div class="row">
         <div class="mb-3 col-md-4">
           <label for="reservationName" class="form-label">Reservation Name <span style="color: red;">*</span></label>
-          <input type="text" id="reservationName" class="form-control"
+          <input type="text" id="reservationName" class="form-control" [disabled]="true"
             [(ngModel)]="reservationToEdit.reservation_name" name="reservation_name">
         </div>
         <div class="mb-3 col-md-4">

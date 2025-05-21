@@ -43,6 +43,8 @@ export class EditEstimateComponent implements OnInit {
   availableSlots: any[] = [];
   additionalServices: any[] = [];
   additionalServicesSelected: any[] = [];
+  isSoundSelected: boolean = false;
+  isStageDecoreSelected: boolean = false;
   bookings: any[] = [];
   totalAdditionalPrice: number = 0;
   events: any[] = [];
@@ -218,6 +220,13 @@ export class EditEstimateComponent implements OnInit {
             this.additionalServicesSelected.push(additionalService);
 
             this.calculateAdditionalPrice();
+
+            if(additionalService.additional_service_name === "Audio System"){
+              this.isSoundSelected = true;
+            }
+            if(additionalService.additional_service_name === "Stage Decor"){
+              this.isStageDecoreSelected = true;
+            }
           }
         });
       })
@@ -329,7 +338,63 @@ export class EditEstimateComponent implements OnInit {
     return this.reservationToEdit.menu_id !== null && this.reservationToEdit.number_of_persons > 0;
   }
 
+  deleteServiceLedgers(){
+    if(this.isSoundSelected){
+      this.data.getVendorByName("SOUND").subscribe((res: any) =>{
+        let vendorId = res.vendor_id;
+        let name = "RES:" + this.reservationToEdit.reservation_name;
+        let purch_id = this.reservationToEdit.booking_id;
+        this.data.getSpecificLedger(vendorId,name,purch_id).subscribe((res: any) => {
+          this.data.deleteLedgerById(res.id).subscribe((res: any) =>{});
+        });
+      });
+    }
+
+    if(this.isStageDecoreSelected){
+      this.data.getVendorByName("STAGE DECORE").subscribe((res: any) =>{
+        let vendorId = res.vendor_id;
+        let name = "RES:" + this.reservationToEdit.reservation_name;
+        let purch_id = this.reservationToEdit.booking_id;
+        this.data.getSpecificLedger(vendorId,name,purch_id).subscribe((res: any) => {
+          this.data.deleteLedgerById(res.id).subscribe((res: any) =>{});
+        });
+      });
+    }
+
+    this.addServiceLedger();
+  }
+
+  addServiceLedger(){
+    this.additionalServicesSelected.forEach((service:any) => {
+      if (service.additional_service_name === "Audio System"){
+        this.data.getVendorByName("SOUND").subscribe((res: any) =>{
+          let ledger = {
+            name: "RES:"+this.reservationToEdit.reservation_name,
+            purch_id: this.reservationToEdit.booking_id,
+            vendor_id: res.vendor_id,
+            amountDebit: service.totalPrice,
+            amountCredit: 0,
+          };
+          this.data.addLedger(ledger).subscribe((res) => { });
+        });
+      }      
+      if (service.additional_service_name === "Stage Decor"){
+        this.data.getVendorByName("STAGE DECORE").subscribe((res: any) =>{
+          let ledger = {
+            name: "RES:"+this.reservationToEdit.reservation_name,
+            purch_id: this.reservationToEdit.booking_id,
+            vendor_id: res.vendor_id,
+            amountDebit: service.totalPrice,
+            amountCredit: 0,
+          };
+          this.data.addLedger(ledger).subscribe((res) => { });
+        });
+      }      
+    });
+  }
+  
   saveReservation() {
+    this.deleteServiceLedgers();
     if (this.reservationToEdit.status === "DRAFTED"){
       this.reservationToEdit.status = "OPEN";
     }

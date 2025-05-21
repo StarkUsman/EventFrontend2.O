@@ -578,6 +578,14 @@ export class DataService {
     return this.http.get(this.backendUrl+`/ledger/${id}/expense/${purch_id}`);
   }
 
+  public getSpecificLedger(id: number, name: any, purch_id: any) {
+    return this.http.get(this.backendUrl+`/ledger/${id}/${name}/${purch_id}`);
+  }
+
+  public deleteLedgerById(id: number){
+    return this.http.delete(this.backendUrl+`/ledger/${id}`);
+  }
+
   public getLedgerByName(name: any){
     return this.http.get(this.backendUrl+`/ledger/name/${name}`);
   }
