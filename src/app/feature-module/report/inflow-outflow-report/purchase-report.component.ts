@@ -53,19 +53,19 @@ export class PurchaseReportComponent implements OnInit {
   }
 
   private getTableData(pageOption: pageSelection): void {
-    this.data.getVendorByName('Cash').subscribe((res: any) => {
+    this.data.getVendorByName('CASH IN HAND').subscribe((res: any) => {
       if (res) {
         this.cashAccount = res;
       }
     });
-    this.data.getVendorByName('Bank').subscribe((res: any) => {
+    this.data.getVendorByName('Bank Al-Falah').subscribe((res: any) => {
       if (res) {
         this.bankAccount = res;
       }
     });
     forkJoin({
-      cashVendor: this.data.getVendorByName('Cash'),
-      bankVendor: this.data.getVendorByName('Bank')
+      cashVendor: this.data.getVendorByName('CASH IN HAND'),
+      bankVendor: this.data.getVendorByName('Bank Al-Falah')
     }).subscribe(({ cashVendor, bankVendor }) => {
 
       forkJoin({
@@ -75,18 +75,18 @@ export class PurchaseReportComponent implements OnInit {
 
         // Process cash transactions
         (cashTx as any).data.forEach((element: any) => {
-          if (element.creditAccount?.name === 'Cash') {
+          if (element.creditAccount?.name === 'CASH IN HAND') {
             this.cashInflow.push(element);
-          } else if (element.debitAccount?.name === 'Cash') {
+          } else if (element.debitAccount?.name === 'CASH IN HAND') {
             this.cashOutflow.push(element);
           }
         });
 
         // Process bank transactions
         (bankTx as any).data.forEach((element: any) => {
-          if (element.creditAccount?.name === 'Bank') {
+          if (element.creditAccount?.name === 'Bank Al-Falah') {
             this.bankInflow.push(element);
-          } else if (element.debitAccount?.name === 'Bank') {
+          } else if (element.debitAccount?.name === 'Bank Al-Falah') {
             this.bankOutflow.push(element);
           }
         });
