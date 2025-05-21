@@ -101,5 +101,98 @@ export class PurchasesDetailsComponent implements OnInit {
     }
   }
 
+  // printInvoice() {
+  //   const printContents = document.querySelector('.card')?.innerHTML;
+  //   if (!printContents) return;
+
+  //   const printWindow = window.open('', '', 'width=1000,height=800');
+  //   if (!printWindow) return;
+
+  //   printWindow.document.write(`
+  //     <html>
+  //       <head>
+  //         <title>Print Reservation</title>
+  //         <style>
+  //           body {
+  //             font-family: Arial, sans-serif;
+  //             padding: 20px;
+  //           }
+  //           table {
+  //             width: 100%;
+  //             border-collapse: collapse;
+  //           }
+  //           th, td {
+  //             border: 1px solid #ddd;
+  //             padding: 8px;
+  //           }
+  //           th {
+  //             background-color: #f4f4f4;
+  //           }
+  //           h5, p {
+  //             margin: 0;
+  //             padding: 5px 0;
+  //           }
+  //           .text-center { text-align: center; }
+  //           .text-start { text-align: left; }
+  //           .text-success { color: green; }
+  //           .text-danger { color: red; }
+  //         </style>
+  //       </head>
+  //       <body onload="window.print(); window.close();">
+  //         ${printContents}
+  //       </body>
+  //     </html>
+  //   `);
+
+  //   printWindow.document.close();
+  // }
+
+  printInvoice() {
+  const originalContent = document.querySelector('.card');
+  if (!originalContent) return;
+
+  const clone = originalContent.cloneNode(true) as HTMLElement;
+
+  // Fix logo image
+  const logoImg = clone.querySelector('img[alt="logo"]') as HTMLImageElement;
+  if (logoImg) {
+    const isBase64 = this.companySettings.logo?.startsWith('data:image/');
+    const imageSrc = isBase64
+      ? this.companySettings.logo
+      : `${window.location.origin}/assets/img/newLogo2.png`;
+
+    logoImg.setAttribute('src', imageSrc);
+    logoImg.removeAttribute('[src]');
+  }
+
+  const printWindow = window.open('', '_blank', 'width=1000,height=800');
+  if (!printWindow) return;
+
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>Print Invoice</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <style>
+          body { padding: 20px; font-family: Arial, sans-serif; }
+          .invoice-logo img { max-width: 150px; }
+          .table th, .table td { padding: 8px; }
+        </style>
+      </head>
+      <body></body>
+    </html>
+  `);
+
+  printWindow.document.close();
+
+  // Wait until document is ready
+  printWindow.onload = () => {
+    printWindow.document.body.appendChild(clone);
+    printWindow.focus();
+    printWindow.print();
+    setTimeout(() => printWindow.close(), 500);
+  };
+}
+
 
 }

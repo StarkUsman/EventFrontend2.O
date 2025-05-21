@@ -105,6 +105,9 @@ export class PurchaseReportComponent implements OnInit {
         if (existingService) {
           //skip if the service is already in the list
             return;
+        } else if(service.additional_service_name === "Audio System" || service.additional_service_name === "Stage Decor") {
+          //skip if the service is Audio System or Stage Decor
+          return;
         } else {
           this.services.push(service);
         }

@@ -142,37 +142,102 @@
                                 <th >Action</th>
                               </tr>
                             </thead>
-                            <tbody>
-                              @for (data of selectedProducts; track data; let i = $index) {
-                                <tr>
-                                  <td>{{ data.item }}</td>
-                                  <td>{{ data.quantity }}</td>
-                                  <td>{{ data.unit }}</td>
-                                  <td>{{ data.purchasePrice }}</td>
-                                  <td>{{ data.discount || 0 }}</td>
-                                  <td>{{ data.tax || 0 }}</td>
-                                  <td>PKR{{ data.amount }}</td>
-                                  <td class="d-flex align-items-center">
-                                    <a
-                                      href="javascript:void(0);"
-                                      class="btn-action-icon me-2"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#add_discount"
-                                      (click)="setEditProduct(data)"
-                                      ><span><i class="feather icon-edit"></i></span
-                                    ></a>
-                                    <a
-                                      href="javascript:void(0);"
-                                      class="btn-action-icon"
-                                      data-bs-toggle="modal"
-                                      (click)="setDeleteProduct(data)"
-                                      data-bs-target="#delete_discount"
-                                      ><span><i class="feather icon-trash-2"></i></span
-                                    ></a>
-                                  </td>
-                                </tr>
-                              }
-                            </tbody>
+                              <tbody>
+                                @for (data of selectedProducts; track data; let i = $index) {
+                                  <tr>
+                                    <!-- Product Name -->
+                                    <td>{{ data.item }}</td>
+
+                                    <!-- Quantity -->
+                                    <td>
+                                      <ng-container *ngIf="editedProduct?.id !== data.id; else editQuantity">
+                                        {{ data.quantity }}
+                                      </ng-container>
+                                      <ng-template #editQuantity>
+                                        <input type="number" class="form-control form-control-sm" [(ngModel)]="editedProduct.quantity" />
+                                      </ng-template>
+                                    </td>
+
+                                    <!-- Unit (Read-only) -->
+                                    <td>{{ data.unit }}</td>
+
+                                    <!-- Rate -->
+                                    <td>
+                                      <ng-container *ngIf="editedProduct?.id !== data.id; else editRate">
+                                        {{ data.purchasePrice }}
+                                      </ng-container>
+                                      <ng-template #editRate>
+                                        <input type="number" class="form-control form-control-sm" [(ngModel)]="editedProduct.price" />
+                                      </ng-template>
+                                    </td>
+
+                                    <!-- Discount -->
+                                    <td>
+                                      <ng-container *ngIf="editedProduct?.id !== data.id; else editDiscount">
+                                        {{ data.discount || 0 }}
+                                      </ng-container>
+                                      <ng-template #editDiscount>
+                                        <input type="number" class="form-control form-control-sm" [(ngModel)]="editedProduct.discount" />
+                                      </ng-template>
+                                    </td>
+
+                                    <!-- Tax -->
+                                    <td>
+                                      <ng-container *ngIf="editedProduct?.id !== data.id; else editTax">
+                                        {{ data.tax || 0 }}%
+                                      </ng-container>
+                                      <ng-template #editTax>
+                                        <select class="form-select form-select-sm" [(ngModel)]="editedProduct.tax">
+                                          <option [ngValue]="'0'">N/A</option>
+                                          <option [ngValue]="'5'">5%</option>
+                                          <option [ngValue]="'10'">10%</option>
+                                          <option [ngValue]="'15'">15%</option>
+                                        </select>
+                                      </ng-template>
+                                    </td>
+
+                                    <!-- Amount (Read-only) -->
+                                    <td>PKR{{ data.amount }}</td>
+
+                                    <!-- Actions -->
+                                    <td class="d-flex align-items-center">
+                                      <ng-container *ngIf="editedProduct?.id !== data.id">
+                                        <a
+                                          href="javascript:void(0);"
+                                          class="btn-action-icon me-2"
+                                          (click)="setEditProduct(data)"
+                                        >
+                                          <i class="feather icon-edit"></i>
+                                        </a>
+                                        <a
+                                          href="javascript:void(0);"
+                                          class="btn-action-icon"
+                                          data-bs-toggle="modal"
+                                          (click)="setDeleteProduct(data)"
+                                          data-bs-target="#delete_discount"
+                                          ><span><i class="feather icon-trash-2"></i></span
+                                        ></a>
+                                      </ng-container>
+                                      <ng-container *ngIf="editedProduct?.id === data.id">
+                                        <a
+                                          href="javascript:void(0);"
+                                          class="btn-action-icon me-2"
+                                          (click)="saveProductEdit()"
+                                        >
+                                          <i class="feather icon-save"></i>
+                                        </a>
+                                        <a
+                                          href="javascript:void(0);"
+                                          class="btn-action-icon"
+                                          (click)="cancelProductEdit()"
+                                        >
+                                          <i class="feather icon-x"></i>
+                                        </a>
+                                      </ng-container>
+                                    </td>
+                                  </tr>
+                                }
+                              </tbody>
                           </table>
                         </div>
                       </div>
@@ -317,7 +382,6 @@
                                   href="javascript:void(0);"
                                   data-bs-dismiss="modal"
                                   class="btn btn-primary paid-continue-btn"
-                                  (click)="updateProduct()"
                                   >Save</a
                                   >
                                 </div>

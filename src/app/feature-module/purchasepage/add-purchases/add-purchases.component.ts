@@ -264,24 +264,43 @@ export class AddPurchasesComponent implements OnInit {
     this.allProducts.push(this.product_to_remove);
   }
 
+  editedProduct: any = null;
+  editedProductCopy: any = null;
+
   setEditProduct(product: any) {
-    product.price = parseFloat(product.purchasePrice);
-    product.discount = 0;
-    product.tax = "0";
-    this.selectedProductEdit = product;
+    this.editedProductCopy = JSON.parse(JSON.stringify(product)); // deep clone
+    this.editedProduct = {
+      ...product,
+      price: parseFloat(product.purchasePrice),
+      discount: product.discount || 0,
+      tax: product.tax || "0"
+    };
   }
 
-  updateProduct() {
-    this.selectedProductEdit.purchasePrice = this.selectedProductEdit.price;
-    this.selectedProductEdit.amount = (this.selectedProductEdit.price * this.selectedProductEdit.quantity) - this.selectedProductEdit.discount;
-    this.selectedProductEdit.amount = this.selectedProductEdit.amount + (this.selectedProductEdit.amount * (parseFloat(this.selectedProductEdit.tax) / 100));
-    this.selectedProducts = this.selectedProducts.map((p: any) => {
-      if (p.id === this.selectedProductEdit.id) {
-        p = this.selectedProductEdit;
-      }
-      return p;
+  saveProductEdit() {
+    this.editedProduct.purchasePrice = this.editedProduct.price;
+    let amt = (this.editedProduct.price * this.editedProduct.quantity) - this.editedProduct.discount;
+    this.editedProduct.amount = amt + (amt * (parseFloat(this.editedProduct.tax) / 100));
+
+    this.selectedProducts = this.selectedProducts.map((p: any) =>
+      p.id === this.editedProduct.id ? { ...this.editedProduct } : p
+    );
+
+    this.data.updateProductPrice(this.editedProduct).subscribe((res: any) => {
+      // optional: toast or confirmation
     });
-    this.data.updateProductPrice(this.selectedProductEdit).subscribe((res: any) => {});
+
+    this.editedProduct = null;
+    this.editedProductCopy = null;
+  }
+
+  cancelProductEdit() {
+    this.selectedProducts = this.selectedProducts.map((p: any) =>
+      p.id === this.editedProductCopy.id ? { ...this.editedProductCopy } : p
+    );
+
+    this.editedProduct = null;
+    this.editedProductCopy = null;
   }
 
   calculateTotalAmount() {
