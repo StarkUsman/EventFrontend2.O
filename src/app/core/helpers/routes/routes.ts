@@ -698,6 +698,9 @@ export class routes {
   public static get purchaseorders(): string {
     return this.baseUrl + '/purchase-return';
   }
+  public static get returnDetails(): string {
+    return this.baseUrl + '/purchase-return-details';
+  }
   public static get addpurchasreturn(): string {
     return this.baseUrl + '/add-purchase-return';
   }

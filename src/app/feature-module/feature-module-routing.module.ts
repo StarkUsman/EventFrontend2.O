@@ -212,6 +212,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'purchase-return-details',
+        loadChildren: () =>
+          import('./purchases-details/purchases-details.module').then(
+            (m) => m.PurchasesDetailsModule
+          ),
+      },
+      {
         path: 'add-purchase-return',
         loadChildren: () =>
           import('./add-purchases/add-purchases.module').then(

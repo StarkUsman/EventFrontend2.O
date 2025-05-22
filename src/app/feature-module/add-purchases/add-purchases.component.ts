@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -61,7 +62,7 @@ export class AddPurchasesComponent implements OnInit {
   filteredOptions!: Observable<string[]>;
   products: any = [];
 
-  constructor(private data: DataService) {
+  constructor(private router: Router, private data: DataService) {
     this.newPurchase.purchase_date = this.purchaseDateValue;
     this.dueDateValue.setMonth(this.purchaseDateValue.getMonth() + 1);
     this.newPurchase.due_date = this.dueDateValue;
@@ -314,7 +315,10 @@ export class AddPurchasesComponent implements OnInit {
 
     this.addLedger(this.newPurchase.purch_id, this.newPurchase.vendor.id, this.newPurchase.total_amount);
 
-    this.data.addPurchaseReturn(this.newPurchase).subscribe((res) => {
+    this.data.addPurchaseReturn(this.newPurchase).subscribe((res:any) => {
+      this.router.navigate([routes.returnDetails], {
+            queryParams: { id: res.id }
+          });
     });
   }
 }

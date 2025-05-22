@@ -182,15 +182,38 @@ export class ViewEstimateComponent  implements OnInit {
         id: this.reservationToAddPayment.booking_id,
         paymentToAdd: this.reservationToAddPayment.paymentToAdd,
       }
-  
-      this.data.addReservationPayment(requestBody).subscribe((res: any) => {
-        this.pagination.tablePageSize.subscribe((res: tablePageSize) => {
-          this.getTableData({ skip: res.skip, limit: res.limit });
-          this.pageSize = res.pageSize;
-          this.reservationToAddPayment = {};
-          this.control.setValue('');
+
+      this.data.getTransaction().subscribe((res: any) => {
+        let purch_id = res.data[res.data.length-1] ? res.data[res.data.length-1].trans_id : 100;
+        purch_id = parseInt(purch_id) + 1;
+
+        let debitAccount = {
+          name: this.reservationToAddPayment.reservation_name,
+          phone: this.reservationToAddPayment.contact_number || this.reservationToAddPayment.alt_contact_number,
+        }
+
+        let transaction = {
+          trans_id: purch_id,
+          date: new Date(),
+          amount: this.reservationToAddPayment.paymentToAdd,
+          creditAccount: this.reservationToAddPayment.account,
+          debitAccount: debitAccount,
+          voucher: 'RES:' + this.reservationToAddPayment.reservation_name,
+        }
+        
+        this.data.addTransaction(transaction).subscribe((res: any) => {
         });
-      });
+        
+        this.data.addReservationPayment(requestBody).subscribe((res: any) => {
+          // this.pagination.tablePageSize.subscribe((res: tablePageSize) => {
+          //   this.getTableData({ skip: res.skip, limit: res.limit });
+          //   this.pageSize = res.pageSize;
+          //   this.reservationToAddPayment = {};
+          //   this.control.setValue('');
+          // });
+          window.location.reload();
+        });
+      });  
     });
   }
 

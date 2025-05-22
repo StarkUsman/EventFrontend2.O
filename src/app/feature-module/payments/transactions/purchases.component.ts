@@ -136,4 +136,12 @@ export class PurchasesComponent {
       );
     });
   }
+
+  notResTransaction(transaction: any) {
+    // if transaction.voucher starts with 'RES' then return false
+    if (transaction.voucher && transaction.voucher.startsWith('RES:')) {
+      return false;
+    }
+    return true; 
+  }
 }

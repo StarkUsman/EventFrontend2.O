@@ -49,7 +49,7 @@ export class SalesReportComponent {
       this.totalData = apiRes.totalData;
       apiRes.data.map((res: any, index: number) => {
         const serialNumber = index + 1;
-        if (index >= pageOption.skip && serialNumber <= pageOption.limit && res.category?.category.toLowerCase() == 'liability') {
+        if (res.category?.category.toLowerCase() == 'liability') {
           res.id = serialNumber;
           this.tableData.push(res);
           this.serialNumberArray.push(serialNumber);

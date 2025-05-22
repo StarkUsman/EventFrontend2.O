@@ -179,7 +179,7 @@
                           </div>
                           <div class="text-end">
                             <button [routerLink]="routes.expensesList" type="reset" class="btn btn-primary me-2">Cancel</button>
-                            <button [disabled]="selectedProducts.length === 0" [routerLink]="routes.expensesList" type="submit" class="btn btn-primary" (click)="addPurchase()">Save</button>
+                            <button [disabled]="selectedProducts.length === 0" type="submit" class="btn btn-primary" (click)="addPurchase()">Save</button>
                           </div>
                         </div>
                       </div>

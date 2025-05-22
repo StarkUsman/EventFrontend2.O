@@ -222,7 +222,7 @@
                           </div>
                           <div class="text-end">
                             <button [routerLink]="routes.purchaseorders" type="reset" class="btn btn-primary me-2">Cancel</button>
-                            <button [disabled]="(!newPurchase.vendor || selectedProducts.length === 0)" [routerLink]="routes.purchaseorders" type="submit" class="btn btn-primary" (click)="addPurchase()">Save</button>
+                            <button [disabled]="(!newPurchase.vendor || selectedProducts.length === 0)" type="submit" class="btn btn-primary" (click)="addPurchase()">Save</button>
                           </div>
                         </div>
                       </div>

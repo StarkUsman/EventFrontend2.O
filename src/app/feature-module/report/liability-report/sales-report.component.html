@@ -79,7 +79,7 @@
               <tbody>
                 @for (data of tableData; track data; let i = $index) {
                   <tr>
-                    <td>{{data.sNo}}</td>
+                    <td>{{i+1}}</td>
                     <td>{{data.name}}</td>
                     <td>{{data.phone}}</td>
                     <td>PKR:{{data.balance}}</td>

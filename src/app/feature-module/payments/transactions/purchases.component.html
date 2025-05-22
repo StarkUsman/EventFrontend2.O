@@ -163,7 +163,7 @@
                                             ><i class="far fa-eye me-2"></i>View</a
                                             >
                                           </li>
-                                          <li>
+                                          <li *ngIf="notResTransaction(data)">
                                             <a
                                               class="dropdown-item"
                                               [routerLink]="routes.editTransaction"
