@@ -32,6 +32,7 @@ export class ListComponent {
   // pagination variables end
   isAdminLoggedIn = 0;
   unfilteredData: any = [];
+  vendorCategory: any = {};
 
   constructor(
     private data: DataService,
@@ -42,6 +43,9 @@ export class ListComponent {
       if (this.router.url == this.routes.vendorsList) {
         this.getTableData({ skip: res.skip, limit: res.limit });
         this.pageSize = res.pageSize;
+        this.data.getVendorCategory().subscribe((res: any) => {
+          this.vendorCategory = res;
+        });
       }
     });
   }
@@ -127,8 +131,13 @@ export class ListComponent {
     }
   
     this.nameError = false;
-    this.newVendor.category = {};
+    this.newVendor.category = this.vendorCategory;
     this.newVendor.subcategory = 'vendor';
+    this.vendorCategory.subcategory.forEach((subCat:any) => {
+      if(subCat.subcategory.toLowerCase() === 'vendor'){
+        this.newVendor.subcategory = subCat.subcategory;
+      }
+    });
 
     this.data.addVendor(this.newVendor).subscribe((res: any) => {
       this.getTableData({ skip: 0, limit: this.pageSize });

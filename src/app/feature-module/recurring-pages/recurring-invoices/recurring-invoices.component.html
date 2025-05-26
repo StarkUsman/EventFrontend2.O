@@ -332,7 +332,7 @@
                       <tbody>
                         @for (data of allSalaries; track data; let i = $index) {
                           <tr>
-                            <td>{{data.id}}</td>
+                            <td>{{i+1}}</td>
                             <td>{{data.vendor.name}}</td>
                             <td>{{data.lastSalaryPaidDate}}</td>
                             <td>PKR:{{data.totalSalaryCalculated}}</td>

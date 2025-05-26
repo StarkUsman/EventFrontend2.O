@@ -86,7 +86,13 @@ export class PurchasesDetailsComponent implements OnInit {
         }
     
         this.data.addReservationPayment(requestBody).subscribe((res: any) => {
-          window.location.reload();
+          let requestBody = {
+            id: this.editedLedger.trans_id,
+            amount: this.editedLedger.amount,
+          }
+          this.data.updateTransactionAmount(requestBody).subscribe((res) => {
+            window.location.reload();
+          });
           });
         });
     }

@@ -1,3 +1,4 @@
+import { forkJoin } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -206,6 +207,7 @@ export class RecurringInvoicesComponent implements OnInit {
       this.menuItemsSelected = [];
       this.accountControl.setValue('');
       this.menuItemControl.setValue('');
+      window.location.reload();
     });
   }
 
@@ -260,21 +262,28 @@ export class RecurringInvoicesComponent implements OnInit {
 
   paySalary() {
     this.allSalaries.forEach((salary: any) => {
-      console.log(salary);
       this.addLedger(salary);
     });
 
     let salariesToUpdate = this.salaries.map((salary: any) => {
       return this.allSalaries.find((s: any) => s.id === salary.id) ? salary : null;
+    }).filter(s => s !== null);
+
+    const today = new Date().toISOString().split('T')[0];
+    salariesToUpdate.forEach((salary: any) => {
+      salary.lastSalaryPaidDate = today;
     });
 
-    this.salaries.forEach((salary: any) => {
-      salary.lastSalaryPaidDate = new Date();
-      console.log(salariesToUpdate);
-      this.data.updateSalary(salary).subscribe((res: any) => {});
-    });
+    const updateObservables = salariesToUpdate.map((salary: any) => this.data.updateSalary(salary));
 
-    window.location.reload();
+    forkJoin(updateObservables).subscribe({
+      next: (results) => {
+        window.location.reload();
+      },
+      error: (err) => {
+        console.error('Error updating salaries', err);
+      }
+    });
   }
 
 }

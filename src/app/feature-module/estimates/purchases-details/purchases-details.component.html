@@ -185,7 +185,7 @@
                                 </td>
                                 <td>{{ledger.account}}</td>
                                 <td class="d-flex align-items-center">
-                                  <ng-container *ngIf="editedLedger !== ledger">
+                                  <ng-container *ngIf="editedLedger !== ledger && reservationToView.status !== 'CANCELLED'">
                                     <a class="btn-action-icon me-2" href="javascript:void(0);" (click)="setLedgerToEdit(ledger)">
                                       <i class="feather icon-edit"></i>
                                     </a>

@@ -89,7 +89,7 @@
                                             ><i class="far fa-eye me-2"></i>View</a
                                             >
                                           </li>
-                                        <li>
+                                        <li *ngIf="(reservation.status !== 'CANCELLED')">
                                         <a
                                           class="dropdown-item"
                                           [routerLink]="routes.editReservation"
@@ -97,7 +97,7 @@
                                           ><i class="far fa-edit me-2"></i>Edit</a
                                           >
                                         </li>
-                                        <li>
+                                        <li *ngIf="(reservation.status !== 'CANCELLED')">
                                           <a
                                             class="dropdown-item"
                                             href="javascript:void(0);"
@@ -107,7 +107,7 @@
                                             ><i class="far fa-times-circle me-2"></i>Cancel</a
                                             >
                                           </li>
-                                        <li>
+                                        <li *ngIf="(reservation.status !== 'CANCELLED')">
                                           <a
                                             class="dropdown-item"
                                             href="javascript:void(0);"
@@ -117,7 +117,7 @@
                                             ><i class="far fa-trash-alt me-2"></i>Delete</a
                                             >
                                           </li>
-                                          <li *ngIf="(reservation.status !== 'FULLFILLED')">
+                                          <li *ngIf="(reservation.status !== 'FULLFILLED' && reservation.status !== 'CANCELLED')">
                                             <a
                                             class="dropdown-item"
                                             href="javascript:void(0);"
@@ -172,7 +172,11 @@
       <div class="modal-body">
         <div class="form-header">
           <h3>Cancel Reservation</h3>
-          <p>Are you sure want to Cancel?</p>
+          <p>Please Enter the Amount to Return</p>
+        </div>
+        <div class="input-block mb-3">
+          <label for="Country">Amount to Return</label>
+          <input type="number" class="form-control" placeholder="Enter Amount to Return" [(ngModel)]="reservationToCancel.amountToReturn">
         </div>
         <div class="modal-btn delete-action">
           <div class="row">
@@ -180,7 +184,7 @@
               <button data-bs-dismiss="modal" class="w-100 btn btn-primary paid-continue-btn" (click)="cancelReservation()">Yes</button>
             </div>
             <div class="col-6">
-              <button type="submit" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-continue-btn">No</button>
+              <button type="submit" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-continue-btn">Abort</button>
             </div>
           </div>
         </div>

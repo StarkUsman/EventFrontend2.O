@@ -498,6 +498,10 @@ export class DataService {
     return this.http.get(this.backendUrl+'/acategory/EXPENSE');
   }
 
+  public getVendorCategory() {
+    return this.http.get(this.backendUrl+'/acategory/Liability');
+  }
+
   public addaCategory(category: any) {
     return this.http.post(this.backendUrl+'/acategory', category);
   }
@@ -590,6 +594,10 @@ export class DataService {
     return this.http.get(this.backendUrl+`/ledger/name/${name}`);
   }
   
+  public getServiceLedger(ledgerDetails: any) {
+    return this.http.get(this.backendUrl+`/ledger/${ledgerDetails.vendor_id}/service/${ledgerDetails.name}/${ledgerDetails.amountDebit}`);
+  }
+  
   public getInventoryLedgerByPID(id: number) {
     return this.http.get<apiResultFormat>(this.backendUrl+`/inventoryLedger/${id}`)
     .pipe(
@@ -653,6 +661,10 @@ export class DataService {
 
   public updateReservationLedgerById(ledger: any){
     return this.http.put(this.backendUrl+`/bookingledger/${ledger.id}`, ledger);
+  }
+
+  public deleteReservationLedgerById(id: number){
+    return this.http.delete(this.backendUrl+`/bookingledger/${id}`);
   }
 
   public addInventoryLedger(ledger: any){
@@ -1079,6 +1091,14 @@ export class DataService {
   }
   public updateTransaction(transaction: any) {
     return this.http.put(this.backendUrl+`/transaction/${transaction.id}`, transaction);
+  }
+
+  public deleteTransaction(id: number) {
+    return this.http.delete(this.backendUrl+`/transaction/${id}`);
+  }
+
+  public updateTransactionAmount(transaction: any) {
+    return this.http.put(this.backendUrl+`/transaction/amount/${transaction.id}`, transaction);
   }
 
   public getrole() {

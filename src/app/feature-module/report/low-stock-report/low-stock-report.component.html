@@ -85,7 +85,7 @@
                           <td>{{data.sNo}}</td>
                           <td>
                             <h2 class="table-avatar">
-                              <a class="avatar avatar-md me-2 companies"><img
+                              <a class="avatar avatar-md me-2 companies"><img *ngIf="data.img"
                                 class="avatar-img sales-rep" [src]="data.img"
                               alt="User Image"></a>
                               <a [routerLink]="routes.productlist">{{data.item}}

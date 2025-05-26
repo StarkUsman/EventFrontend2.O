@@ -33,7 +33,9 @@ export class PurchaseReportComponent implements OnInit {
   bankIn: any[] = [];
   bankOut: any[] = [];
 
-  filterDate: any = new Date().toISOString().split('T')[0];
+  // filterDate: any = new Date().toISOString().split('T')[0];
+  filterDate: any = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
+  endDate: any = new Date().toISOString().split('T')[0];
 
   public routes = routes;
 
@@ -126,12 +128,41 @@ export class PurchaseReportComponent implements OnInit {
     });
     return total;
   }
+
+  cashSkippedBalance: any = 0;
+  bankSkippedBalance: any = 0;
+
+  skippedTransactions(){
+    this.cashSkippedBalance = 0;
+    this.bankSkippedBalance = 0;
+
+    this.cashIn.forEach((transaction: any) => {
+      if (transaction.date >= this.endDate) {
+        this.cashSkippedBalance += transaction.amount;
+      }
+    });
+    this.cashOut.forEach((transaction: any) => {
+      if (transaction.date >= this.endDate) {
+        this.cashSkippedBalance -= transaction.amount;
+      }
+    });
+    this.bankIn.forEach((transaction: any) => {
+      if (transaction.date >= this.endDate) {
+        this.bankSkippedBalance += transaction.amount;
+      }
+    });
+    this.bankOut.forEach((transaction: any) => {
+      if (transaction.date >= this.endDate) {
+        this.bankSkippedBalance -= transaction.amount;
+      }
+    });
+  }
   
   cashClosingBalance(){
-    return this.cashAccount.balance;
+    return this.cashAccount.balance - this.cashSkippedBalance;
   }
   lastCashClosingBalance(){
-    return this.cashAccount?.balance - this.totalCashInflow() + this.totalCashOutflow();
+    return this.cashClosingBalance() - this.totalCashInflow() + this.totalCashOutflow();
   }
   
   totalBankInflow(){
@@ -151,11 +182,11 @@ export class PurchaseReportComponent implements OnInit {
   }
 
   bankClosingBalance(){
-    return this.bankAccount.balance;
+    return this.bankAccount.balance - this.bankSkippedBalance;
   }
 
   lastBankClosingBalance(){
-    return this.bankAccount?.balance - this.totalBankInflow() + this.totalBankOutflow();
+    return this.bankClosingBalance() - this.totalBankInflow() + this.totalBankOutflow();
   }
 
 
@@ -166,11 +197,11 @@ export class PurchaseReportComponent implements OnInit {
     this.bankInflow = structuredClone(this.bankIn);
     this.bankOutflow = structuredClone(this.bankOut);
 
-    this.cashInflow = this.cashInflow.filter((transaction: any) => transaction.date >= this.filterDate);
-    this.cashOutflow = this.cashOutflow.filter((transaction: any) => transaction.date >= this.filterDate);
+    this.cashInflow = this.cashInflow.filter((transaction: any) => transaction.date >= this.filterDate && transaction.date < this.endDate);
+    this.cashOutflow = this.cashOutflow.filter((transaction: any) => transaction.date >= this.filterDate && transaction.date < this.endDate);
     
-    this.bankInflow = this.bankInflow.filter((transaction: any) => transaction.date >= this.filterDate);
-    this.bankOutflow = this.bankOutflow.filter((transaction: any) => transaction.date >= this.filterDate);
+    this.bankInflow = this.bankInflow.filter((transaction: any) => transaction.date >= this.filterDate && transaction.date < this.endDate);
+    this.bankOutflow = this.bankOutflow.filter((transaction: any) => transaction.date >= this.filterDate && transaction.date < this.endDate);
 
     this.cashMaxLengthArray = Array(
       Math.max(
@@ -181,6 +212,6 @@ export class PurchaseReportComponent implements OnInit {
       )
     ).fill(null);
 
-
+    this.skippedTransactions();
   }
 }

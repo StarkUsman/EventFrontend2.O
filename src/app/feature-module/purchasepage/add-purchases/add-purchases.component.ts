@@ -74,7 +74,7 @@ export class AddPurchasesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTableData();
-    this.data.getVendors().subscribe((res) => {
+    this.data.getVendorsOnly().subscribe((res) => {
       this.allVendors = res.data;
     });
     this.data.getCategory().subscribe((res) => {

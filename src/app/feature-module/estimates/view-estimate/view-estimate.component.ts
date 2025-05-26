@@ -117,7 +117,55 @@ export class ViewEstimateComponent  implements OnInit {
   }
 
   deleteReservation() {
-    this.data.deleteReservation(this.reservationToDelete.booking_id).subscribe((res: any) => {
+    let reservationBeingDeleted = structuredClone(this.reservationToDelete);
+
+    reservationBeingDeleted.additional_services.forEach((service: any) => {
+      if(service.additional_service_name === "Audio System"){
+        this.data.getVendorByName("SOUND").subscribe((res: any) => {
+          let ledgerDetails = {
+            vendor_id: res.vendor_id,
+            name: "RES:" + reservationBeingDeleted.reservation_name,
+            amountDebit: service.totalPrice,
+          }
+
+          this.data.getServiceLedger(ledgerDetails).subscribe((res: any) => {
+            let ledgerToDelete = res.data[0];
+            if(ledgerToDelete){
+              this.data.deleteLedgerById(ledgerToDelete.id).subscribe(() => {});
+            }
+          })
+        })
+      } else if(service.additional_service_name === "Stage Decor"){
+        this.data.getVendorByName("STAGE DECORE").subscribe((res: any) => {
+          let ledgerDetails = {
+            vendor_id: res.vendor_id,
+            name: "RES:" + reservationBeingDeleted.reservation_name,
+            amountDebit: service.totalPrice,
+          }
+
+          this.data.getServiceLedger(ledgerDetails).subscribe((res: any) => {
+            let ledgerToDelete = res.data[0];
+            if(ledgerToDelete){
+              this.data.deleteLedgerById(ledgerToDelete.id).subscribe(() => {});
+            }
+          })
+        })
+      }
+    });
+
+    this.data.getReservationLedgerById(reservationBeingDeleted.booking_id).subscribe((res: any) => {
+      if(res.data.length > 0) {
+        res.data.forEach((ledger: any) => {
+          this.data.deleteLedgerById(ledger.ledgerId).subscribe(() => {});
+          if(ledger.trans_id){
+            this.data.deleteTransaction(ledger.trans_id).subscribe(() => {});
+          }
+          this.data.deleteReservationLedgerById(ledger.id).subscribe(() => {});
+        })
+      }
+    });
+
+    this.data.deleteReservation(reservationBeingDeleted.booking_id).subscribe((res: any) => {
       this.pagination.tablePageSize.subscribe((res: tablePageSize) => {
         this.getTableData({ skip: res.skip, limit: res.limit });
         this.pageSize = res.pageSize;
@@ -133,6 +181,62 @@ export class ViewEstimateComponent  implements OnInit {
   }
 
   cancelReservation() {
+    let reservationBeingCancelled = structuredClone(this.reservationToCancel);
+    
+    reservationBeingCancelled.additional_services.forEach((service: any) => {
+      if(service.additional_service_name === "Audio System"){
+        this.data.getVendorByName("SOUND").subscribe((res: any) => {
+          let ledgerDetails = {
+            vendor_id: res.vendor_id,
+            name: "RES:" + reservationBeingCancelled.reservation_name,
+            amountDebit: service.totalPrice,
+          }
+
+          this.data.getServiceLedger(ledgerDetails).subscribe((res: any) => {
+            let ledgerToDelete = res.data[0];
+            if(ledgerToDelete){
+              this.data.deleteLedgerById(ledgerToDelete.id).subscribe(() => {});
+            }
+          })
+        })
+      } else if(service.additional_service_name === "Stage Decor"){
+        this.data.getVendorByName("STAGE DECORE").subscribe((res: any) => {
+          let ledgerDetails = {
+            vendor_id: res.vendor_id,
+            name: "RES:" + reservationBeingCancelled.reservation_name,
+            amountDebit: service.totalPrice,
+          }
+
+          this.data.getServiceLedger(ledgerDetails).subscribe((res: any) => {
+            let ledgerToDelete = res.data[0];
+            if(ledgerToDelete){
+              this.data.deleteLedgerById(ledgerToDelete.id).subscribe(() => {});
+            }
+          })
+        })
+      }
+    });
+
+    let cashInHandAccount: any = {};
+
+    if(reservationBeingCancelled.amountToReturn > 0){
+      this.data.getVendorByName("CASH IN HAND").subscribe((res: any) => {
+        cashInHandAccount = res;
+        let ledger = {
+          name: "RES:" + reservationBeingCancelled.reservation_name + ' (CANCELLED)',
+          purch_id: reservationBeingCancelled.booking_id,
+          vendor_id: res.vendor_id,
+          amountDebit: reservationBeingCancelled.amountToReturn,
+          amountCredit: 0,
+        }
+
+        this.data.addLedger(ledger).subscribe((res: any) => {
+          this.addNegativeReservationLedger(res, reservationBeingCancelled, cashInHandAccount);
+        });
+      })
+    }
+      
+    // ======================================================
     let requestBody = {
       id: this.reservationToCancel.booking_id,
       status: 'CANCELLED',
@@ -175,46 +279,93 @@ export class ViewEstimateComponent  implements OnInit {
       amount: this.reservationToAddPayment.paymentToAdd,
       account: this.reservationToAddPayment.account.name,
       ledgerId: res.id,
+      trans_id: undefined,
     };
 
-    this.data.addReservationLedger(ledger).subscribe((res) => {
-      let requestBody = {
-        id: this.reservationToAddPayment.booking_id,
-        paymentToAdd: this.reservationToAddPayment.paymentToAdd,
+    this.data.getTransaction().subscribe((res: any) => {
+      let purch_id = res.data[res.data.length-1] ? res.data[res.data.length-1].trans_id : 100;
+      purch_id = parseInt(purch_id) + 1;
+
+      let debitAccount = {
+        name: this.reservationToAddPayment.reservation_name,
+        phone: this.reservationToAddPayment.contact_number || this.reservationToAddPayment.alt_contact_number,
       }
 
-      this.data.getTransaction().subscribe((res: any) => {
-        let purch_id = res.data[res.data.length-1] ? res.data[res.data.length-1].trans_id : 100;
-        purch_id = parseInt(purch_id) + 1;
-
-        let debitAccount = {
-          name: this.reservationToAddPayment.reservation_name,
-          phone: this.reservationToAddPayment.contact_number || this.reservationToAddPayment.alt_contact_number,
-        }
-
-        let transaction = {
-          trans_id: purch_id,
-          date: new Date(),
-          amount: this.reservationToAddPayment.paymentToAdd,
-          creditAccount: this.reservationToAddPayment.account,
-          debitAccount: debitAccount,
-          voucher: 'RES:' + this.reservationToAddPayment.reservation_name,
-        }
-        
-        this.data.addTransaction(transaction).subscribe((res: any) => {
+      let transaction = {
+        trans_id: purch_id,
+        date: new Date(),
+        amount: this.reservationToAddPayment.paymentToAdd,
+        creditAccount: this.reservationToAddPayment.account,
+        debitAccount: debitAccount,
+        voucher: 'RES:' + this.reservationToAddPayment.reservation_name,
+      }
+      
+      this.data.addTransaction(transaction).subscribe((res: any) => {
+        ledger.trans_id = res.id;
+        this.data.addReservationLedger(ledger).subscribe((res) => {
+          let requestBody = {
+            id: this.reservationToAddPayment.booking_id,
+            paymentToAdd: this.reservationToAddPayment.paymentToAdd,
+          }
+          
+          this.data.addReservationPayment(requestBody).subscribe((res: any) => {
+            // this.pagination.tablePageSize.subscribe((res: tablePageSize) => {
+            //   this.getTableData({ skip: res.skip, limit: res.limit });
+            //   this.pageSize = res.pageSize;
+            //   this.reservationToAddPayment = {};
+            //   this.control.setValue('');
+            // });
+            window.location.reload();
+          });
         });
-        
-        this.data.addReservationPayment(requestBody).subscribe((res: any) => {
-          // this.pagination.tablePageSize.subscribe((res: tablePageSize) => {
-          //   this.getTableData({ skip: res.skip, limit: res.limit });
-          //   this.pageSize = res.pageSize;
-          //   this.reservationToAddPayment = {};
-          //   this.control.setValue('');
-          // });
+      });
+    });  
+  }
+
+  addNegativeReservationLedger(res: any, reservationBeingCancelled: any, debitAccount: any) {
+    console.log(reservationBeingCancelled);
+    console.log(res);
+    let ledger = {
+      booking_id: reservationBeingCancelled.booking_id,
+      user: JSON.parse(localStorage.getItem('user') || '{}').firstName + ' ' + JSON.parse(localStorage.getItem('user') || '{}').lastName,
+      amount: -reservationBeingCancelled.amountToReturn,
+      account: "CASH IN HAND",
+      ledgerId: res.id,
+      trans_id: undefined,
+    };
+
+    this.data.getTransaction().subscribe((res: any) => {
+      let purch_id = res.data[res.data.length-1] ? res.data[res.data.length-1].trans_id : 100;
+      purch_id = parseInt(purch_id) + 1;
+
+      let creditAccount = {
+        name: reservationBeingCancelled.reservation_name,
+        phone: this.reservationToAddPayment.contact_number || this.reservationToAddPayment.alt_contact_number,
+      }
+
+      let transaction = {
+        trans_id: purch_id,
+        date: new Date(),
+        amount: reservationBeingCancelled.amountToReturn,
+        creditAccount: creditAccount,
+        debitAccount: debitAccount,
+        voucher: 'RES:' + this.reservationToAddPayment.reservation_name + ' (CANCELLED)',
+      }
+      
+      this.data.addTransaction(transaction).subscribe((res: any) => {
+        ledger.trans_id = res.id;
+        this.data.addReservationLedger(ledger).subscribe((res) => {
+          // let requestBody = {
+          //   id: this.reservationToAddPayment.booking_id,
+          //   paymentToAdd: this.reservationToAddPayment.paymentToAdd,
+          // }
           window.location.reload();
+          
+          // this.data.addReservationPayment(requestBody).subscribe((res: any) => {
+          // });
         });
-      });  
-    });
+      });
+    });  
   }
 
   addAmount(){

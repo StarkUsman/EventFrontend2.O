@@ -7,11 +7,11 @@
           <li class="top-nav-search mx-2">
             <div class="position-relative">
               <div class="d-flex align-items-center">
-                <!-- <label class="btn btn-primary form-control mx-2" for="startDate">From</label>
-                <input type="date" class="form-control me-2" placeholder="Start Date"  name="startDate" [(ngModel)]="startDate" (ngModelChange)="filterData()"> -->
-                
                 <label class="btn btn-primary form-control mx-2" for="endDate">Date</label>
                 <input type="date" class="form-control me-2" placeholder="End Date"  name="endDate" [(ngModel)]="filterDate" (ngModelChange)="filterData()">
+                
+                <label class="btn btn-primary form-control mx-2" for="startDate">Till</label>
+                <input type="date" class="form-control me-2" placeholder="Start Date"  name="startDate" [(ngModel)]="endDate" (ngModelChange)="filterData()">
               </div>
             </div>
           </li>

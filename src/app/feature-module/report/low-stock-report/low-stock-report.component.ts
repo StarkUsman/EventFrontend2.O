@@ -52,7 +52,7 @@ export class LowStockReportComponent {
       apiRes.data = apiRes.data.filter((item: any) => item.quantity <= item.alertQuantity);
       apiRes.data.map((res: any, index: number) => {
         const serialNumber = index + 1;
-        if (index >= pageOption.skip && serialNumber <= pageOption.limit) {
+        if (res.alertQuantity) {
           res.sNo = serialNumber;
           this.expensereport.push(res);
           this.serialNumberArray.push(serialNumber);
