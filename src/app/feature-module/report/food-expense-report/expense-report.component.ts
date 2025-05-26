@@ -62,7 +62,7 @@ export class ExpenseReportComponent implements OnInit {
       this.totalData = apiRes.totalData;
       apiRes.data.map((res: any, index: number) => {
         const serialNumber = index + 1;
-        if (index >= pageOption.skip && serialNumber <= pageOption.limit) {
+        if (true) {
           res.sNo = serialNumber;
           res.checked = true;
           this.expensereport.push(res);
