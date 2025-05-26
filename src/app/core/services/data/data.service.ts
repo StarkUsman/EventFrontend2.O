@@ -1935,7 +1935,7 @@ public sideBar: any[] = [
             base: routes.expenseReport,
           },
           {
-            menuValue: 'All Expense Report',
+            menuValue: 'Expense Voucher Report',
             route: routes.expenseReportAll,
             base: routes.expenseReportAll,
           },
