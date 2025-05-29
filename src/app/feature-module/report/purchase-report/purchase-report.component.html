@@ -78,8 +78,8 @@
                   <th mat-sort-header="sno">#</th>
                   <th mat-sort-header="companyname">Product Name</th>
                   <th mat-sort-header="payment">Purchase Price</th>
-                  <th mat-sort-header="amount">ExpenseQuantity</th>
-                  <th>Total Expense</th>
+                  <th mat-sort-header="amount">PurchaseQuantity</th>
+                  <th>Total Price</th>
                 </tr>
               </thead>
               <tbody>
@@ -88,13 +88,13 @@
                     <td>{{data.sNo}}</td>
                     <td>{{data.item}}</td>
                     <td>PKR:{{data.purchasePrice}}</td>
-                    <td>{{data.totalQuantity}}</td>
+                    <td>{{ data.totalQuantity | number:'1.2-2' }}</td>
                     <td>PKR:{{data.totalExpense}}</td>
                   </tr>
                 }
                 <tr>
                   <td colspan="3">
-                      <p>Total Expense as on {{closingExpenseDate()}}</p>
+                      <p>Total Purchase Price as on {{closingExpenseDate()}}</p>
                   </td>
                   <td></td>
                   <td><span class="text-primary fw-600">PKR:{{totalDebit()}}</span></td>

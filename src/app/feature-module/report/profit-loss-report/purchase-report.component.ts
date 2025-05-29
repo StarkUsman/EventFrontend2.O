@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { D } from '@fullcalendar/core/internal-common';
@@ -16,6 +16,7 @@ import { PaginationService, tablePageSize } from 'src/app/shared/sharedIndex';
   styleUrls: ['./purchase-report.component.scss'],
 })
 export class PurchaseReportComponent implements OnInit {
+  @ViewChild('reportTable') reportTable!: ElementRef<HTMLTableElement>;
   public routes = routes;
   endDate: string = '';
   yearMonth: string = '';
@@ -103,8 +104,8 @@ export class PurchaseReportComponent implements OnInit {
       item.additional_services.forEach((service: any) => {
         const existingService = this.services.find((s) => s.additional_service_name === service.additional_service_name);
         if (existingService) {
-          //skip if the service is already in the list
-            return;
+          // update the existing service and set s.totalPrice += service.totalPrice
+          existingService.totalPrice += service.totalPrice;
         } else if(service.additional_service_name === "Audio System" || service.additional_service_name === "Stage Decor") {
           //skip if the service is Audio System or Stage Decor
           return;
@@ -190,5 +191,28 @@ export class PurchaseReportComponent implements OnInit {
     setTimeout(() => {
       this.saveProfitLoss();
     }, 10000); 
+  }
+
+    downloadCSV(): void {
+    const table = this.reportTable.nativeElement;
+    const rows = Array.from(table.querySelectorAll('tr'));
+
+    const csv = rows.map(row => {
+      const cols = Array.from(row.querySelectorAll('th, td')).map(cell => {
+        let text = cell.textContent?.trim() ?? '';
+        text = text.replace(/"/g, '""'); // Escape quotes
+        return `"${text}"`;
+      });
+      return cols.join(',');
+    }).join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const anchor = document.createElement('a');
+    anchor.setAttribute('href', url);
+    anchor.setAttribute('download', 'profitLoss_export.csv');
+    anchor.click();
+    URL.revokeObjectURL(url);
   }
 }

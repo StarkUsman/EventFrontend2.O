@@ -1,5 +1,5 @@
+import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { forkJoin } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -18,6 +18,7 @@ import { PaginationService, tablePageSize } from 'src/app/shared/sharedIndex';
   styleUrls: ['./purchase-report.component.scss'],
 })
 export class PurchaseReportComponent implements OnInit {
+  @ViewChild('reportTable') reportTable!: ElementRef<HTMLTableElement>;
   cashMaxLengthArray: any[] = [];
   cashInflow: any[] = [];
   cashOutflow: any[] = [];
@@ -213,5 +214,28 @@ export class PurchaseReportComponent implements OnInit {
     ).fill(null);
 
     this.skippedTransactions();
+  }
+
+    downloadCSV(): void {
+    const table = this.reportTable.nativeElement;
+    const rows = Array.from(table.querySelectorAll('tr'));
+
+    const csv = rows.map(row => {
+      const cols = Array.from(row.querySelectorAll('th, td')).map(cell => {
+        let text = cell.textContent?.trim() ?? '';
+        text = text.replace(/"/g, '""'); // Escape quotes
+        return `"${text}"`;
+      });
+      return cols.join(',');
+    }).join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const anchor = document.createElement('a');
+    anchor.setAttribute('href', url);
+    anchor.setAttribute('download', 'inflowOutflow_export.csv');
+    anchor.click();
+    URL.revokeObjectURL(url);
   }
 }

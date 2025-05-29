@@ -486,6 +486,18 @@ export class DataService {
     return this.http.delete(this.backendUrl+`/salary/${id}`);
   }
 
+  public addSalaryHistory(salary: any){
+    return this.http.post(this.backendUrl+`/salaryHistory`, salary)
+  }
+
+  public getSalaryHistory() {
+    return this.http.get<apiResultFormat>(this.backendUrl+'/salaryHistory').pipe(
+      map((res: apiResultFormat) => {
+        return res;
+      })
+    );
+  }
+
   public getAccountsCategory() {
     return this.http.get<apiResultFormat>(this.backendUrl+'/acategory').pipe(
       map((res: apiResultFormat) => {
@@ -1939,13 +1951,13 @@ public sideBar: any[] = [
             route: routes.expenseReportAll,
             base: routes.expenseReportAll,
           },
+          // {
+          //   menuValue: 'Event Expense Report',
+          //   route: routes.eventexpenseReport,
+          //   base: routes.eventexpenseReport,
+          // },
           {
             menuValue: 'Event Expense Report',
-            route: routes.eventexpenseReport,
-            base: routes.eventexpenseReport,
-          },
-          {
-            menuValue: 'Food Expense Report',
             route: routes.foodexpenseReport,
             base: routes.foodexpenseReport,
           },
@@ -1960,12 +1972,12 @@ public sideBar: any[] = [
             base: routes.lowStockReport,
           },
           {
-            menuValue: 'Summary Purchase Report',
+            menuValue: 'Purchase Voucher Report',
             route: routes.sumpurchaseReport,
             base: routes.sumpurchaseReport,
           },
           {
-            menuValue: 'AdditionalService Report',
+            menuValue: 'Additional Service Report',
             route: routes.serviceReport,
             base: routes.serviceReport,
           },

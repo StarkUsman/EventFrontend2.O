@@ -85,7 +85,11 @@
                             <tbody>
                               <tr>
                                 <td>Hall</td>
-                                <td>{{reservationToView.SLOT?.hall}}</td>
+                                <!-- <td>{{reservationToView.SLOT?.hall}}</td> -->
+                                 <td>
+                                  {{ reservationToView.SLOT[0]?.hall }}
+                                  <span *ngIf="reservationToView.SLOT[1]?.hall">, {{ reservationToView.SLOT[1].hall }}</span>
+                                </td>
                                 <!-- <td>{{reservationToView.SLOT?.slot}}</td> -->
                                 <td>{{reservationToView.SLOT?.slot === 'Evening' ? 'Night' : 'Day'}}</td>
                                 <td>1</td>
@@ -94,7 +98,6 @@
                               </tr>
                               <tr>
                                 <td>{{reservationToView.selectedMenu?.menu_name}}</td>
-                                <!-- <td>{{ reservationToView.selectedMenu?.description ? (reservationToView.selectedMenu?.description | slice:0:20) + (reservationToView.selectedMenu?.description.length > 20 ? '...' : '') : 'N/A' }}</td> -->
                                 <td></td>
                                 <td></td>
                                 <td>{{reservationToView.number_of_persons}}</td>
@@ -103,7 +106,6 @@
                               </tr>
                               <tr *ngFor="let item of menuItems">
                                 <td>{{item.item_name}}</td>
-                                <!-- <td>{{ item.description ? (item.description | slice:0:20) + (item.description.length > 20 ? '...' : '') : 'N/A' }}</td> -->
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -112,7 +114,6 @@
                               </tr>
                               <tr *ngFor="let service of reservationToView.additional_services">
                                 <td>{{service.additional_service_name}}</td>
-                                <!-- <td>{{ service.description ? (service.description | slice:0:20) + (service.description.length > 20 ? '...' : '') : 'N/A' }}</td> -->
                                 <td></td>
                                 <td></td>
                                 <td>{{service.quantity}}</td>
@@ -174,7 +175,6 @@
                                 <td>{{ledger.date}}</td>
                                 <!-- <td></td> -->
                                 <td>{{ledger.user}}</td>
-                                <!-- <td>{{ledger.amount}}</td> -->
                                 <td>
                                   <ng-container *ngIf="editedLedger !== ledger; else editAmount">
                                     {{ ledger.amount }}
@@ -213,11 +213,6 @@
                     <span class="d-block">Additional Notes</span>
                     <p class="mb-0">{{reservationToView.notes}}</p>
                   </div>
-                  <!-- <div class="invoice-sign text-end">										
-                    <span class="d-block">Authorised Sign</span>
-                    <img class="img-fluid d-inline-block" src="assets/img/signature.png" alt="sign">
-                  </div> -->
-                  <!-- /Terms & Conditions -->
                 </div>
               </div>
             </div>

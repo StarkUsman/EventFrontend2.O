@@ -50,7 +50,7 @@ export class ExpenseReportComponent implements OnInit {
     this.data.getExpenseAccountCategory().subscribe((res: any) => {
       this.allSubCategories = res.subcategory;
       for (const subCategory of this.allSubCategories) {
-        if (subCategory.subcategory.toLowerCase() === 'event expense') {
+        if (subCategory.subcategory?.toLowerCase() === 'event expense') {
           subCategory.checked = true;
         } else {
           subCategory.checked = false;
@@ -65,7 +65,8 @@ export class ExpenseReportComponent implements OnInit {
       this.expensereport = [];
       this.serialNumberArray = [];
       this.totalData = apiRes.totalData;
-      apiRes.data = apiRes.data.filter((item: any) => item.subcategory.toLowerCase() === 'event expense');
+      apiRes.data = apiRes.data.filter((item: any) => item.subcategory?.toLowerCase() === 'event expense');
+      console.log(apiRes.data);
       apiRes.data.map((res: any, index: number) => {
         const serialNumber = index + 1;
         if (true) {

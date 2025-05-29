@@ -1,3 +1,4 @@
+import { firstValueFrom } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -301,7 +302,7 @@ export class EditEstimateComponent implements OnInit {
   }
 
   updateMenuPriceTotal(price: number) {
-    this.reservationToEdit.selectedMenu.menu_price = price;
+    this.reservationToEdit.selectedMenu.price = price;
     this.reservationToEdit.selectedMenu.finalPrice = price * this.reservationToEdit.number_of_persons;
   }
 
@@ -338,27 +339,34 @@ export class EditEstimateComponent implements OnInit {
     return this.reservationToEdit.menu_id !== null && this.reservationToEdit.number_of_persons > 0;
   }
 
-  deleteServiceLedgers(){
-    if(this.isSoundSelected){
-      this.data.getVendorByName("SOUND").subscribe((res: any) =>{
-        let vendorId = res.vendor_id;
-        let name = "RES:" + this.reservationToEdit.reservation_name;
-        let purch_id = this.reservationToEdit.booking_id;
-        this.data.getSpecificLedger(vendorId,name,purch_id).subscribe((res: any) => {
-          this.data.deleteLedgerById(res.id).subscribe((res: any) =>{});
-        });
-      });
+  async deleteServiceLedgers() {
+    const name = "RES:" + this.reservationToEdit.reservation_name;
+    const purch_id = this.reservationToEdit.booking_id;
+
+    const tasks = [];
+
+    if (this.isSoundSelected) {
+      const soundTask = (async () => {
+        const soundVendor:any = await firstValueFrom(this.data.getVendorByName("SOUND"));
+        const ledger:any = await firstValueFrom(this.data.getSpecificLedger(soundVendor.vendor_id, name, purch_id));
+        await firstValueFrom(this.data.deleteLedgerById(ledger.id));
+      })();
+      tasks.push(soundTask);
     }
 
-    if(this.isStageDecoreSelected){
-      this.data.getVendorByName("STAGE DECORE").subscribe((res: any) =>{
-        let vendorId = res.vendor_id;
-        let name = "RES:" + this.reservationToEdit.reservation_name;
-        let purch_id = this.reservationToEdit.booking_id;
-        this.data.getSpecificLedger(vendorId,name,purch_id).subscribe((res: any) => {
-          this.data.deleteLedgerById(res.id).subscribe((res: any) =>{});
-        });
-      });
+    if (this.isStageDecoreSelected) {
+      const stageTask = (async () => {
+        const stageVendor:any = await firstValueFrom(this.data.getVendorByName("STAGE DECORE"));
+        const ledger:any = await firstValueFrom(this.data.getSpecificLedger(stageVendor.vendor_id, name, purch_id));
+        await firstValueFrom(this.data.deleteLedgerById(ledger.id));
+      })();
+      tasks.push(stageTask);
+    }
+
+    try {
+      await Promise.all(tasks);
+    } catch (err) {
+      console.error("Ledger deletion failed:", err);
     }
 
     this.addServiceLedger();

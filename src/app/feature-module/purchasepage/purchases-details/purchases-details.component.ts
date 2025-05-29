@@ -22,10 +22,12 @@ export class PurchasesDetailsComponent implements OnInit {
     paymentCode: null,
   };
   paymentStatus: any = null
+  companySettings: any = {};
 
   constructor(private route: ActivatedRoute, private data: DataService) { }
 
   ngOnInit(): void {
+    this.companySettings = JSON.parse(localStorage.getItem('companySettings') || '{}');
     const options: Intl.DateTimeFormatOptions = {
       timeZone: 'Asia/Karachi',
       year: 'numeric',

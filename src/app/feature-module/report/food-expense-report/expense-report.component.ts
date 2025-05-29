@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -17,6 +17,7 @@ import { DataService } from 'src/app/core/services/data/data.service';
   styleUrls: ['./expense-report.component.scss'],
 })
 export class ExpenseReportComponent implements OnInit {
+  @ViewChild('reportTable') reportTable!: ElementRef<HTMLTableElement>;
   isCollapsed = false;
   showFilter = false;
   public Toggledata = false;
@@ -33,6 +34,11 @@ export class ExpenseReportComponent implements OnInit {
   endDate: string = '';
   allSubCategories: any = [];
   unfilteredData: Array<any> = [];
+  salaryExpense: Array<any> = [];
+  unfilteredSalExpense: Array<any> = [];
+  accountExpense: Array<any> = [];
+  accountExpenseUnfiltered: Array<any> = [];
+
   constructor(
     private data: DataService,
     private pagination: PaginationService,
@@ -70,9 +76,9 @@ export class ExpenseReportComponent implements OnInit {
           res.totalExpense = 0;
           res.totalQuantity = 0;
           for (const ledger of res.ledger) {
-            res.totalQuantity += ledger.quantity;
+            res.totalQuantity -= ledger.quantity;
             ledger.expense = ledger.quantity * ledger.purchasePrice;
-            res.totalExpense += ledger.quantity * ledger.purchasePrice;
+            res.totalExpense -= ledger.quantity * ledger.purchasePrice;
           }
           res.totalExpense = res.totalExpense.toFixed(2);
         }
@@ -89,6 +95,63 @@ export class ExpenseReportComponent implements OnInit {
       });
       this.unfilteredData = structuredClone(apiRes.data);
     });
+
+    this.data.getSalaryHistory().subscribe((apiRes: apiResultFormat) => {
+      this.salaryExpense = [];
+      this.salaryExpense = apiRes.data;
+      this.unfilteredSalExpense = structuredClone(this.salaryExpense);
+
+      this.salaryExpense = this.consolidateSalaryHistory(this.salaryExpense);
+    });
+
+    this.data.getExpense().subscribe((apiRes: apiResultFormat) => {
+      this.accountExpense = [];
+      apiRes.data = apiRes.data.filter((item: any) => item.subcategory?.toLowerCase() === 'event expense');
+      apiRes.data.forEach((res: any, index: number) => {
+        res.totalExpense = 0;
+        for (const ledger of res.ledger) {
+          res.totalExpense += ledger.amountDebit;
+        }
+        res.totalExpense = res.totalExpense.toFixed(2);
+        this.accountExpense.push(res);
+      });
+      this.accountExpenseUnfiltered = structuredClone(this.accountExpense);
+    });
+  }
+
+  consolidateSalaryHistory(salaryHistory: any[]): any[] {
+    const grouped = new Map<string, any>();
+
+    for (const entry of salaryHistory) {
+      const vendorKey = `${entry.vendor.id}_${entry.vendor.name}`;
+      if (!grouped.has(vendorKey)) {
+        grouped.set(vendorKey, {
+          vendor: entry.vendor,
+          numberOfPersons: 0,
+          totalAmount: 0,
+          rateSum: 0,
+          rateCount: 0,
+          Dated: entry.Dated,
+        });
+      }
+
+      const group = grouped.get(vendorKey);
+      group.numberOfPersons += entry.numberOfPersons;
+      group.totalAmount += entry.totalAmount;
+      group.rateSum += entry.rate;
+      group.rateCount += 1;
+    }
+
+    // Finalize objects with averaged rate
+    const consolidated = Array.from(grouped.values()).map(group => ({
+      vendor: group.vendor,
+      numberOfPersons: group.numberOfPersons,
+      totalAmount: group.totalAmount,
+      rate: +(group.rateSum / group.rateCount).toFixed(2),
+      Dated: group.Dated,
+    }));
+
+    return consolidated;
   }
 
   public searchData(value: string): void {
@@ -158,9 +221,30 @@ export class ExpenseReportComponent implements OnInit {
     return total.toFixed(2);
   }
 
+  totalSalaryDebit(){
+    let total = 0;
+    for (const salary of this.salaryExpense) {
+      total += parseFloat(salary.totalAmount);
+    }
+    return total.toFixed(2);
+  }
+
+  totalAccountExpense() {
+    let total = 0;
+    for (const vendor of this.accountExpense) {
+      total += parseFloat(vendor.totalExpense);
+    }
+    return total.toFixed(2);
+  }
+
+  grandTotal() {
+    return (Number(this.totalDebit()) + Number(this.totalSalaryDebit()) + Number(this.totalAccountExpense())).toFixed(2);
+  }
+
   getDateRange(startStr: string, endStr: string): [Date, Date] {
     const start = new Date(startStr);
     const end = new Date(endStr);
+    start.setHours(0, 0, 0, 0);
     end.setHours(23, 59, 59, 999);
     return [start, end];
   }  
@@ -198,6 +282,58 @@ export class ExpenseReportComponent implements OnInit {
             }
         });
         this.expensereport = filteredProducts;
+        
+        this.salaryExpense = structuredClone(this.unfilteredSalExpense);
+        this.salaryExpense = this.salaryExpense.filter((salary: any) => {
+          const salaryDate = new Date(salary.Dated);
+          return salaryDate >= start && salaryDate <= end;
+        });
+
+        this.salaryExpense = this.consolidateSalaryHistory(this.salaryExpense);
+
+        const filteredVendors = this.accountExpenseUnfiltered.map((vendor: any) => {
+          const filteredLedger = vendor.ledger.filter((entry: any) => {
+            const entryDate = new Date(entry.createdAt);
+            return entryDate >= start && entryDate <= end;
+          });
+
+          const totalExpense = filteredLedger.reduce(
+            (sum: number, entry: any) => sum + entry.amountDebit,
+            0
+          );
+
+          return {
+            ...vendor,
+            ledger: filteredLedger,
+            totalExpense,
+          };
+        });
+
+        this.accountExpense = filteredVendors;
     }
   }
+
+  downloadCSV(): void {
+    const table = this.reportTable.nativeElement;
+    const rows = Array.from(table.querySelectorAll('tr'));
+
+    const csv = rows.map(row => {
+      const cols = Array.from(row.querySelectorAll('th, td')).map(cell => {
+        let text = cell.textContent?.trim() ?? '';
+        text = text.replace(/"/g, '""'); // Escape quotes
+        return `"${text}"`;
+      });
+      return cols.join(',');
+    }).join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const anchor = document.createElement('a');
+    anchor.setAttribute('href', url);
+    anchor.setAttribute('download', 'foodExpense_export.csv');
+    anchor.click();
+    URL.revokeObjectURL(url);
+  }
+
 }

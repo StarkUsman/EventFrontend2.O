@@ -52,7 +52,7 @@ export class ViewEstimateComponent  implements OnInit {
       this.totalData = apiRes.totalData;
       apiRes.data.map((res: any, index: number) => {
         const serialNumber = index + 1;
-        if (index >= pageOption.skip && serialNumber <= pageOption.limit) {
+        if (true) {
           res.sNo = serialNumber;
           this.reservations.push(res);
           this.serialNumberArray.push(serialNumber);
@@ -377,12 +377,12 @@ export class ViewEstimateComponent  implements OnInit {
     this.reservations = structuredClone(this.unfilteredData);
     this.reservations = this.reservations.filter((reservation) => {
       return (
-        reservation.reservation_name.toLowerCase().includes(this.queryString.toLowerCase()) ||
-        reservation.contact_number.toLowerCase().includes(this.queryString.toLowerCase()) ||
-        reservation.alt_contact_number?.toLowerCase().includes(this.queryString.toLowerCase()) ||
-        reservation.description?.toLowerCase().includes(this.queryString.toLowerCase()) ||
-        reservation.SLOT.hall.toLowerCase().includes(this.queryString.toLowerCase()) ||
-        reservation.status?.toLowerCase().includes(this.queryString.toLowerCase())
+        reservation.reservation_name?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        reservation.contact_number?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        reservation.alt_contact_number?.toLowerCase().includes(this.queryString.toLowerCase())
+        // reservation.description?.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        // reservation.SLOT.hall.toLowerCase().includes(this.queryString.toLowerCase()) ||
+        // reservation.status?.toLowerCase().includes(this.queryString.toLowerCase())
       );
     });
   }

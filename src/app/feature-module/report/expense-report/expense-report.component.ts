@@ -68,7 +68,8 @@ export class ExpenseReportComponent implements OnInit {
           this.serialNumberArray.push(serialNumber);
           res.totalExpense = 0;
           for (const ledger of res.ledger) {
-            res.totalExpense += ledger.amountDebit;
+            res.totalExpense -= ledger.amountDebit;
+            res.totalExpense += ledger.amountCredit;
           }
           res.totalExpense = res.totalExpense.toFixed(2);
         }
@@ -178,10 +179,13 @@ export class ExpenseReportComponent implements OnInit {
           return entryDate >= start && entryDate <= end;
         });
 
-        const totalExpense = filteredLedger.reduce(
-          (sum: number, entry: any) => sum + entry.amountDebit,
-          0
-        );
+        // const totalExpense = filteredLedger.reduce(
+        //   (sum: number, entry: any) => sum + entry.amountDebit,
+        //   0
+        // );
+        const totalExpense = filteredLedger.reduce((sum: number, entry: any) => {
+          return sum + (entry.amountCredit || 0) - (entry.amountDebit || 0);
+        }, 0).toFixed(2);
 
         return {
           ...vendor,

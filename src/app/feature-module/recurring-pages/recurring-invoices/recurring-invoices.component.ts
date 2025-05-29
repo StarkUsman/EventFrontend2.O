@@ -260,7 +260,27 @@ export class RecurringInvoicesComponent implements OnInit {
     this.data.addLedger(ledger).subscribe((res) => { });
   }
 
+  salaryHistory: any = [];
+
+  addSalaryHistory(salaryHistory: any[]): Observable<any> {
+    const historyObservables = salaryHistory.map((salary: any) =>
+      this.data.addSalaryHistory(salary)
+    );
+    return forkJoin(historyObservables);
+  }
+
   paySalary() {
+    this.salaryHistory = [];
+    this.allSalaries.filter((salary: any) => salary.totalSalaryCalculated > 0).forEach((salary: any) => {
+      let salaryHistoryObject = {
+        vendor: salary.vendor,
+        numberOfPersons: salary.number_of_persons_sum,
+        rate: salary.rate,
+        totalAmount: salary.totalSalaryCalculated,
+      }
+      this.salaryHistory.push(salaryHistoryObject);
+    });
+
     this.allSalaries.forEach((salary: any) => {
       this.addLedger(salary);
     });
@@ -277,12 +297,23 @@ export class RecurringInvoicesComponent implements OnInit {
     const updateObservables = salariesToUpdate.map((salary: any) => this.data.updateSalary(salary));
 
     forkJoin(updateObservables).subscribe({
-      next: (results) => {
-        window.location.reload();
+      next: () => {
+        if (this.salaryHistory.length > 0) {
+          this.addSalaryHistory(this.salaryHistory).subscribe({
+            next: () => {
+              window.location.reload();
+            },
+            error: (err) => {
+              console.error("Error adding salary history", err);
+            },
+          });
+        } else {
+          window.location.reload();
+        }
       },
       error: (err) => {
-        console.error('Error updating salaries', err);
-      }
+        console.error("Error updating salaries", err);
+      },
     });
   }
 
