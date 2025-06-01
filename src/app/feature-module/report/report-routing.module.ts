@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ReportComponent } from './report.component';
+import { AuthGuardRole } from '../../core/guards/authRole/auth.guard';
+import { AuthGuardRoleAdminRes } from '../../core/guards/authRoleAdminRes/auth.guard';
+import { AuthGuardRoleAdminStore } from '../../core/guards/authRoleAdminStore/auth.guard';
 
 const routes: Routes = [
   {
@@ -13,6 +16,7 @@ const routes: Routes = [
           import('./expense-report/expense-report.module').then(
             (m) => m.ExpenseReportModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'expense-report-expense',
@@ -20,6 +24,7 @@ const routes: Routes = [
           import('./expense-report-expense/expense-report.module').then(
             (m) => m.ExpenseReportModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'liability-report',
@@ -27,6 +32,7 @@ const routes: Routes = [
           import('./liability-report/sales-report.module').then(
             (m) => m.SalesReportModule
           ),
+          canActivate: [AuthGuardRoleAdminStore],
       },
       {
         path: 'receivable-report',
@@ -34,6 +40,7 @@ const routes: Routes = [
           import('./receivable-report/purchase-report.module').then(
             (m) => m.PurchaseReportModule
           ),
+          canActivate: [AuthGuardRoleAdminRes],
       },
       {
         path: 'event-expense-report',
@@ -41,6 +48,7 @@ const routes: Routes = [
           import('./event-expense-report/expense-report.module').then(
             (m) => m.ExpenseReportModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'food-expense-report',
@@ -48,6 +56,7 @@ const routes: Routes = [
           import('./food-expense-report/expense-report.module').then(
             (m) => m.ExpenseReportModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'purchase-report',
@@ -55,6 +64,7 @@ const routes: Routes = [
           import('./purchase-report/purchase-report.module').then(
             (m) => m.PurchaseReportModule
           ),
+          canActivate: [AuthGuardRoleAdminStore],
       },
       {
         path: 'additional-service-report',
@@ -62,6 +72,7 @@ const routes: Routes = [
           import('./additional-service-report/purchase-report.module').then(
             (m) => m.PurchaseReportModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'inflow-outflow-report',
@@ -69,6 +80,7 @@ const routes: Routes = [
           import('./inflow-outflow-report/purchase-report.module').then(
             (m) => m.PurchaseReportModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'profit-loss-report',
@@ -76,6 +88,7 @@ const routes: Routes = [
           import('./profit-loss-report/purchase-report.module').then(
             (m) => m.PurchaseReportModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'summary-purchase-report',
@@ -83,6 +96,7 @@ const routes: Routes = [
           import('./summary-purchase-report/purchase-report.module').then(
             (m) => m.PurchaseReportModule
           ),
+          canActivate: [AuthGuardRoleAdminStore],
       },
       {
         path: 'purchase-return-report',
@@ -90,6 +104,7 @@ const routes: Routes = [
           import('./purchase-return-report/purchase-return-report.module').then(
             (m) => m.PurchaseReturnReportModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'sales-report',
@@ -97,6 +112,7 @@ const routes: Routes = [
           import('./sales-report/sales-report.module').then(
             (m) => m.SalesReportModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'sales-return-report',
@@ -104,6 +120,7 @@ const routes: Routes = [
           import('./sales-return-report/sales-return-report.module').then(
             (m) => m.SalesReturnReportModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'quotation-report',
@@ -111,6 +128,7 @@ const routes: Routes = [
           import('./quotation-report/quotation-report.module').then(
             (m) => m.QuotationReportModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'payment-report',
@@ -118,6 +136,7 @@ const routes: Routes = [
           import('./payment-report/payment-report.module').then(
             (m) => m.PaymentReportModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'stock-report',
@@ -125,6 +144,7 @@ const routes: Routes = [
           import('./stock-report/stock-report.module').then(
             (m) => m.StockReportModule
           ),
+          canActivate: [AuthGuardRole],
       },
       {
         path: 'low-stock-report',
@@ -132,6 +152,7 @@ const routes: Routes = [
           import('./low-stock-report/low-stock-report.module').then(
             (m) => m.LowStockReportModule
           ),
+          canActivate: [AuthGuardRoleAdminStore],
       },
       {
         path: 'income-report',
@@ -139,6 +160,7 @@ const routes: Routes = [
           import('./income-report/income-report.module').then(
             (m) => m.IncomeReportModule
           ),
+          canActivate: [AuthGuardRoleAdminRes],
       },
       {
         path: 'tax-purchase',
@@ -146,6 +168,7 @@ const routes: Routes = [
           import('./tax-purchase/tax-purchase.module').then(
             (m) => m.TaxPurchaseModule
           ),
+          canActivate: [AuthGuardRole],
       },
 
       {
@@ -154,6 +177,7 @@ const routes: Routes = [
           import('./profit-loss-list/profit-loss-list.module').then(
             (m) => m.ProfitLossListModule
           ),
+          canActivate: [AuthGuardRole],
       },
     ],
   },

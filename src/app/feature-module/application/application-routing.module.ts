@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ApplicationComponent } from './application.component';
+import { AuthGuardRoleAdminRes } from 'src/app/core/guards/authRoleAdminRes/auth.guard';
 
 const routes: Routes = [
   {
@@ -16,6 +17,7 @@ const routes: Routes = [
         path: 'calender',
         loadChildren: () =>
           import('./calender/calender.module').then((m) => m.CalenderModule),
+        canActivate: [AuthGuardRoleAdminRes],
       },
       {
         path: 'email',

@@ -47,6 +47,8 @@ export class LoginComponent {
               this.router.navigate([routes.dashboard]);
             } else if (res.role === 'store') {
               this.router.navigate([routes.vendorsList]);
+            } else if (res.role === 'reservation') {
+              this.router.navigate([routes.calender]);
             } else {
               this.auth.checkAuth.next('false');
               this.showLoginError = true;

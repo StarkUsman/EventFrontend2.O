@@ -18,6 +18,7 @@ import {
   ApexResponsive,
 } from 'ng-apexcharts';
 import { routes, SideBarService, DataService } from 'src/app/core/core.index';
+import { ProfitLossReportService } from 'src/app/core/services/profitLoss/profit-loss-report.service';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries | any;
@@ -69,7 +70,7 @@ export class DashboardComponent implements OnInit {
   monthArray: any = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   monthcategories: any = [];
 
-  constructor(private sideBar: SideBarService, private data: DataService, private cdr: ChangeDetectorRef) {
+  constructor(private sideBar: SideBarService, private data: DataService, private cdr: ChangeDetectorRef, private reportService: ProfitLossReportService) {
     this.data.getProfitLoss().subscribe((res: any) => {
       res.data.sort((a: any, b: any) => parseInt(a.monthName) - parseInt(b.monthName));
       res.data.forEach((item: any) => {
@@ -190,6 +191,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.reportService.init();
     this.data.getDashboardData().subscribe((res: any) => {
       this.people_to_be_served = res.people_to_be_served;
       this.pct_people_to_be_served_last_month = res.pct_people_to_be_served_last_month.toFixed(1);

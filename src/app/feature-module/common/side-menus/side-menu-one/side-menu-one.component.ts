@@ -86,13 +86,25 @@ export class SideMenuOneComponent implements OnDestroy {
         this.side_bar_data = res;
         console.log(this.side_bar_data, "sidebar data")
         const user = JSON.parse(localStorage.getItem('user') || '{}');
-        if (user.role != 'admin') {
+        if (user.role != 'admin' && user.role != 'reservation') {
           this.side_bar_data = this.side_bar_data.filter((item) => item.tittle !== 'Reservations');
         }
         if (user.role == 'store') {
-          this.side_bar_data = this.side_bar_data.filter((item) => item.tittle !== 'Main' && item.tittle !== 'Inventory' && item.tittle !== 'User Management' && item.tittle !== 'Roles & Permission');
+          this.side_bar_data = this.side_bar_data.filter((item) => item.tittle !== 'Main' && item.tittle !== 'Management');
           this.side_bar_data.map((mainMenus: MainMenus) => {
-            mainMenus.menu = mainMenus.menu.filter((item) => item.menuValue !== 'Accounts' && item.menuValue !== 'Transactions' && item.menuValue !== 'Settings');
+            mainMenus.menu = mainMenus.menu.filter((item) => item.menuValue !== 'Accounts' && item.menuValue !== 'Transactions' && item.menuValue !== 'Settings' && item.menuValue !== 'Salaries');
+            mainMenus.menu.map((subMenu: any) => {
+              subMenu.subMenus = subMenu.subMenus.filter((item: any) => item.menuValue !== 'Expense Report' && item.menuValue !== 'Expense Voucher Report' && item.menuValue !== 'Event Expense Report' && item.menuValue !== 'Additional Service Report' && item.menuValue !== 'Receivable Report' && item.menuValue !== 'Customer Income Report' && item.menuValue !== 'Inflow/Outflow Report' && item.menuValue !== 'Profit & Loss')
+            });
+          });
+        }
+        if (user.role == 'reservation') {
+          this.side_bar_data = this.side_bar_data.filter((item) => item.tittle == 'Reservations' || item.tittle == 'Reports' || item.tittle == 'Main');
+          this.side_bar_data.map((mainMenus: MainMenus) => {
+            mainMenus.menu = mainMenus.menu.filter((item) => item.menuValue !== 'Accounts' && item.menuValue !== 'Transactions' && item.menuValue !== 'Settings' && item.menuValue !== 'Salaries');
+            mainMenus.menu.map((subMenu: any) => {
+              subMenu.subMenus = subMenu.subMenus.filter((item: any) => item.menuValue == 'Receivable Report' || item.menuValue == 'Customer Income Report' || item.menuValue == 'Reservations' || item.menuValue == 'Add Reservation' || item.menuValue == 'Menus' || item.menuValue == 'Menu-Items' || item.menuValue == 'Additional Services' || item.menuValue == 'Calendar');
+            });
           });
         }
     });

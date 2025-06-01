@@ -5,6 +5,7 @@ import { AuthGuardRole } from '../core/guards/authRole/auth.guard';
 import { LoggedInGuard } from '../core/guards/loggedIn/logged-in.guard';
 import { FeatureModuleComponent } from './feature-module.component';
 import { AuthGuardRoleAdmin } from '../core/guards/authRoleAdminOnly/auth.guard';
+import { AuthGuardRoleAdminStore } from '../core/guards/authRoleAdminStore/auth.guard';
 
 const routes: Routes = [
   {
@@ -111,7 +112,6 @@ const routes: Routes = [
           import('./application/application.module').then(
             (m) => m.ApplicationModule
           ),
-          canActivate: [AuthGuardRole],
       },
       {
         path: 'settings',
@@ -129,6 +129,7 @@ const routes: Routes = [
         path: 'expenses',
         loadChildren: () =>
           import('./expenses/expenses.module').then((m) => m.ExpensesModule),
+        canActivate: [AuthGuardRoleAdminStore],
       },
       {
         path: 'payments',
@@ -158,11 +159,13 @@ const routes: Routes = [
         path: 'vendors',
         loadChildren: () =>
           import('./vendors/vendors.module').then((m) => m.VendorsModule),
+        canActivate: [AuthGuardRoleAdminStore],
       },
       {
         path: 'inventory',
         loadChildren: () =>
           import('./inventory/inventory.module').then((m) => m.InventoryModule),
+        canActivate: [AuthGuardRoleAdminStore],
       },
 
       {
@@ -185,15 +188,14 @@ const routes: Routes = [
         path: 'services',
         loadChildren: () =>
           import('./location/location.module').then((m) => m.LocationModule),
-        canActivate: [AuthGuardRole],
+        canActivate: [AuthGuardRoleAdmin],
       },
       {
         path: 'product-service',
         loadChildren: () =>
           import('./products-service/products-service.module').then(
-            (m) => m.ProductsServiceModule
-          ),
-          canActivate: [AuthGuardRole],
+            (m) => m.ProductsServiceModule),
+        canActivate: [AuthGuardRoleAdminStore],
       },
       {
         path: 'manageusers',
@@ -210,6 +212,7 @@ const routes: Routes = [
           import('./purchase-orders/purchase-orders.module').then(
             (m) => m.PurchaseOrdersModule
           ),
+        canActivate: [AuthGuardRoleAdminStore],
       },
       {
         path: 'purchase-return-details',
@@ -217,6 +220,7 @@ const routes: Routes = [
           import('./purchases-details/purchases-details.module').then(
             (m) => m.PurchasesDetailsModule
           ),
+        canActivate: [AuthGuardRoleAdminStore],
       },
       {
         path: 'add-purchase-return',
@@ -224,6 +228,7 @@ const routes: Routes = [
           import('./add-purchases/add-purchases.module').then(
             (m) => m.AddPurchasesModule
           ),
+        canActivate: [AuthGuardRoleAdminStore],
       },
       {
         path: 'edit-purchase-return',
@@ -231,6 +236,7 @@ const routes: Routes = [
           import('./edit-purchase-return/edit-purchases.module').then(
             (m) => m.EditPurchasesModule
           ),
+        canActivate: [AuthGuardRoleAdminStore],
       },
       {
         path: 'debit-notes',
@@ -326,6 +332,7 @@ const routes: Routes = [
           import('./purchasepage/purchasepage.module').then(
             (m) => m.PurchasepageModule
           ),
+          canActivate: [AuthGuardRoleAdminStore],
       },
       {
         path: 'quotationspage',
@@ -411,7 +418,6 @@ const routes: Routes = [
         path: 'report',
         loadChildren: () =>
           import('./report/report.module').then((m) => m.ReportModule),
-        canActivate: [AuthGuardRole],
       },
     ],
   },

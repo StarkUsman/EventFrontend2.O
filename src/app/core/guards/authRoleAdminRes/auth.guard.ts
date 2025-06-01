@@ -6,7 +6,7 @@ import { routes } from '../../core.index';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthGuardRoleAdmin {
+export class AuthGuardRoleAdminRes {
   constructor(private router: Router) {}
 
   canActivate():
@@ -17,7 +17,7 @@ export class AuthGuardRoleAdmin {
     
     const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-    if (localStorage.getItem('authenticated') && (user.role === 'admin' || user.role === 'reservation')) {
+    if (localStorage.getItem('authenticated') && (user.role === 'admin' || user.role === 'reservation' || user.role === 'accounts')) {
       return true;
     } else {
       this.router.navigate([routes.errorPage500]);
